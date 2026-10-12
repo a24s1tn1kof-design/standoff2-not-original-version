@@ -113,7 +113,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
 @keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
 #reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:12px;font-weight:bold;background:rgba(0,0,0,.7);padding:5px 14px;border-radius:16px;border:2px solid #fa0;display:none;letter-spacing:2px}
-#debug-hud{position:absolute;top:60px;left:8px;background:rgba(0,0,0,.85);color:#0f0;padding:6px 10px;font-size:11px;border-radius:6px;font-family:monospace;pointer-events:none;z-index:9999;white-space:pre}
 </style>
 </head>
 <body>
@@ -130,6 +129,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #btn-aim{bottom:82px;right:82px}
 #btn-jump{bottom:82px;right:12px}
 #btn-crouch{bottom:12px;right:82px}
+#btn-crouch.active{background:rgba(255,170,0,.9);color:#111}
 #btn-reload{bottom:152px;right:12px}
 #btn-swap{bottom:152px;right:60px}
 #btn-sprint{bottom:14px;left:128px}
@@ -207,10 +207,25 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .skin-info .sweapon{font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px}
 .skin-info .srarity{font-size:11px;letter-spacing:3px;font-weight:bold}
 .skin-info .sprice{font-size:14px;color:#4f4;font-weight:bold;margin-top:8px}
+/* === ПРИЦЕЛ AWM === */
+#awp-scope{position:fixed;inset:0;z-index:850;display:none;pointer-events:auto;background:radial-gradient(circle at 50% 50%, transparent 0%, transparent 25%, rgba(0,0,0,.95) 30%, rgba(0,0,0,.98) 100%)}
+#awp-scope.active{display:block}
+#awp-scope .scope-circle{position:absolute;top:50%;left:50%;width:65vmin;height:65vmin;transform:translate(-50%,-50%);border:3px solid #000;border-radius:50%;box-shadow:inset 0 0 30px rgba(0,0,0,.5);pointer-events:none}
+#awp-scope .scope-cross-h{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:65vmin;height:1px;background:rgba(0,0,0,.9);pointer-events:none}
+#awp-scope .scope-cross-v{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1px;height:65vmin;background:rgba(0,0,0,.9);pointer-events:none}
+#awp-scope .scope-mark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:4px;height:4px;background:#000;border-radius:50%;pointer-events:none}
+#awp-scope .scope-line-h1{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:65vmin;height:1px;background:rgba(0,0,0,.9)}
+#awp-scope .scope-line-v1{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1px;height:65vmin;background:rgba(0,0,0,.9)}
+#awp-scope .scope-ticks{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60vmin;height:60vmin;border:1px dashed rgba(0,0,0,.4);border-radius:50%}
+#awp-scope .awp-close{position:absolute;top:14px;right:14px;width:44px;height:44px;background:rgba(0,0,0,.85);border:2px solid #fa0;border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;padding:10px;z-index:10}
+#awp-scope .awp-close:active{background:#fa0;color:#111}
+#awp-scope .awp-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);color:#fa0;font-size:11px;letter-spacing:2px;background:rgba(0,0,0,.7);padding:6px 14px;border-radius:20px;border:1px solid #fa0;pointer-events:none}
+#awp-scope .awp-x{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#000;font-size:32px;font-weight:bold;font-family:Arial;pointer-events:none}
 #button-editor{position:fixed;inset:0;z-index:3001;display:none;background:rgba(5,5,15,.9)}
 #button-editor.active{display:block}
 .editor-btn{position:absolute;background:rgba(255,170,0,.35);border:3px dashed #fa0;border-radius:50%;cursor:move;touch-action:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;padding:2px;text-align:center;font-weight:bold;pointer-events:auto}
 .editor-btn.selected{border-color:#4f4;border-style:solid;background:rgba(68,255,68,.25)}
+.editor-btn.rect{border-radius:8px}
 .editor-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fa0;padding:8px 16px;border-radius:8px;font-size:11px;letter-spacing:1px;border:1px solid #fa0;z-index:10;text-align:center;max-width:90vw}
 .editor-info{position:absolute;top:44px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#4f4;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:bold;border:1px solid #4f4;z-index:10;display:none}
 .editor-info.show{display:block}
@@ -267,7 +282,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 </style>
 </head>
 <body>
-   <div id="rotate-hint"><div class="phone"></div><h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2><p>Только горизонтальная ориентация</p></div>
+  <div id="rotate-hint"><div class="phone"></div><h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2><p>Только горизонтальная ориентация</p></div>
 
 <div id="menu">
 <div id="fs-toggle-btn"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
@@ -334,14 +349,17 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="ammo-hud"><div class="wname" id="weapon-name">AKR-12</div><div class="ammo" id="ammo">30<span class="res">/90</span></div></div>
 <div id="minimap"><canvas id="minimap-canvas" width="88" height="88"></canvas></div>
 <div id="killfeed"></div>
-<div id="debug-hud">JOY: --</div>
+<div id="debug-hud" style="display:none;position:absolute;top:60px;left:8px;background:rgba(0,0,0,.85);color:#0f0;padding:6px 10px;font-size:11px;border-radius:6px;font-family:monospace;pointer-events:none;z-index:9999;white-space:pre">JOY: --</div>
 <div id="joy-move"><div id="joy-move-knob"></div></div>
 <div class="ctrl-btn small" id="btn-pause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></div>
 <div class="ctrl-btn small" id="btn-fullscreen"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
 <div class="ctrl-btn big" id="btn-fire"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg></div>
 <div class="ctrl-btn medium" id="btn-aim"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg></div>
 <div class="ctrl-btn medium" id="btn-jump"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg></div>
-<div class="ctrl-btn medium" id="btn-crouch"><svg viewBox="0 0 24 24"><path d="M12 20l8-8h-5V4H9v8H4z"/></svg></div>
+<div class="ctrl-btn medium" id="btn-crouch">
+<svg id="crouch-icon-down" viewBox="0 0 24 24"><path d="M12 20l8-8h-5V4H9v8H4z"/></svg>
+<svg id="crouch-icon-up" viewBox="0 0 24 24" style="display:none"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+</div>
 <div class="ctrl-btn small" id="btn-reload"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A8 8 0 1 0 19.73 14h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div>
 <div class="ctrl-btn small" id="btn-swap"><svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM7 7l1.41 1.41L5.83 11H16v2H5.83l2.58 2.58L7 17l-5-5z"/></svg></div>
 <div class="ctrl-btn medium" id="btn-sprint"><svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/></svg></div>
@@ -351,6 +369,17 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <button id="btn-settings-pause">⚙ НАСТРОЙКИ</button>
 <button id="btn-leave">✕ ПОКИНУТЬ ИГРУ</button>
 </div>
+</div>
+
+<div id="awp-scope">
+<div class="scope-circle"></div>
+<div class="scope-cross-h"></div>
+<div class="scope-cross-v"></div>
+<div class="scope-mark"></div>
+<div class="scope-ticks"></div>
+<div class="awp-x">✕</div>
+<div class="awp-close" id="awp-close-btn"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
+<div class="awp-hint">СНАЙПЕРСКИЙ ПРИЦЕЛ • AWM</div>
 </div>
 
 <div id="game-over"><h1>ВЫ ПОГИБЛИ</h1><div class="result-stats">Убийств: <span id="final-kills">0</span><br>Заработано: <span id="final-money">0</span> $</div><button id="btn-return-menu">В МЕНЮ</button></div>
@@ -428,6 +457,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div class="setting-row"><label>Чувствительность</label><input type="range" id="set-sens" min="1" max="20" value="8"><span class="val" id="set-sens-val">8</span></div>
 <div class="setting-row"><label>Звук</label><input type="checkbox" id="set-sound" checked></div>
 <div class="setting-row"><label>Вибрация</label><input type="checkbox" id="set-vibe" checked></div>
+<div class="setting-row"><label>Показывать координаты</label><input type="checkbox" id="set-debug"></div>
 </div>
 <div class="settings-section"><h4>🎯 Кнопки управления</h4>
 <div class="setting-row"><label>Размер кнопок</label><input type="range" id="set-btnsize" min="50" max="150" value="100"><span class="val" id="set-btnsize-val">100%</span></div>
@@ -462,7 +492,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 </script>
 <script type="module">
 import * as THREE from 'three';
-   const modalQueue = [];
+  const modalQueue = [];
 let modalActive = false;
 function showModal(config){
     modalQueue.push(config);
@@ -534,8 +564,8 @@ const WEAPONS = {
     awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,range:150,model:'sniper'}
 };
 const MAPS = {
-    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>'},
-    templ:{name:'TEMPL',desc:'Древний храм в горах.',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:.5,sunColor:0xccddff,generate:buildTempl,icon:'<svg viewBox="0 0 24 24"><path d="M12 2L2 8h20zM4 10v10h2V10zm4 0v10h2V10zm4 0v10h2V10zm4 0v10h2V10zM2 22h20v-2H2z"/></svg>'}
+    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>',spawn:[15,15]},
+    templ:{name:'TEMPL',desc:'Древний храм в горах.',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:.5,sunColor:0xccddff,generate:buildTempl,icon:'<svg viewBox="0 0 24 24"><path d="M12 2L2 8h20zM4 10v10h2V10zm4 0v10h2V10zm4 0v10h2V10zm4 0v10h2V10zM2 22h20v-2H2z"/></svg>',spawn:[20,0]}
 };
 const SKINS = {
     akr_dust:{name:'AKR-12 | Пыль',weapon:'akr',rarity:'common',color:'#666',price:150},
@@ -566,7 +596,7 @@ const playerData = {
     ownedSkins:[],equippedSkins:{},clanName:null,clanTag:'—',clanColor:'#888',
     lastFreeCase:0,lastDailyReward:0,customClans:[],
     buttonLayout:null,buttonSize:100,buttonOpacity:72,
-    sensitivity:8,soundEnabled:true,vibeEnabled:true
+    sensitivity:8,soundEnabled:true,vibeEnabled:true,showDebug:false
 };
 const state = {
     scene:null,camera:null,renderer:null,raycaster:null,clock:null,
@@ -582,7 +612,7 @@ const state = {
 const PLAYER_HEIGHT=1.7,PLAYER_RADIUS=.6,WORLD_SIZE=90,HALF_WORLD=WORLD_SIZE/2-2,
       GRAVITY=22,JUMP_SPEED=7,MOVE_SPEED=6,BASE_LOOK=0.004;
 const mobile = {moveX:0,moveY:0,joyMoveActive:false,joyMoveStart:{x:0,y:0},lookActive:false,lookId:null,lookLast:{x:0,y:0}};
-const SAVE_KEY = 'standoff_save_v10';
+const SAVE_KEY = 'standoff_save_v11';
 function saveProfile(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){} }
 function loadProfile(){
     try { const s = localStorage.getItem(SAVE_KEY); if(s){ const p = JSON.parse(s); Object.keys(p).forEach(k=>{ if(k in playerData) playerData[k]=p[k]; }); } } catch(e){}
@@ -642,7 +672,7 @@ document.querySelectorAll('.overlay-close').forEach(btn=>{
     btn.addEventListener('click', handler, true);
 });
 document.getElementById('get-reward-btn').addEventListener('click', claimDailyReward);
-   function renderCases(){
+  function renderCases(){
     const grid = document.getElementById('cases-grid'); if(!grid) return;
     grid.innerHTML = '';
     document.getElementById('cases-balance').textContent = playerData.money;
@@ -852,14 +882,21 @@ function initSettings(){
     document.getElementById('set-sens-val').textContent = playerData.sensitivity;
     document.getElementById('set-sound').checked = playerData.soundEnabled;
     document.getElementById('set-vibe').checked = playerData.vibeEnabled;
+    document.getElementById('set-debug').checked = playerData.showDebug;
     document.getElementById('set-btnsize').value = playerData.buttonSize;
     document.getElementById('set-btnsize-val').textContent = playerData.buttonSize + '%';
     document.getElementById('set-btnopacity').value = playerData.buttonOpacity;
     document.getElementById('set-btnopacity-val').textContent = playerData.buttonOpacity + '%';
+    updateDebugVisibility();
+}
+function updateDebugVisibility(){
+    const el = document.getElementById('debug-hud');
+    if(el) el.style.display = playerData.showDebug ? 'block' : 'none';
 }
 document.getElementById('set-sens').addEventListener('input',(e)=>{ playerData.sensitivity = +e.target.value; document.getElementById('set-sens-val').textContent = playerData.sensitivity; saveProfile(); });
 document.getElementById('set-sound').addEventListener('change',(e)=>{ playerData.soundEnabled = e.target.checked; saveProfile(); });
 document.getElementById('set-vibe').addEventListener('change',(e)=>{ playerData.vibeEnabled = e.target.checked; saveProfile(); });
+document.getElementById('set-debug').addEventListener('change',(e)=>{ playerData.showDebug = e.target.checked; updateDebugVisibility(); saveProfile(); });
 document.getElementById('set-btnsize').addEventListener('input',(e)=>{ playerData.buttonSize = +e.target.value; document.getElementById('set-btnsize-val').textContent = playerData.buttonSize + '%'; applyButtonSettings(); saveProfile(); });
 document.getElementById('set-btnopacity').addEventListener('input',(e)=>{ playerData.buttonOpacity = +e.target.value; document.getElementById('set-btnopacity-val').textContent = playerData.buttonOpacity + '%'; applyButtonSettings(); saveProfile(); });
 function applyButtonSettings(){
@@ -882,10 +919,10 @@ function applyButtonSettings(){
             }
         });
     }
-   }
-   let editorState = { active:false, selected:null, dragging:null, layout:{} };
-const EDITOR_BTNS = ['joy-move','btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen'];
-const BTN_LABELS = {'joy-move':'ДЖОЙСТИК','btn-fire':'ОГОНЬ','btn-aim':'ПРИЦЕЛ','btn-jump':'ПРЫЖОК','btn-crouch':'ПРИСЕД','btn-reload':'ПЕРЕЗАР','btn-swap':'СМЕНА','btn-sprint':'БЕГ','btn-pause':'ПАУЗА','btn-fullscreen':'ФУЛЛСКРИН'};
+  }
+  let editorState = { active:false, selected:null, dragging:null, layout:{} };
+const EDITOR_BTNS = ['minimap','joy-move','btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen'];
+const BTN_LABELS = {'minimap':'МИНИКАРТА','joy-move':'ДЖОЙСТИК','btn-fire':'ОГОНЬ','btn-aim':'ПРИЦЕЛ','btn-jump':'ПРЫЖОК','btn-crouch':'ПРИСЕД','btn-reload':'ПЕРЕЗАР','btn-swap':'СМЕНА','btn-sprint':'БЕГ','btn-pause':'ПАУЗА','btn-fullscreen':'ФУЛЛСКРИН'};
 function openButtonEditor(){
     editorState.active = true;
     editorState.layout = {};
@@ -897,10 +934,11 @@ function openButtonEditor(){
         const src = document.getElementById(id); if(!src) return;
         const rect = src.getBoundingClientRect();
         const clone = document.createElement('div');
-        clone.className = 'editor-btn'; clone.dataset.id = id;
+        clone.className = 'editor-btn' + (id === 'minimap' ? ' rect' : '');
+        clone.dataset.id = id;
         clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
         clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
-        clone.textContent = BTN_LABELS[id].slice(0,6);
+        clone.textContent = BTN_LABELS[id].slice(0,8);
         editorState.layout[id] = { x: Math.round(rect.left), y: Math.round(rect.top), size: Math.round(rect.width) };
         editor.appendChild(clone);
     });
@@ -936,7 +974,7 @@ function changeSize(delta){
     const el = document.querySelector(`.editor-btn[data-id="${editorState.selected}"]`);
     if(!el) return;
     const cur = editorState.layout[editorState.selected].size;
-    const ns = Math.max(30, Math.min(200, cur + delta));
+    const ns = Math.max(30, Math.min(250, cur + delta));
     el.style.width = ns + 'px'; el.style.height = ns + 'px';
     editorState.layout[editorState.selected].size = ns;
     const lbl = document.getElementById('ed-size-label');
@@ -995,7 +1033,7 @@ async function resetButtonLayout(){
     if(!ok) return;
     playerData.buttonLayout = null; playerData.buttonSize = 100; playerData.buttonOpacity = 72;
     saveProfile();
-    document.querySelectorAll('#hud .ctrl-btn, #joy-move').forEach(b=>{ b.style.left=''; b.style.top=''; b.style.right=''; b.style.bottom=''; b.style.width=''; b.style.height=''; });
+    document.querySelectorAll('#hud .ctrl-btn, #joy-move, #minimap').forEach(b=>{ b.style.left=''; b.style.top=''; b.style.right=''; b.style.bottom=''; b.style.width=''; b.style.height=''; });
     applyButtonSettings(); initSettings();
 }
 async function resetAllData(){
@@ -1026,7 +1064,7 @@ function buildSandstone(){
     addBox(0,wallH/2,HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
     addBox(-HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
     addBox(HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
-    const crates=[[-8,-8,4,2,4],[8,-8,4,2,4],[-8,8,4,2,4],[8,8,4,2,4],[0,0,5,3,5],[-20,0,3,1.5,10],[20,0,3,1.5,10],[0,-20,10,1.5,3],[0,20,10,1.5,3],[-30,-25,5,2,5],[30,-25,5,2,5],[-30,25,5,2,5],[30,25,5,2,5],[-35,0,3,4,3],[35,0,3,4,3],[0,-35,3,4,3],[0,35,3,4,3]];
+    const crates=[[-8,-8,4,2,4],[8,-8,4,2,4],[-8,8,4,2,4],[8,8,4,2,4],[-20,0,3,1.5,10],[20,0,3,1.5,10],[0,-20,10,1.5,3],[0,20,10,1.5,3],[-30,-25,5,2,5],[30,-25,5,2,5],[-30,25,5,2,5],[30,25,5,2,5],[-35,0,3,4,3],[35,0,3,4,3],[0,-35,3,4,3],[0,35,3,4,3]];
     const cA=new THREE.MeshStandardMaterial({color:0xa07850,roughness:.85});
     const cB=new THREE.MeshStandardMaterial({color:0x7a5838,roughness:.85});
     crates.forEach(([x,z,w,h,d],i)=>addBox(x,h/2,z,w,h,d,i%2?cA:cB));
@@ -1063,14 +1101,15 @@ function buildTempl(){
     const corMat=new THREE.MeshStandardMaterial({color:0x4a5a70,roughness:.75});
     [[-25,-25,3,5,20],[25,-25,3,5,20],[-25,25,3,5,20],[25,25,3,5,20]].forEach(([x,z,w,h,d])=>addBox(x,h/2,z,w,h,d,corMat));
     state.spawnPoints=[[-38,-38],[38,-38],[-38,38],[38,38],[-30,0],[30,0],[0,-30],[0,30]];
-   }
-   function createScene(){
+  }
+  function createScene(){
     const map=MAPS[state.mapKey];
     state.scene=new THREE.Scene();
     state.scene.background=new THREE.Color(map.skyColor);
     state.scene.fog=new THREE.Fog(map.fogColor,5,map.fogFar);
     state.camera=new THREE.PerspectiveCamera(80,innerWidth/innerHeight,.1,500);
-    state.camera.position.set(0,PLAYER_HEIGHT,0);
+    const sp = map.spawn || [15,15];
+    state.camera.position.set(sp[0],PLAYER_HEIGHT,sp[1]);
     state.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
     state.renderer.setSize(innerWidth,innerHeight);
     const pr = devicePixelRatio > 1.5 ? 1.5 : devicePixelRatio;
@@ -1253,6 +1292,13 @@ function switchWeaponTo(k){
     const w=WEAPONS[k];
     state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
     updateAmmoUI(); saveProfile();
+    // если переключились с AWP на другое - закрываем прицел
+    if(k !== 'awp'){
+        document.getElementById('awp-scope').classList.remove('active');
+        state.isAiming = false;
+        state.camera.fov = 80;
+        state.camera.updateProjectionMatrix();
+    }
 }
 function checkCollision(np){
     if(np.x<-HALF_WORLD+PLAYER_RADIUS||np.x>HALF_WORLD-PLAYER_RADIUS) return true;
@@ -1278,9 +1324,10 @@ function updateMovement(dt){
     if(state.keys.w) iz+=1; if(state.keys.s) iz-=1;
     if(state.keys.d) ix+=1; if(state.keys.a) ix-=1;
     if(mobile.joyMoveActive){ ix+=mobile.moveX; iz-=mobile.moveY; }
-    // Debug HUD
-    const dbg = document.getElementById('debug-hud');
-    if(dbg) dbg.textContent = `JOY:${mobile.joyMoveActive?'ON':'off'} X:${mobile.moveX.toFixed(2)} Y:${mobile.moveY.toFixed(2)}\nix:${ix.toFixed(2)} iz:${iz.toFixed(2)}\npos:${state.camera.position.x.toFixed(1)},${state.camera.position.z.toFixed(1)}`;
+    if(playerData.showDebug){
+        const dbg = document.getElementById('debug-hud');
+        if(dbg) dbg.textContent = `JOY:${mobile.joyMoveActive?'ON':'off'} X:${mobile.moveX.toFixed(2)} Y:${mobile.moveY.toFixed(2)}\nix:${ix.toFixed(2)} iz:${iz.toFixed(2)}\npos:${state.camera.position.x.toFixed(1)},${state.camera.position.z.toFixed(1)}`;
+    }
     if(ix!==0||iz!==0){
         mv.addScaledVector(right,ix); mv.addScaledVector(fwd,iz);
         if(mv.lengthSq()>0) mv.normalize();
@@ -1353,12 +1400,11 @@ function drawMinimap(){
     ctx.fillStyle='#fa0';
     ctx.beginPath(); ctx.moveTo(0,-4);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3); ctx.closePath(); ctx.fill();
     ctx.restore();
-   }
-   function setupJoysticks(){
+  }
+  function setupJoysticks(){
     const joyMove=document.getElementById('joy-move');
     const knob=document.getElementById('joy-move-knob');
     const R=55;
-    
     function updateJoystick(x, y){
         let dx = x - mobile.joyMoveStart.x;
         let dy = y - mobile.joyMoveStart.y;
@@ -1372,8 +1418,6 @@ function drawMinimap(){
         const rect = joyMove.getBoundingClientRect();
         return {x: rect.left + rect.width/2, y: rect.top + rect.height/2};
     }
-    
-    // ===== TOUCH =====
     let activeTouchId = null;
     joyMove.addEventListener('touchstart', (e)=>{
         e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
@@ -1407,8 +1451,6 @@ function drawMinimap(){
     };
     joyMove.addEventListener('touchend', endTouch);
     joyMove.addEventListener('touchcancel', endTouch);
-    
-    // ===== МЫШЬ (ПК) =====
     let mouseActive = false;
     joyMove.addEventListener('mousedown', (e)=>{
         e.preventDefault(); e.stopPropagation();
@@ -1428,8 +1470,6 @@ function drawMinimap(){
             knob.style.transform = 'translate(-50%,-50%)';
         }
     });
-    
-    // ===== LOOK (touch справа) =====
     let lookTouchId = null;
     document.addEventListener('touchstart', (e)=>{
         if(e.target && e.target.closest){
@@ -1439,6 +1479,7 @@ function drawMinimap(){
             if(e.target.closest('.modal')) return;
             if(e.target.closest('#button-editor')) return;
             if(e.target.closest('#paused-msg')) return;
+            if(e.target.closest('#awp-scope')) return;
         }
         for(const t of e.changedTouches){
             if(lookTouchId === null && t.clientX > window.innerWidth * 0.3){
@@ -1456,7 +1497,7 @@ function drawMinimap(){
                 const dx = t.clientX - mobile.lookLast.x;
                 const dy = t.clientY - mobile.lookLast.y;
                 mobile.lookLast = {x: t.clientX, y: t.clientY};
-                const sens = BASE_LOOK * (playerData.sensitivity/8);
+                const sens = BASE_LOOK * (playerData.sensitivity/8) * (state.isAiming ? 0.5 : 1);
                 state.yaw -= dx * sens;
                 state.pitch -= dy * sens;
                 state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
@@ -1476,8 +1517,6 @@ function drawMinimap(){
     };
     document.addEventListener('touchend', endLook);
     document.addEventListener('touchcancel', endLook);
-    
-    // ===== LOOK (ПКМ мышь) =====
     let mouseLookActive = false;
     document.addEventListener('mousedown', (e)=>{
         if(e.button === 2){
@@ -1491,7 +1530,7 @@ function drawMinimap(){
             const dx = e.clientX - mobile.lookLast.x;
             const dy = e.clientY - mobile.lookLast.y;
             mobile.lookLast = {x: e.clientX, y: e.clientY};
-            const sens = BASE_LOOK * (playerData.sensitivity/8);
+            const sens = BASE_LOOK * (playerData.sensitivity/8) * (state.isAiming ? 0.5 : 1);
             state.yaw -= dx * sens;
             state.pitch -= dy * sens;
             state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
@@ -1524,16 +1563,73 @@ function setupButtons(){
         el.addEventListener('touchstart',(e)=>{ e.preventDefault(); e.stopPropagation(); fn(); },{passive:false});
     };
     hold('btn-fire',()=>{state.autoFire=true; if(!WEAPONS[playerData.equippedWeapon].auto) shoot();},()=>{state.autoFire=false;});
-    hold('btn-aim',()=>{state.isAiming=true; state.camera.fov=55; state.camera.updateProjectionMatrix();},()=>{state.isAiming=false; state.camera.fov=80; state.camera.updateProjectionMatrix();});
+    // ПРИЦЕЛ - открывает AWP-прицел если AWP, иначе стандартный zoom
+    hold('btn-aim',()=>{
+        if(playerData.equippedWeapon === 'awp'){
+            state.isAiming = true;
+            document.getElementById('awp-scope').classList.add('active');
+            document.getElementById('crosshair').style.opacity = '0';
+            state.camera.fov = 30;
+            state.camera.updateProjectionMatrix();
+        } else {
+            state.isAiming = true;
+            state.camera.fov = 55;
+            state.camera.updateProjectionMatrix();
+        }
+    },()=>{
+        if(playerData.equippedWeapon === 'awp'){
+            state.isAiming = false;
+            document.getElementById('awp-scope').classList.remove('active');
+            document.getElementById('crosshair').style.opacity = '0.95';
+            state.camera.fov = 80;
+            state.camera.updateProjectionMatrix();
+        } else {
+            state.isAiming = false;
+            state.camera.fov = 80;
+            state.camera.updateProjectionMatrix();
+        }
+    });
+    // КРЕСТИК ЗАКРЫТИЯ AWP-ПРИЦЕЛА
+    document.getElementById('awp-close-btn').addEventListener('click', (e)=>{
+        e.stopPropagation();
+        state.isAiming = false;
+        document.getElementById('awp-scope').classList.remove('active');
+        document.getElementById('crosshair').style.opacity = '0.95';
+        state.camera.fov = 80;
+        state.camera.updateProjectionMatrix();
+    });
+    document.getElementById('awp-close-btn').addEventListener('touchstart', (e)=>{
+        e.preventDefault(); e.stopPropagation();
+        state.isAiming = false;
+        document.getElementById('awp-scope').classList.remove('active');
+        document.getElementById('crosshair').style.opacity = '0.95';
+        state.camera.fov = 80;
+        state.camera.updateProjectionMatrix();
+    }, {passive:false});
     hold('btn-jump',()=>{if(state.canJump){state.velocity.y=JUMP_SPEED;state.canJump=false;}});
-    hold('btn-crouch',()=>{state.isCrouching=true;},()=>{state.isCrouching=false;});
+    // ПРИСЕД - toggle
+    tap('btn-crouch', ()=>{
+        state.isCrouching = !state.isCrouching;
+        const btn = document.getElementById('btn-crouch');
+        const down = document.getElementById('crouch-icon-down');
+        const up = document.getElementById('crouch-icon-up');
+        if(state.isCrouching){
+            btn.classList.add('active');
+            down.style.display = 'none';
+            up.style.display = 'block';
+        } else {
+            btn.classList.remove('active');
+            down.style.display = 'block';
+            up.style.display = 'none';
+        }
+    });
     hold('btn-sprint',()=>{state.keys.shift=true;},()=>{state.keys.shift=false;});
     tap('btn-reload',reload);
     tap('btn-swap',switchWeapon);
     tap('btn-pause',pauseGame);
     tap('btn-resume',resumeGame);
     tap('btn-leave',leaveGame);
-    tap('btn-settings-pause',()=>{ openOverlay('settings-overlay'); });
+    tap('btn-settings-pause',()=>{ initSettings(); openOverlay('settings-overlay'); });
     tap('btn-fullscreen',toggleFullscreen);
     tap('fs-toggle-btn',toggleFullscreen);
     tap('btn-return-menu',returnToMenu);
@@ -1581,6 +1677,7 @@ function startGame(){
     if(state.scene) destroyGame();
     state.keys={w:false,a:false,s:false,d:false,space:false,shift:false};
     state.hitMarkerTimer=0; state.hitFlashTimer=0;
+    state.isCrouching = false;
     createScene();
     const w=WEAPONS[playerData.equippedWeapon];
     state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
@@ -1594,8 +1691,15 @@ function startGame(){
     document.getElementById('map-name').textContent=MAPS[state.mapKey].name;
     document.getElementById('game-over').style.display='none';
     document.getElementById('paused-msg').style.display='none';
+    document.getElementById('awp-scope').classList.remove('active');
+    document.getElementById('crosshair').style.opacity = '0.95';
     state.renderer.domElement.style.display='block';
     applyButtonSettings(); applyButtonLayout();
+    updateDebugVisibility();
+    // сброс иконки приседа
+    document.getElementById('crouch-icon-down').style.display = 'block';
+    document.getElementById('crouch-icon-up').style.display = 'none';
+    document.getElementById('btn-crouch').classList.remove('active');
     state.clock.getDelta();
     checkOrientation();
     animate();
@@ -1624,6 +1728,7 @@ function returnToMenu(){
     destroyGame();
     hud.style.display='none';
     document.getElementById('game-over').style.display='none';
+    document.getElementById('awp-scope').classList.remove('active');
     menu.style.display='flex';
     updateProfileUI();
 }
@@ -1685,6 +1790,7 @@ setupButtons();
 checkOrientation();
 initSettings();
 applyButtonLayout();
+updateDebugVisibility();
 document.getElementById('play-btn').addEventListener('click',()=>{
     if(innerHeight>innerWidth){ checkOrientation(); return; }
     renderMapSelect();
@@ -1700,7 +1806,14 @@ document.addEventListener('keydown',e=>{
         case 'Space':state.keys.space=true;e.preventDefault();break;
         case 'ShiftLeft':state.keys.shift=true;break;
         case 'KeyR':reload();break;
-        case 'ControlLeft':case 'KeyC':state.isCrouching=true;break;
+        case 'ControlLeft':case 'KeyC':
+            state.isCrouching = !state.isCrouching;
+            const btn = document.getElementById('btn-crouch');
+            const down = document.getElementById('crouch-icon-down');
+            const up = document.getElementById('crouch-icon-up');
+            if(state.isCrouching){ btn.classList.add('active'); down.style.display='none'; up.style.display='block'; }
+            else { btn.classList.remove('active'); down.style.display='block'; up.style.display='none'; }
+            break;
         case 'Digit1':if(playerData.ownedWeapons.includes('pistol'))switchWeaponTo('pistol');break;
         case 'Digit2':if(playerData.ownedWeapons.includes('akr'))switchWeaponTo('akr');break;
         case 'Digit3':if(playerData.ownedWeapons.includes('awp'))switchWeaponTo('awp');break;
@@ -1712,10 +1825,8 @@ document.addEventListener('keyup',e=>{
         case 'KeyA':state.keys.a=false;break; case 'KeyD':state.keys.d=false;break;
         case 'Space':state.keys.space=false;break;
         case 'ShiftLeft':state.keys.shift=false;break;
-        case 'ControlLeft':case 'KeyC':state.isCrouching=false;break;
     }
 });
-// ПК: ЛКМ на пустом месте = стрельба
 document.addEventListener('mousedown', (e)=>{
     if(e.button !== 0) return;
     if(!state.scene || state.isGameOver || state.isPaused) return;
@@ -1726,6 +1837,7 @@ document.addEventListener('mousedown', (e)=>{
         if(e.target.closest('.modal')) return;
         if(e.target.closest('#paused-msg')) return;
         if(e.target.closest('#button-editor')) return;
+        if(e.target.closest('#awp-scope')) return;
     }
     shoot();
 });

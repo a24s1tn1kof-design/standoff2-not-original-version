@@ -522,9 +522,16 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 
 <input type="file" id="avatar-input" accept="image/*" style="display:none">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
 <script>
-   // ==== МОДАЛЬНЫЕ ОКНА ====
+  if (window.VConsole) { window.vConsole = new VConsole(); }
+  console.log('=== vConsole loaded ===');
+</script>
+<script src="https://unpkg.com/three@0.132.2/build/three.min.js"></script>
+<script>
+console.log('=== THREE loaded, version:', THREE ? THREE.REVISION : 'undefined', '===');
+
+// ==== МОДАЛЬНЫЕ ОКНА ====
 const modalQueue = [];
 let modalActive = false;
 function showModal(config){
@@ -573,21 +580,18 @@ function processModalQueue(){
 function myAlert(text, title = 'УВЕДОМЛЕНИЕ'){ return new Promise(resolve => showModal({type:'alert', title, text, onOk: resolve})); }
 function myConfirm(text, title = 'ПОДТВЕРЖДЕНИЕ'){ return new Promise(resolve => showModal({type:'confirm', title, text, onOk: ()=>resolve(true), onCancel: ()=>resolve(false)})); }
 function myPrompt(text, value = '', title = 'ВВОД', maxLength = 30){ return new Promise(resolve => showModal({type:'prompt', title, text, value, maxLength, onOk: (v)=>resolve(v), onCancel: ()=>resolve(null)})); }
+console.log('=== Модалки готовы ===');
 
-// ==== ОРУЖИЕ ====
 const WEAPONS = {
     knife:{name:'НОЖ',damage:55,headshotMult:3,rpm:120,magSize:999,reserveMax:999,reloadTime:0,auto:false,spread:0,range:2.5,model:'knife',isMelee:true},
     pistol:{name:'P-9 PISTOL',damage:25,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,range:60,model:'pistol'},
     akr:{name:'AKR-12',damage:35,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,range:80,model:'rifle'},
     awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,range:150,model:'sniper'}
 };
-
-// ==== КАРТЫ (generate заполнится ниже) ====
 const MAPS = {
     sandstone:{name:'SANDSTONE',desc:'Пустынная крепость.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:1.2,sunColor:0xffdd88,generate:null,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>',spawn:[15,15]},
     templ:{name:'TEMPL',desc:'Древний храм в горах.',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:1.2,sunColor:0xccddff,generate:null,icon:'<svg viewBox="0 0 24 24"><path d="M12 2L2 8h20zM4 10v10h2V10zm4 0v10h2V10zm4 0v10h2V10zm4 0v10h2V10zM2 22h20v-2H2z"/></svg>',spawn:[20,0]}
 };
-
 const SKINS = {
     akr_dust:{name:'AKR-12 | Пыль',weapon:'akr',rarity:'common',color:'#666',price:150},
     pistol_dust:{name:'P-9 | Пыль',weapon:'pistol',rarity:'common',color:'#666',price:100},
@@ -599,21 +603,18 @@ const SKINS = {
     awp_dragon:{name:'AWM | Дракон',weapon:'awp',rarity:'legendary',color:'#fa0',price:4000},
     knife_gold:{name:'Нож | Золото',weapon:'knife',rarity:'legendary',color:'#fa0',price:5000}
 };
-
 const RARITY = {
     common:{name:'ОБЫЧНЫЙ',color:'#888',chance:60},
     rare:{name:'РЕДКИЙ',color:'#4f4',chance:28},
     epic:{name:'ЭПИЧЕСКИЙ',color:'#a4f',chance:9},
     legendary:{name:'ЛЕГЕНДАРНЫЙ',color:'#fa0',chance:3}
 };
-
 const CASES = {
     free_case:{name:'БЕСПЛАТНЫЙ',price:0,rarity:'free',skins:['akr_dust','pistol_dust','akr_redline']},
     common_case:{name:'СТАНДАРТНЫЙ',price:500,rarity:'common',skins:['akr_dust','pistol_dust','akr_redline','pistol_redline']},
     rare_case:{name:'РЕДКИЙ',price:1500,rarity:'rare',skins:['akr_redline','pistol_redline','akr_neon','awp_neon']},
     legend_case:{name:'ЛЕГЕНДАРНЫЙ',price:3000,rarity:'legend',skins:['akr_neon','awp_neon','akr_dragon','awp_dragon','knife_gold']}
 };
-
 const playerData = {
     money:5000,totalKills:0,ownedWeapons:['knife','pistol','akr','awp'],equippedWeapon:'akr',
     playerId:'73396228',playerName:'Игрок',avatar:null,level:1,exp:0,
@@ -623,13 +624,12 @@ const playerData = {
     sensitivity:8,soundEnabled:true,vibeEnabled:true,showDebug:false,
     crosshair:{color:'#fa0',thickness:2,length:22,style:'cross'}
 };
-
 const state = {
     scene:null,camera:null,renderer:null,raycaster:null,clock:null,
     mapKey:'sandstone',magAmmo:0,reserveAmmo:0,health:100,maxHealth:100,
     score:0,sessionMoney:0,deaths:0,isReloading:false,isGameOver:false,isPaused:false,
     lastShootTime:0,enemies:[],colliders:[],bloodParticles:[],
-    velocity:new THREE.Vector3(),canJump:true,minimapCtx:null,
+    velocity:null,canJump:true,minimapCtx:null,
     weaponModel:null,muzzleFlash:null,autoFire:false,spawnPoints:[],
     isCrouching:false,isAiming:false,yaw:0,pitch:0,
     keys:{w:false,a:false,s:false,d:false,space:false,shift:false},
@@ -637,12 +637,11 @@ const state = {
     matchState:'idle',wave:0,totalKillsNeeded:30,currentWaveEnemies:0,waveTimer:0,
     recoilPitch:0,recoilYaw:0,isMoving:false,isShooting:false
 };
-
 const PLAYER_HEIGHT=1.7,PLAYER_RADIUS=.6,WORLD_SIZE=90,HALF_WORLD=WORLD_SIZE/2-2,
       GRAVITY=22,JUMP_SPEED=7,MOVE_SPEED=6,BASE_LOOK=0.004;
 const mobile = {moveX:0,moveY:0,joyMoveActive:false,joyMoveStart:{x:0,y:0},lookActive:false,lookId:null,lookLast:{x:0,y:0}};
-
-const SAVE_KEY = 'standoff_save_v16';
+const SAVE_KEY = 'standoff_save_v17';
+console.log('=== Константы готовы, state.mapKey =', state.mapKey, '===');
 function saveProfile(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){} }
 function loadProfile(){
     try { const s = localStorage.getItem(SAVE_KEY); if(s){ const p = JSON.parse(s); Object.keys(p).forEach(k=>{ if(k in playerData) playerData[k]=p[k]; }); } } catch(e){}
@@ -650,14 +649,12 @@ function loadProfile(){
     updateProfileUI();
     applyCrosshair();
 }
-
-// ==== ПРОФИЛЬ ====
 function updateProfileUI(){
     document.getElementById('p-id-val').textContent = playerData.playerId;
     document.getElementById('p-name').textContent = playerData.playerName;
     const av = document.getElementById('avatar');
-    if(playerData.avatar) av.innerHTML = `<img src="${playerData.avatar}">`;
-    else av.innerHTML = `<div class="avatar-default"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>`;
+    if(playerData.avatar) av.innerHTML = '<img src="'+playerData.avatar+'">';
+    else av.innerHTML = '<div class="avatar-default"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>';
     document.querySelector('#p-level .lv-badge').textContent = 'LVL ' + playerData.level;
     document.getElementById('p-exp').textContent = playerData.exp + ' / 100 EXP';
     document.querySelector('#p-level .lv-bar-fill').style.width = (playerData.exp) + '%';
@@ -668,13 +665,13 @@ function applyCrosshair(){
     const t = ch.thickness, l = ch.length;
     let css = '';
     if(ch.style === 'cross'){
-        css = `#crosshair::before{width:${t}px;height:${l}px;left:${11-t/2}px;top:${(22-l)/2}px}#crosshair::after{width:${l}px;height:${t}px;left:${(22-l)/2}px;top:${11-t/2}px}`;
+        css = '#crosshair::before{width:'+t+'px;height:'+l+'px;left:'+(11-t/2)+'px;top:'+((22-l)/2)+'px}#crosshair::after{width:'+l+'px;height:'+t+'px;left:'+((22-l)/2)+'px;top:'+(11-t/2)+'px}';
     } else if(ch.style === 'dot'){
-        css = `#crosshair::before{width:${t+2}px;height:${t+2}px;left:${10-t/2}px;top:${10-t/2}px;border-radius:50%}#crosshair::after{display:none}`;
+        css = '#crosshair::before{width:'+(t+2)+'px;height:'+(t+2)+'px;left:'+(10-t/2)+'px;top:'+(10-t/2)+'px;border-radius:50%}#crosshair::after{display:none}';
     } else if(ch.style === 'cross-dot'){
-        css = `#crosshair::before{width:${t}px;height:${l}px;left:${11-t/2}px;top:${(22-l)/2}px}#crosshair::after{width:${l}px;height:${t}px;left:${(22-l)/2}px;top:${11-t/2}px}`;
+        css = '#crosshair::before{width:'+t+'px;height:'+l+'px;left:'+(11-t/2)+'px;top:'+((22-l)/2)+'px}#crosshair::after{width:'+l+'px;height:'+t+'px;left:'+((22-l)/2)+'px;top:'+(11-t/2)+'px}';
     } else if(ch.style === 'circle'){
-        css = `#crosshair::before{width:${l}px;height:${l}px;left:${11-l/2}px;top:${11-l/2}px;background:transparent;border:${t}px solid ${ch.color};border-radius:50%}#crosshair::after{display:none}`;
+        css = '#crosshair::before{width:'+l+'px;height:'+l+'px;left:'+(11-l/2)+'px;top:'+(11-l/2)+'px;background:transparent;border:'+t+'px solid '+ch.color+';border-radius:50%}#crosshair::after{display:none}';
     }
     let styleEl = document.getElementById('ch-dynamic-style');
     if(!styleEl){ styleEl = document.createElement('style'); styleEl.id = 'ch-dynamic-style'; document.head.appendChild(styleEl); }
@@ -700,13 +697,13 @@ async function claimDailyReward(){
     const now = Date.now();
     if(now - playerData.lastDailyReward < 86400000){
         const h = Math.ceil((86400000 - (now - playerData.lastDailyReward))/3600000);
-        await myAlert(`Награда будет доступна через ${h} ч.`, 'ПОДОЖДИТЕ'); return;
+        await myAlert('Награда будет доступна через '+h+' ч.', 'ПОДОЖДИТЕ'); return;
     }
     const reward = 500 + Math.floor(Math.random()*500);
     playerData.money += reward;
     playerData.lastDailyReward = now;
     saveProfile();
-    await myAlert(`Получено ${reward}$!`, 'НАГРАДА');
+    await myAlert('Получено '+reward+'$!', 'НАГРАДА');
 }
 function closeOverlay(id){ const el = document.getElementById(id); if(el) el.style.display='none'; }
 function openOverlay(id){ const el = document.getElementById(id); if(el) el.style.display='flex'; }
@@ -723,8 +720,8 @@ document.querySelectorAll('.overlay-close').forEach(btn=>{
     btn.addEventListener('click', handler, true);
 });
 document.getElementById('get-reward-btn').addEventListener('click', claimDailyReward);
+console.log('=== Профиль готов ===');
 
-// ==== КЕЙСЫ ====
 function renderCases(){
     const grid = document.getElementById('cases-grid'); if(!grid) return;
     grid.innerHTML = '';
@@ -736,7 +733,7 @@ function renderCases(){
         const card = document.createElement('div');
         card.className = 'case-card';
         card.style.opacity = canOpen ? '1' : '.55';
-        card.innerHTML = `<div class="case-icon"><svg viewBox="0 0 24 24" style="color:${isFree?'#4f4':'#fa0'}"><path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="case-name">${c.name}</div><div class="case-price">${isFree ? '<span style="color:#4f4">БЕСПЛАТНО</span>' : `${c.price} $`}</div><div style="font-size:9px;color:#666;margin-top:4px">${c.skins.length} предметов</div>`;
+        card.innerHTML = '<div class="case-icon"><svg viewBox="0 0 24 24" style="color:'+(isFree?'#4f4':'#fa0')+'"><path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="case-name">'+c.name+'</div><div class="case-price">'+(isFree ? '<span style="color:#4f4">БЕСПЛАТНО</span>' : c.price + ' $')+'</div>';
         card.onclick = ()=>{
             if(!canOpen){ myAlert(isFree ? 'Бесплатный кейс раз в час!' : 'Недостаточно денег!', 'НЕДОСТУПНО'); return; }
             openCase(key);
@@ -776,7 +773,7 @@ function renderRoulette(items, winner, caseInfo){
         const s = SKINS[id];
         const el = document.createElement('div');
         el.className = 'roulette-item ' + s.rarity;
-        el.innerHTML = `<div class="ri-icon" style="color:${s.color}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="ri-name">${s.name}</div>`;
+        el.innerHTML = '<div class="ri-icon" style="color:'+s.color+'"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="ri-name">'+s.name+'</div>';
         strip.appendChild(el);
     });
     document.getElementById('roulette-title').textContent = caseInfo.name;
@@ -787,7 +784,7 @@ function renderRoulette(items, winner, caseInfo){
     const offset = (Math.random() - 0.5) * 60;
     requestAnimationFrame(()=>{
         strip.style.transition = 'transform 4s cubic-bezier(.15,.7,.3,1)';
-        strip.style.transform = `translateX(${targetX + offset}px)`;
+        strip.style.transform = 'translateX('+(targetX + offset)+'px)';
     });
     setTimeout(()=>{
         if(!playerData.ownedSkins.includes(winner)) playerData.ownedSkins.push(winner);
@@ -795,7 +792,7 @@ function renderRoulette(items, winner, caseInfo){
         const s = SKINS[winner];
         const result = document.getElementById('case-result');
         result.className = s.rarity;
-        result.querySelector('.result-icon').innerHTML = `<svg viewBox="0 0 24 24" style="color:${s.color}"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg>`;
+        result.querySelector('.result-icon').innerHTML = '<svg viewBox="0 0 24 24" style="color:'+s.color+'"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg>';
         result.querySelector('.result-name').textContent = s.name;
         result.querySelector('.result-rarity').textContent = RARITY[s.rarity].name;
         result.classList.add('show');
@@ -803,8 +800,6 @@ function renderRoulette(items, winner, caseInfo){
 }
 function closeRoulette(){ document.getElementById('case-roulette').style.display = 'none'; renderCases(); }
 document.getElementById('btn-close-roulette').addEventListener('click', closeRoulette);
-
-// ==== ИНВЕНТАРЬ ====
 let invFilter = 'all';
 function renderInventory(){
     const grid = document.getElementById('inventory-grid'); if(!grid) return;
@@ -812,7 +807,7 @@ function renderInventory(){
     let skins = playerData.ownedSkins || [];
     if(invFilter !== 'all') skins = skins.filter(id => SKINS[id] && SKINS[id].rarity === invFilter);
     if(skins.length === 0){
-        grid.innerHTML = '<div class="inv-empty" style="grid-column:1/-1">Инвентарь пуст<br><span style="font-size:11px;color:#555">Открой кейсы чтобы получить скины</span></div>';
+        grid.innerHTML = '<div class="inv-empty" style="grid-column:1/-1">Инвентарь пуст</div>';
         return;
     }
     skins.forEach(id => {
@@ -820,7 +815,7 @@ function renderInventory(){
         const equipped = playerData.equippedSkins[s.weapon] === id;
         const card = document.createElement('div');
         card.className = 'inv-item ' + s.rarity;
-        card.innerHTML = `${equipped ? '<div class="inv-equipped">✔</div>' : ''}<div class="inv-icon" style="color:${s.color}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="inv-name">${s.name}</div><div class="inv-weapon">${WEAPONS[s.weapon].name}</div><div class="inv-rarity" style="color:${s.color}">${RARITY[s.rarity].name}</div><div class="inv-price">💰 ${s.price}$</div>`;
+        card.innerHTML = (equipped ? '<div class="inv-equipped">✔</div>' : '')+'<div class="inv-icon" style="color:'+s.color+'"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="inv-name">'+s.name+'</div><div class="inv-weapon">'+WEAPONS[s.weapon].name+'</div><div class="inv-rarity" style="color:'+s.color+'">'+RARITY[s.rarity].name+'</div><div class="inv-price">💰 '+s.price+'$</div>';
         card.onclick = ()=> openSkinModal(id);
         grid.appendChild(card);
     });
@@ -830,13 +825,13 @@ function openSkinModal(skinId){
     currentSkinId = skinId;
     const s = SKINS[skinId]; if(!s) return;
     const m = document.getElementById('modal-skin');
-    document.getElementById('skin-preview-icon').innerHTML = `<svg viewBox="0 0 24 24" style="color:${s.color}"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg>`;
+    document.getElementById('skin-preview-icon').innerHTML = '<svg viewBox="0 0 24 24" style="color:'+s.color+'"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg>';
     document.getElementById('skin-modal-name').textContent = s.name;
     document.getElementById('skin-modal-name').style.color = s.color;
     document.getElementById('skin-modal-weapon').textContent = WEAPONS[s.weapon].name;
     document.getElementById('skin-modal-rarity').textContent = RARITY[s.rarity].name;
     document.getElementById('skin-modal-rarity').style.color = s.color;
-    document.getElementById('skin-modal-price').textContent = `Цена продажи: ${s.price}$`;
+    document.getElementById('skin-modal-price').textContent = 'Цена продажи: ' + s.price + '$';
     const equipped = playerData.equippedSkins[s.weapon] === skinId;
     document.getElementById('skin-modal-equip').textContent = equipped ? 'СНЯТЬ' : 'ВЫБРАТЬ';
     m.classList.add('show');
@@ -855,14 +850,14 @@ document.getElementById('skin-modal-sell').addEventListener('click', async ()=>{
     const s = SKINS[skinId];
     const m = document.getElementById('modal-skin');
     m.classList.remove('show');
-    const ok = await myConfirm(`Продать "${s.name}" за ${s.price}$?`, 'ПРОДАЖА');
+    const ok = await myConfirm('Продать "'+s.name+'" за '+s.price+'$?', 'ПРОДАЖА');
     if(!ok) return;
     const idx = playerData.ownedSkins.indexOf(skinId);
     if(idx > -1) playerData.ownedSkins.splice(idx, 1);
     if(playerData.equippedSkins[s.weapon] === skinId) delete playerData.equippedSkins[s.weapon];
     playerData.money += s.price;
     saveProfile(); renderInventory(); updateProfileUI();
-    myAlert(`Продано за ${s.price}$!\nБаланс: ${playerData.money}$`, 'ПРОДАЖА');
+    myAlert('Продано за '+s.price+'$!\nБаланс: '+playerData.money+'$', 'ПРОДАЖА');
 });
 document.querySelectorAll('.inv-tab').forEach(tab=>{
     tab.addEventListener('click', ()=>{
@@ -872,15 +867,15 @@ document.querySelectorAll('.inv-tab').forEach(tab=>{
         renderInventory();
     });
 });
+console.log('=== Кейсы и инвентарь готовы ===');
 
-// ==== КЛАНЫ ====
 function renderClans(){
     const grid = document.getElementById('clans-grid'); if(!grid) return;
     grid.innerHTML = '';
     if(playerData.clanName){
         const cur = document.createElement('div');
-        cur.style.cssText = `background:linear-gradient(135deg,rgba(40,30,10,.9),rgba(20,20,35,.9));border:2px solid ${playerData.clanColor||'#fa0'};border-radius:10px;padding:14px;max-width:500px;margin:0 auto 12px;width:100%;text-align:center`;
-        cur.innerHTML = `<div style="font-size:16px;font-weight:bold;color:${playerData.clanColor||'#fa0'};letter-spacing:2px">${playerData.clanName}</div><div style="font-size:11px;color:#888;margin:4px 0">${playerData.clanTag||'—'}</div><button id="btn-leave-clan" style="margin-top:8px;padding:8px 20px;background:#a22;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer">ПОКИНУТЬ КЛАН</button>`;
+        cur.style.cssText = 'background:linear-gradient(135deg,rgba(40,30,10,.9),rgba(20,20,35,.9));border:2px solid '+(playerData.clanColor||'#fa0')+';border-radius:10px;padding:14px;max-width:500px;margin:0 auto 12px;width:100%;text-align:center';
+        cur.innerHTML = '<div style="font-size:16px;font-weight:bold;color:'+(playerData.clanColor||'#fa0')+';letter-spacing:2px">'+playerData.clanName+'</div><div style="font-size:11px;color:#888;margin:4px 0">'+(playerData.clanTag||'—')+'</div><button id="btn-leave-clan" style="margin-top:8px;padding:8px 20px;background:#a22;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer">ПОКИНУТЬ КЛАН</button>';
         grid.appendChild(cur);
         setTimeout(()=>{ const b = document.getElementById('btn-leave-clan'); if(b) b.onclick = leaveClan; }, 0);
     } else {
@@ -894,7 +889,7 @@ function renderClans(){
         item.className = 'clan-item';
         item.style.borderColor = playerData.clanTag === c.tag ? c.color : '#333';
         const initials = c.tag.replace(/[\[\]]/g,'').slice(0,2);
-        item.innerHTML = `<div class="ci-emblem" style="background:${c.color}">${initials}</div><div class="ci-info"><div class="ci-name" style="color:${c.color}">${c.name}</div><div class="ci-desc">${c.tag}</div></div>`;
+        item.innerHTML = '<div class="ci-emblem" style="background:'+c.color+'">'+initials+'</div><div class="ci-info"><div class="ci-name" style="color:'+c.color+'">'+c.name+'</div><div class="ci-desc">'+c.tag+'</div></div>';
         item.onclick = ()=> joinClan(c);
         grid.appendChild(item);
     });
@@ -902,7 +897,7 @@ function renderClans(){
 function joinClan(c){
     playerData.clanName = c.name; playerData.clanTag = c.tag; playerData.clanColor = c.color;
     saveProfile(); renderClans();
-    myAlert(`Клан: ${c.name}`, 'ВСТУПЛЕНИЕ');
+    myAlert('Клан: '+c.name, 'ВСТУПЛЕНИЕ');
 }
 function leaveClan(){
     playerData.clanName = null; playerData.clanTag = '—'; playerData.clanColor = '#888';
@@ -923,7 +918,6 @@ async function createClan(){
 }
 document.getElementById('btn-create-clan').addEventListener('click', createClan);
 
-// ==== НАСТРОЙКИ ====
 function initSettings(){
     document.getElementById('set-sens').value = playerData.sensitivity;
     document.getElementById('set-sens-val').textContent = playerData.sensitivity;
@@ -951,13 +945,13 @@ function updateCrosshairPreview(){
     p.style.setProperty('--cc', ch.color);
     let innerHTML = '';
     if(ch.style === 'cross'){
-        innerHTML = `<div class="ch-h" style="width:${ch.thickness}px;height:${ch.length}px"></div><div class="ch-v" style="width:${ch.length}px;height:${ch.thickness}px"></div>`;
+        innerHTML = '<div class="ch-h" style="width:'+ch.thickness+'px;height:'+ch.length+'px"></div><div class="ch-v" style="width:'+ch.length+'px;height:'+ch.thickness+'px"></div>';
     } else if(ch.style === 'dot'){
-        innerHTML = `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:${ch.thickness+2}px;height:${ch.thickness+2}px;background:${ch.color};border-radius:50%"></div>`;
+        innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:'+(ch.thickness+2)+'px;height:'+(ch.thickness+2)+'px;background:'+ch.color+';border-radius:50%"></div>';
     } else if(ch.style === 'cross-dot'){
-        innerHTML = `<div class="ch-h" style="width:${ch.thickness}px;height:${ch.length}px"></div><div class="ch-v" style="width:${ch.length}px;height:${ch.thickness}px"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:${ch.thickness+2}px;height:${ch.thickness+2}px;background:${ch.color};border-radius:50%"></div>`;
+        innerHTML = '<div class="ch-h" style="width:'+ch.thickness+'px;height:'+ch.length+'px"></div><div class="ch-v" style="width:'+ch.length+'px;height:'+ch.thickness+'px"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:'+(ch.thickness+2)+'px;height:'+(ch.thickness+2)+'px;background:'+ch.color+';border-radius:50%"></div>';
     } else if(ch.style === 'circle'){
-        innerHTML = `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:${ch.length}px;height:${ch.length}px;border:${ch.thickness}px solid ${ch.color};border-radius:50%"></div>`;
+        innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:'+ch.length+'px;height:'+ch.length+'px;border:'+ch.thickness+'px solid '+ch.color+';border-radius:50%"></div>';
     }
     p.innerHTML = innerHTML;
 }
@@ -996,8 +990,6 @@ function applyButtonSettings(){
         });
     }
 }
-
-// ==== РЕДАКТОР КНОПОК ====
 let editorState = { active:false, selected:null, dragging:null, layout:{} };
 const EDITOR_BTNS = ['minimap','fire-zone','joy-move','btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen'];
 const BTN_LABELS = {'minimap':'МИНИКАРТА','fire-zone':'ЗОНА СТРЕЛЬБЫ','joy-move':'ДЖОЙСТИК','btn-fire':'ОГОНЬ','btn-aim':'ПРИЦЕЛ','btn-jump':'ПРЫЖОК','btn-crouch':'ПРИСЕД','btn-reload':'ПЕРЕЗАР','btn-swap':'СМЕНА','btn-sprint':'БЕГ','btn-pause':'ПАУЗА','btn-fullscreen':'ФУЛЛСКРИН'};
@@ -1022,7 +1014,7 @@ function openButtonEditor(){
     });
     const sizePanel = document.createElement('div');
     sizePanel.className = 'editor-size-controls';
-    sizePanel.innerHTML = `<button id="ed-size-down">−</button><span class="editor-size-label">РАЗМЕР: <span id="ed-size-label">—</span></span><button id="ed-size-up">+</button>`;
+    sizePanel.innerHTML = '<button id="ed-size-down">−</button><span class="editor-size-label">РАЗМЕР: <span id="ed-size-label">—</span></span><button id="ed-size-up">+</button>';
     editor.appendChild(sizePanel);
     document.getElementById('ed-size-down').onclick = ()=> changeSize(-6);
     document.getElementById('ed-size-up').onclick = ()=> changeSize(6);
@@ -1049,7 +1041,7 @@ function selectEditorBtn(id){
 }
 function changeSize(delta){
     if(!editorState.selected) return;
-    const el = document.querySelector(`.editor-btn[data-id="${editorState.selected}"]`);
+    const el = document.querySelector('.editor-btn[data-id="'+editorState.selected+'"]');
     if(!el) return;
     const cur = editorState.layout[editorState.selected].size;
     const ns = Math.max(30, Math.min(300, cur + delta));
@@ -1062,14 +1054,14 @@ function startDragEditor(e, id){
     e.preventDefault(); e.stopPropagation();
     selectEditorBtn(id);
     const t = e.touches ? e.touches[0] : e;
-    const el = document.querySelector(`.editor-btn[data-id="${id}"]`);
+    const el = document.querySelector('.editor-btn[data-id="'+id+'"]');
     if(!el) return;
     editorState.dragging = { id, ox: t.clientX - el.offsetLeft, oy: t.clientY - el.offsetTop };
 }
 function editorMoveHandler(e){
     if(!editorState.active || !editorState.dragging) return;
     const t = e.touches ? e.touches[0] : e;
-    const el = document.querySelector(`.editor-btn[data-id="${editorState.dragging.id}"]`);
+    const el = document.querySelector('.editor-btn[data-id="'+editorState.dragging.id+'"]');
     if(el){
         const nx = t.clientX - editorState.dragging.ox;
         const ny = t.clientY - editorState.dragging.oy;
@@ -1088,7 +1080,7 @@ function closeButtonEditor(){ editorState.active = false; document.getElementByI
 function saveButtonEditor(){
     const layout = {};
     Object.entries(editorState.layout).forEach(([id, pos])=>{
-        const el = document.querySelector(`.editor-btn[data-id="${id}"]`);
+        const el = document.querySelector('.editor-btn[data-id="'+id+'"]');
         if(el){ layout[id] = { x: Math.round(parseFloat(el.style.left) || 0), y: Math.round(parseFloat(el.style.top) || 0), size: el.offsetWidth }; }
     });
     playerData.buttonLayout = layout;
@@ -1124,9 +1116,9 @@ document.getElementById('btn-open-editor').addEventListener('click', openButtonE
 document.getElementById('btn-reset-layout').addEventListener('click', resetButtonLayout);
 document.getElementById('btn-reset-data').addEventListener('click', resetAllData);
 
-// ==== КАРТЫ ====
 function addCollider(x,y,z,w,h,d){state.colliders.push({min:new THREE.Vector3(x-w/2,y-h/2,z-d/2),max:new THREE.Vector3(x+w/2,y+h/2,z+d/2)});}
-function addBox(x,y,z,w,h,d,mat,collide=true){
+function addBox(x,y,z,w,h,d,mat,collide){
+    if(collide === undefined) collide = true;
     const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
     m.position.set(x,y,z); m.receiveShadow=true;
     state.scene.add(m);
@@ -1134,6 +1126,7 @@ function addBox(x,y,z,w,h,d,mat,collide=true){
     return m;
 }
 function buildSandstone(){
+    console.log('>>> buildSandstone START');
     const map=MAPS.sandstone, scene=state.scene;
     const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.95}));
     g.rotation.x=-Math.PI/2; g.receiveShadow=true; scene.add(g);
@@ -1154,8 +1147,10 @@ function buildSandstone(){
         addCollider(x,3.5,z,1,7,1);
     });
     state.spawnPoints=[[-35,-35],[35,-35],[-35,35],[35,35],[-30,0],[30,0],[0,-30],[0,30]];
+    console.log('>>> buildSandstone DONE, objects:', scene.children.length);
 }
 function buildTempl(){
+    console.log('>>> buildTempl START');
     const map=MAPS.templ, scene=state.scene;
     const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.9}));
     g.rotation.x=-Math.PI/2; g.receiveShadow=true; scene.add(g);
@@ -1180,58 +1175,61 @@ function buildTempl(){
     const corMat=new THREE.MeshStandardMaterial({color:0x4a5a70,roughness:.75});
     [[-25,-25,3,5,20],[25,-25,3,5,20],[-25,25,3,5,20],[25,25,3,5,20]].forEach(([x,z,w,h,d])=>addBox(x,h/2,z,w,h,d,corMat));
     state.spawnPoints=[[-38,-38],[38,-38],[-38,38],[38,38],[-30,0],[30,0],[0,-30],[0,30]];
+    console.log('>>> buildTempl DONE, objects:', scene.children.length);
 }
-// ПРИВЯЗЫВАЕМ ФУНКЦИИ ГЕНЕРАЦИИ К КАРТАМ
 MAPS.sandstone.generate = buildSandstone;
 MAPS.templ.generate = buildTempl;
-console.log('=== ЧАСТЬ 2 ЗАГРУЖЕНА, MAPS настроены ===');
-    // ==== СЦЕНА ====
+console.log('=== Карты готовы к использованию ===');
+
 function createScene(){
-    console.log('createScene START');
-    const map=MAPS[state.mapKey];
-    state.scene=new THREE.Scene();
-    state.scene.background=new THREE.Color(map.skyColor);
-    state.scene.fog=new THREE.Fog(map.fogColor,5,map.fogFar);
-    state.camera=new THREE.PerspectiveCamera(80,innerWidth/innerHeight,.1,500);
-    const sp = map.spawn || [15,15];
-    state.camera.position.set(sp[0],PLAYER_HEIGHT,sp[1]);
-    state.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
-    console.log('WebGLRenderer OK');
-    state.renderer.setSize(innerWidth,innerHeight);
-    const pr = devicePixelRatio > 1.5 ? 1.5 : devicePixelRatio;
-    state.renderer.setPixelRatio(pr);
-    state.renderer.shadowMap.enabled=true;
-    state.renderer.shadowMap.type=THREE.PCFShadowMap;
-    state.renderer.domElement.style.display='block';
-    state.renderer.domElement.style.position='fixed';
-    state.renderer.domElement.style.top='0';
-    state.renderer.domElement.style.left='0';
-    state.renderer.domElement.style.zIndex='1';
-    document.body.appendChild(state.renderer.domElement);
-    console.log('Canvas appended');
-    state.scene.add(state.camera);
-    state.raycaster=new THREE.Raycaster();
-    state.clock=new THREE.Clock();
-    state.yaw=0; state.pitch=0;
-    state.muzzleFlashTimer=0; state.hitMarkerTimer=0; state.hitFlashTimer=0;
-    state.recoilPitch=0; state.recoilYaw=0;
-    state.scene.add(new THREE.AmbientLight(map.ambient,map.ambientIntensity));
-    const sun=new THREE.DirectionalLight(map.sunColor,1.2);
-    sun.position.set(30,40,20); sun.castShadow=false;
-    state.scene.add(sun);
-    state.scene.add(new THREE.HemisphereLight(map.skyColor, map.groundColor, 0.6));
-    state.colliders=[]; state.spawnPoints=[];
-    console.log('Before map.generate, generate type:', typeof map.generate);
+    console.log('=== createScene START ===');
     try {
+        const map=MAPS[state.mapKey];
+        console.log('Map key:', state.mapKey, 'Map:', map ? map.name : 'UNDEFINED', 'generate:', typeof map.generate);
+        state.scene=new THREE.Scene();
+        state.scene.background=new THREE.Color(map.skyColor);
+        state.scene.fog=new THREE.Fog(map.fogColor,5,map.fogFar);
+        state.camera=new THREE.PerspectiveCamera(80,innerWidth/innerHeight,.1,500);
+        const sp = map.spawn || [15,15];
+        state.camera.position.set(sp[0],PLAYER_HEIGHT,sp[1]);
+        state.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+        console.log('WebGLRenderer created');
+        state.renderer.setSize(innerWidth,innerHeight);
+        const pr = devicePixelRatio > 1.5 ? 1.5 : devicePixelRatio;
+        state.renderer.setPixelRatio(pr);
+        state.renderer.shadowMap.enabled=true;
+        state.renderer.shadowMap.type=THREE.PCFShadowMap;
+        state.renderer.domElement.style.display='block';
+        state.renderer.domElement.style.position='fixed';
+        state.renderer.domElement.style.top='0';
+        state.renderer.domElement.style.left='0';
+        state.renderer.domElement.style.zIndex='1';
+        document.body.appendChild(state.renderer.domElement);
+        console.log('Canvas appended to body');
+        state.scene.add(state.camera);
+        state.raycaster=new THREE.Raycaster();
+        state.clock=new THREE.Clock();
+        state.yaw=0; state.pitch=0;
+        state.muzzleFlashTimer=0; state.hitMarkerTimer=0; state.hitFlashTimer=0;
+        state.recoilPitch=0; state.recoilYaw=0;
+        state.velocity=new THREE.Vector3();
+        state.scene.add(new THREE.AmbientLight(map.ambient,map.ambientIntensity));
+        const sun=new THREE.DirectionalLight(map.sunColor,1.2);
+        sun.position.set(30,40,20); sun.castShadow=false;
+        state.scene.add(sun);
+        state.scene.add(new THREE.HemisphereLight(map.skyColor, map.groundColor, 0.6));
+        state.colliders=[]; state.spawnPoints=[];
+        console.log('Before map.generate');
         map.generate();
-        console.log('Map generated! Objects:', state.scene.children.length, 'Colliders:', state.colliders.length);
+        console.log('Map generated! Total objects:', state.scene.children.length, 'Colliders:', state.colliders.length);
+        createWeaponModel();
+        state.minimapCtx=document.getElementById('minimap-canvas').getContext('2d');
+        updateCameraFromYawPitch();
+        console.log('=== createScene DONE ===');
     } catch(err){
-        console.error('MAP GENERATE ERROR:', err);
+        console.error('!!! createScene ERROR:', err);
+        alert('Ошибка сцены: ' + err.message);
     }
-    createWeaponModel();
-    state.minimapCtx=document.getElementById('minimap-canvas').getContext('2d');
-    updateCameraFromYawPitch();
-    console.log('createScene DONE');
 }
 function updateCameraFromYawPitch(){
     const e = new THREE.Euler(state.pitch + state.recoilPitch, state.yaw + state.recoilYaw, 0, 'YXZ');
@@ -1248,9 +1246,7 @@ function createWeaponModel(){
     const bladeMat=new THREE.MeshStandardMaterial({color:0xc0c0c0,metalness:.9,roughness:.2});
     if(wData.model==='knife'){
         const blade=new THREE.Mesh(new THREE.BoxGeometry(.04,.02,.28),bladeMat); blade.position.set(0,.01,-.18); g.add(blade);
-        const bladeTip=new THREE.Mesh(new THREE.ConeGeometry(.02,.08,4),bladeMat); bladeTip.rotation.x=-Math.PI/2; bladeTip.position.set(0,.01,-.36); g.add(bladeTip);
         const handle=new THREE.Mesh(new THREE.BoxGeometry(.05,.05,.14),grip); handle.position.set(0,-.01,.02); g.add(handle);
-        const guard=new THREE.Mesh(new THREE.BoxGeometry(.09,.02,.02),accent); guard.position.set(0,0,-.08); g.add(guard);
     } else if(wData.model==='pistol'){
         const s=new THREE.Mesh(new THREE.BoxGeometry(.08,.09,.34),dark); s.position.set(0,0,-.15); g.add(s);
         const b=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.12,8),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.34); g.add(b);
@@ -1339,8 +1335,7 @@ function shoot(){
     state.raycaster.far=w.range;
     const targets=[];
     state.enemies.forEach(e=>{targets.push(e.userData.body,e.userData.head);});
-    const meshes = state.scene.children.filter(c => c.isMesh && c.geometry && c.geometry.type === 'BoxGeometry');
-    const allHits = state.raycaster.intersectObjects([...targets, ...meshes], false);
+    const allHits = state.raycaster.intersectObjects(targets, false);
     if(allHits.length>0){
         const hit=allHits[0];
         let enemy=null, isHead=false;
@@ -1356,8 +1351,6 @@ function shoot(){
             state.hitMarkerTimer=0.08;
             spawnParticles(hit.point,0xff2222,6);
             if(enemy.userData.hp<=0) killEnemy(enemy,isHead);
-        } else {
-            spawnParticles(hit.point,0xffaa00,4);
         }
     }
     if(state.magAmmo===0&&state.reserveAmmo>0) reload();
@@ -1396,7 +1389,7 @@ function killEnemy(e,isHead){
 function addKillfeed(text,reward){
     const kf=document.getElementById('killfeed');
     const m=document.createElement('div'); m.className='kill-msg';
-    m.innerHTML=`<span style="color:#fa0">${text}</span> +${reward}$`;
+    m.innerHTML='<span style="color:#fa0">'+text+'</span> +'+reward+'$';
     kf.appendChild(m);
     setTimeout(()=>m.remove(),3000);
 }
@@ -1418,8 +1411,8 @@ function reload(){
 function updateAmmoUI(){
     const w=WEAPONS[playerData.equippedWeapon];
     document.getElementById('weapon-name').textContent=w.name;
-    if(w.isMelee) document.getElementById('ammo').innerHTML = `∞`;
-    else document.getElementById('ammo').innerHTML=`${state.magAmmo}<span class="res">/${state.reserveAmmo}</span>`;
+    if(w.isMelee) document.getElementById('ammo').innerHTML = '∞';
+    else document.getElementById('ammo').innerHTML=state.magAmmo+'<span class="res">/'+state.reserveAmmo+'</span>';
 }
 function switchWeapon(){
     const list=playerData.ownedWeapons;
@@ -1470,7 +1463,7 @@ function updateMovement(dt){
     if(mobile.joyMoveActive){ ix+=mobile.moveX; iz-=mobile.moveY; }
     if(playerData.showDebug){
         const dbg = document.getElementById('debug-hud');
-        if(dbg) dbg.textContent = `JOY:${mobile.joyMoveActive?'ON':'off'} X:${mobile.moveX.toFixed(2)} Y:${mobile.moveY.toFixed(2)}\nix:${ix.toFixed(2)} iz:${iz.toFixed(2)}\npos:${state.camera.position.x.toFixed(1)},${state.camera.position.z.toFixed(1)}`;
+        if(dbg) dbg.textContent = 'JOY:'+(mobile.joyMoveActive?'ON':'off')+' X:'+mobile.moveX.toFixed(2)+' Y:'+mobile.moveY.toFixed(2)+'\nix:'+ix.toFixed(2)+' iz:'+iz.toFixed(2)+'\npos:'+state.camera.position.x.toFixed(1)+','+state.camera.position.z.toFixed(1);
     }
     if(ix!==0||iz!==0){
         mv.addScaledVector(right,ix); mv.addScaledVector(fwd,iz);
@@ -1546,7 +1539,6 @@ function drawMinimap(){
     ctx.beginPath(); ctx.moveTo(0,-4);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3); ctx.closePath(); ctx.fill();
     ctx.restore();
 }
-// ==== ДЖОЙСТИКИ ====
 function setupJoysticks(){
     const joyMove=document.getElementById('joy-move');
     const knob=document.getElementById('joy-move-knob');
@@ -1556,7 +1548,7 @@ function setupJoysticks(){
         let dy = y - mobile.joyMoveStart.y;
         const dist = Math.hypot(dx, dy);
         if(dist > R){ dx = dx/dist*R; dy = dy/dist*R; }
-        knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        knob.style.transform = 'translate(calc(-50% + '+dx+'px), calc(-50% + '+dy+'px))';
         mobile.moveX = dx/R;
         mobile.moveY = dy/R;
     }
@@ -1594,23 +1586,6 @@ function setupJoysticks(){
     };
     joyMove.addEventListener('touchend', endTouch);
     joyMove.addEventListener('touchcancel', endTouch);
-    let mouseActive = false;
-    joyMove.addEventListener('mousedown', (e)=>{
-        e.preventDefault(); e.stopPropagation();
-        mouseActive = true;
-        mobile.joyMoveActive = true;
-        mobile.joyMoveStart = getCenter();
-        updateJoystick(e.clientX, e.clientY);
-    });
-    document.addEventListener('mousemove', (e)=>{ if(mouseActive) updateJoystick(e.clientX, e.clientY); });
-    document.addEventListener('mouseup', ()=>{
-        if(mouseActive){
-            mouseActive = false;
-            mobile.joyMoveActive = false;
-            mobile.moveX = 0; mobile.moveY = 0;
-            knob.style.transform = 'translate(-50%,-50%)';
-        }
-    });
     let lookTouchId = null;
     document.addEventListener('touchstart', (e)=>{
         if(e.target && e.target.closest){
@@ -1660,30 +1635,6 @@ function setupJoysticks(){
     };
     document.addEventListener('touchend', endLook);
     document.addEventListener('touchcancel', endLook);
-    let mouseLookActive = false;
-    document.addEventListener('mousedown', (e)=>{
-        if(e.button === 2){
-            if(e.target && e.target.closest && (e.target.closest('#joy-move') || e.target.closest('.ctrl-btn') || e.target.closest('#fire-zone'))) return;
-            mouseLookActive = true;
-            mobile.lookLast = {x: e.clientX, y: e.clientY};
-        }
-    });
-    document.addEventListener('mousemove', (e)=>{
-        if(mouseLookActive){
-            const dx = e.clientX - mobile.lookLast.x;
-            const dy = e.clientY - mobile.lookLast.y;
-            mobile.lookLast = {x: e.clientX, y: e.clientY};
-            const sens = BASE_LOOK * (playerData.sensitivity/8) * (state.isAiming ? 0.4 : 1);
-            state.yaw -= dx * sens;
-            state.pitch -= dy * sens;
-            state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
-            updateCameraFromYawPitch();
-        }
-    });
-    document.addEventListener('mouseup', (e)=>{ if(e.button === 2) mouseLookActive = false; });
-    document.addEventListener('contextmenu', (e)=>{
-        if(e.target.closest && e.target.closest('#hud')) e.preventDefault();
-    });
 }
 function toggleAim(){
     if(playerData.equippedWeapon === 'awp'){
@@ -1761,7 +1712,6 @@ function setupButtons(){
         fz.addEventListener('mousedown', fzDown);
         fz.addEventListener('mouseup', fzUp);
         fz.addEventListener('mouseleave', fzUp);
-        fz.addEventListener('contextmenu', (e)=>e.preventDefault());
     }
     tap('btn-aim', toggleAim);
     document.getElementById('awp-close-btn').addEventListener('click', (e)=>{
@@ -1773,15 +1723,6 @@ function setupButtons(){
         state.camera.fov = 80;
         state.camera.updateProjectionMatrix();
     });
-    document.getElementById('awp-close-btn').addEventListener('touchstart', (e)=>{
-        e.preventDefault(); e.stopPropagation();
-        state.isAiming = false;
-        document.getElementById('awp-scope').classList.remove('active');
-        document.getElementById('crosshair').style.opacity = '0.95';
-        document.getElementById('btn-aim').classList.remove('active');
-        state.camera.fov = 80;
-        state.camera.updateProjectionMatrix();
-    }, {passive:false});
     hold('btn-jump',()=>{if(state.canJump){state.velocity.y=JUMP_SPEED;state.canJump=false;}});
     tap('btn-crouch', ()=>{
         state.isCrouching = !state.isCrouching;
@@ -1834,20 +1775,20 @@ function renderMapSelect(){
     Object.entries(MAPS).forEach(([key,map])=>{
         const card=document.createElement('div');
         card.className='map-card';
-        card.innerHTML=`<div class="map-preview ${key}">${map.icon}</div><div class="map-info"><h3>${map.name}</h3><p>${map.desc}</p></div>`;
+        card.innerHTML='<div class="map-preview '+key+'">'+map.icon+'</div><div class="map-info"><h3>'+map.name+'</h3><p>'+map.desc+'</p></div>';
         card.onclick=()=>{state.mapKey=key;mapSelect.style.display='none';startGame();};
         list.appendChild(card);
     });
 }
 function showProfilePopup(){
-    myAlert(`ID: ${playerData.playerId}\nИмя: ${playerData.playerName}\nУровень: ${playerData.level}\nEXP: ${playerData.exp}/100\nДеньги: ${playerData.money}$\nУбийств: ${playerData.totalKills}\nСкинов: ${playerData.ownedSkins.length}\nКлан: ${playerData.clanName||'Нет'}`, 'ПРОФИЛЬ');
+    myAlert('ID: '+playerData.playerId+'\nИмя: '+playerData.playerName+'\nУровень: '+playerData.level+'\nДеньги: '+playerData.money+'$\nУбийств: '+playerData.totalKills+'\nСкинов: '+playerData.ownedSkins.length, 'ПРОФИЛЬ');
 }
 function updateRoundInfo(){
     const el = document.getElementById('round-info');
     if(!el) return;
     const remaining = state.totalKillsNeeded - state.score;
-    el.querySelector('.ri-title').textContent = `ВОЛНА ${state.wave} / 3`;
-    el.querySelector('.ri-sub').textContent = `Врагов осталось: ${remaining}`;
+    el.querySelector('.ri-title').textContent = 'ВОЛНА ' + state.wave + ' / 3';
+    el.querySelector('.ri-sub').textContent = 'Врагов осталось: ' + remaining;
 }
 function startNextWave(){
     if(state.wave >= 3) return;
@@ -1858,7 +1799,7 @@ function startNextWave(){
     state.currentWaveEnemies = 10;
 }
 function startGame(){
-    console.log('startGame called');
+    console.log('=== startGame called ===');
     menu.style.display='none'; mapSelect.style.display='none'; hud.style.display='block';
     if(state.scene) destroyGame();
     state.keys={w:false,a:false,s:false,d:false,space:false,shift:false};
@@ -1869,7 +1810,7 @@ function startGame(){
     state.matchState = 'playing'; state.wave = 0;
     state.currentWaveEnemies = 0; state.totalKillsNeeded = 30;
     createScene();
-    console.log('createScene returned');
+    console.log('=== createScene returned ===');
     const w=WEAPONS[playerData.equippedWeapon];
     if(w.isMelee){ state.magAmmo=0; state.reserveAmmo=0; }
     else { state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax; }
@@ -1880,7 +1821,6 @@ function startGame(){
     state.velocity.set(0,0,0);
     document.getElementById('score').textContent='0';
     document.getElementById('map-name').textContent=MAPS[state.mapKey].name;
-    document.getElementById('game-over').style.display='none';
     document.getElementById('match-end').classList.remove('show');
     document.getElementById('paused-msg').style.display='none';
     document.getElementById('awp-scope').classList.remove('active');
@@ -1896,7 +1836,7 @@ function startGame(){
     state.clock.getDelta();
     checkOrientation();
     animate();
-    console.log('animate started');
+    console.log('=== animate started ===');
 }
 function endMatch(win){
     state.isGameOver=true;
@@ -1926,7 +1866,6 @@ function destroyGame(){
 function returnToMenu(){
     destroyGame();
     hud.style.display='none';
-    document.getElementById('game-over').style.display='none';
     document.getElementById('match-end').classList.remove('show');
     document.getElementById('awp-scope').classList.remove('active');
     document.getElementById('round-info').classList.remove('show');
@@ -2020,7 +1959,6 @@ document.getElementById('play-btn').addEventListener('click',()=>{
 });
 document.getElementById('back-to-menu').addEventListener('click',()=>{mapSelect.style.display='none';});
 document.addEventListener('gesturestart',e=>e.preventDefault());
-document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{
     switch(e.code){
         case 'KeyW':state.keys.w=true;break;
@@ -2032,18 +1970,6 @@ document.addEventListener('keydown',e=>{
         case 'KeyR':reload();break;
         case 'KeyV':switchWeapon();break;
         case 'KeyF':toggleAim();break;
-        case 'ControlLeft':case 'KeyC':
-            state.isCrouching = !state.isCrouching;
-            const btn = document.getElementById('btn-crouch');
-            const down = document.getElementById('crouch-icon-down');
-            const up = document.getElementById('crouch-icon-up');
-            if(state.isCrouching){ btn.classList.add('active'); down.style.display='none'; up.style.display='block'; }
-            else { btn.classList.remove('active'); down.style.display='block'; up.style.display='none'; }
-            break;
-        case 'Digit1':if(playerData.ownedWeapons.includes('knife'))switchWeaponTo('knife');break;
-        case 'Digit2':if(playerData.ownedWeapons.includes('pistol'))switchWeaponTo('pistol');break;
-        case 'Digit3':if(playerData.ownedWeapons.includes('akr'))switchWeaponTo('akr');break;
-        case 'Digit4':if(playerData.ownedWeapons.includes('awp'))switchWeaponTo('awp');break;
     }
 });
 document.addEventListener('keyup',e=>{
@@ -2056,18 +1982,9 @@ document.addEventListener('keyup',e=>{
         case 'ShiftLeft':state.keys.shift=false;break;
     }
 });
-document.addEventListener('mousedown', (e)=>{
-    if(e.button !== 0) return;
-    if(!state.scene || state.isGameOver || state.isPaused) return;
-    if(e.target.tagName !== 'CANVAS') return;
-    const w = WEAPONS[playerData.equippedWeapon];
-    if(w.isMelee || !w.auto) shoot();
-    state.autoFire = true;
-});
-document.addEventListener('mouseup', (e)=>{
-    if(e.button === 0) state.autoFire = false;
-});
-console.log('🎮 Standoff Mini 3D загружен!');
+console.log('=== INIT DONE, всё загружено ===');
+console.log('=== state.mapKey:', state.mapKey, '===');
+console.log('=== MAPS:', Object.keys(MAPS).join(', '), '===');
 </script>
 </body>
-</html>
+    </html>

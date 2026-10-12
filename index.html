@@ -42,14 +42,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #p-exp{font-size:9px;color:#888;margin-top:4px}
 #p-lock{display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid #222;font-size:10px;color:#888}
 #p-lock svg{width:12px;height:12px;color:#fa0}
-#friends-panel{flex:1;background:rgba(15,15,25,.9);border:1px solid #222;border-radius:8px;padding:8px;overflow-y:auto;min-height:60px}
-#friends-panel h4{font-size:10px;color:#666;letter-spacing:2px;margin-bottom:6px}
-.friend{display:flex;align-items:center;gap:8px;padding:5px;border-radius:6px;background:#1a1a2a;margin-bottom:4px;font-size:11px}
-.friend .f-av{width:22px;height:22px;border-radius:4px;background:#2a2a3a;display:flex;align-items:center;justify-content:center;color:#fa0;font-weight:bold}
-.friend .f-name{flex:1;color:#ccc}
-.friend .f-status{width:8px;height:8px;border-radius:50%;background:#4f4}
-.friend.offline .f-status{background:#666}
-.friend.offline .f-name{color:#666}
 #center-panel{flex:1;background:linear-gradient(135deg,rgba(20,20,35,.95),rgba(30,25,45,.95));border:1px solid #2a2a3a;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
 .rewards-title{font-size:14px;color:#fa0;letter-spacing:3px;font-weight:900;margin-bottom:6px}
 .rewards-sub{font-size:10px;color:#888;max-width:200px;margin-bottom:20px;line-height:1.5}
@@ -89,7 +81,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #back-to-menu{max-width:520px;width:100%;margin:8px auto 0;padding:10px;background:#222;color:#fa0;border:2px solid #fa0;border-radius:8px;font-weight:bold;letter-spacing:2px;cursor:pointer;font-size:12px}
 #hud{display:none;position:fixed;inset:0;pointer-events:none;z-index:10}
 #crosshair{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%)}
-#crosshair::before,#crosshair::after{content:'';position:absolute;background:#fa0;box-shadow:0 0 4px #000}
+#crosshair::before,#crosshair::after{content:'';position:absolute;background:var(--crosshair-color,#fa0);box-shadow:0 0 4px #000}
 #crosshair::before{width:2px;height:22px;left:10px;top:0}
 #crosshair::after{width:22px;height:2px;left:0;top:10px}
 #crosshair.hit::before,#crosshair.hit::after{background:#f22}
@@ -113,6 +105,16 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
 @keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
 #reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:12px;font-weight:bold;background:rgba(0,0,0,.7);padding:5px 14px;border-radius:16px;border:2px solid #fa0;display:none;letter-spacing:2px}
+/* ЗОНА СТРЕЛЬБЫ */
+#fire-zone{position:absolute;top:10px;left:10px;width:80px;height:80px;background:rgba(15,15,25,.5);border:2px solid rgba(255,170,0,.6);border-radius:50%;pointer-events:auto;touch-action:none;z-index:99;display:flex;align-items:center;justify-content:center}
+#fire-zone.active{background:rgba(255,50,50,.6);border-color:#f44}
+#fire-zone svg{width:40%;height:40%;color:#fa0;pointer-events:none}
+#fire-zone.active svg{color:#fff}
+/* РАУНД-ИНФО */
+#round-info{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);border:2px solid #fa0;border-radius:8px;padding:4px 16px;text-align:center;display:none;z-index:100}
+#round-info.show{display:block}
+#round-info .ri-title{font-size:14px;color:#fa0;letter-spacing:3px;font-weight:bold}
+#round-info .ri-sub{font-size:9px;color:#888;letter-spacing:1px;margin-top:2px}
 </style>
 </head>
 <body>
@@ -122,6 +124,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #hud .ctrl-btn{position:absolute;background:rgba(15,15,25,.72);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;padding:8px;transition:all .1s;touch-action:none;z-index:100}
 #hud .ctrl-btn svg{width:100%;height:100%;pointer-events:none;fill:currentColor}
 #hud .ctrl-btn:active{background:rgba(255,170,0,.5);color:#111;transform:scale(.92)}
+#hud .ctrl-btn.active{background:rgba(255,170,0,.9);color:#111}
 #hud .ctrl-btn.small{width:38px;height:38px}
 #hud .ctrl-btn.medium{width:48px;height:48px}
 #hud .ctrl-btn.big{width:62px;height:62px}
@@ -129,7 +132,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #btn-aim{bottom:82px;right:82px}
 #btn-jump{bottom:82px;right:12px}
 #btn-crouch{bottom:12px;right:82px}
-#btn-crouch.active{background:rgba(255,170,0,.9);color:#111}
 #btn-reload{bottom:152px;right:12px}
 #btn-swap{bottom:152px;right:60px}
 #btn-sprint{bottom:14px;left:128px}
@@ -141,11 +143,20 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #btn-resume{background:linear-gradient(135deg,#4f4,#2a2);color:#111}
 #btn-settings-pause{background:#333;color:#fa0;border:1px solid #fa0!important}
 #btn-leave{background:linear-gradient(135deg,#f44,#a22);color:#fff}
-#game-over{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:1100;padding:20px}
-#game-over h1{color:#f22;font-size:26px;letter-spacing:6px;margin-bottom:14px}
-#game-over .result-stats{font-size:13px;color:#ccc;margin-bottom:18px;line-height:1.8;text-align:center}
-#game-over .result-stats span{color:#fa0;font-weight:bold}
-#game-over button{padding:12px 28px;font-size:13px;background:linear-gradient(135deg,#fa0,#f80);color:#111;font-weight:bold;letter-spacing:3px;border:none;border-radius:8px;cursor:pointer}
+/* ЭКРАН ПОБЕДЫ/ПОРАЖЕНИЯ */
+#match-end{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:1200;padding:20px}
+#match-end.show{display:flex}
+#match-end .me-title{font-size:48px;letter-spacing:8px;font-weight:900;margin-bottom:20px;text-shadow:0 0 30px currentColor}
+#match-end .me-title.win{color:#4f4;text-shadow:0 0 30px #4f4}
+#match-end .me-title.lose{color:#f22;text-shadow:0 0 30px #f22}
+#match-end .me-stats{background:rgba(15,15,25,.9);border:2px solid #fa0;border-radius:12px;padding:20px 40px;margin-bottom:20px;min-width:280px}
+#match-end .me-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:#ccc;border-bottom:1px solid #1a1a2a}
+#match-end .me-row:last-child{border-bottom:none}
+#match-end .me-row span:last-child{color:#fa0;font-weight:bold}
+#match-end .me-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+#match-end .me-btns button{padding:12px 28px;border:none;border-radius:8px;font-weight:bold;font-size:13px;letter-spacing:2px;cursor:pointer}
+#match-end .me-btns .primary{background:linear-gradient(135deg,#fa0,#f80);color:#111}
+#match-end .me-btns .secondary{background:#222;color:#fa0;border:2px solid #fa0}
 .overlay{position:fixed;inset:0;background:rgba(5,5,15,.97);z-index:2000;display:none;flex-direction:column;padding:12px;overflow-y:auto}
 .overlay h2{text-align:center;color:#fa0;font-size:18px;letter-spacing:4px;margin-bottom:12px;padding-right:48px}
 .overlay-close{position:absolute;top:10px;right:10px;width:36px;height:36px;background:rgba(15,15,25,.9);border:2px solid #fa0;border-radius:8px;color:#fa0;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;padding:8px;pointer-events:auto}
@@ -187,6 +198,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .setting-row .val{font-size:11px;color:#fa0;font-weight:bold;min-width:40px;text-align:right}
 .setting-row input[type="range"]{flex:1;max-width:220px;accent-color:#fa0}
 .setting-row input[type="checkbox"]{width:20px;height:20px;accent-color:#fa0}
+.setting-row select{background:#1a1a2a;color:#fa0;border:1px solid #333;border-radius:4px;padding:4px 8px;font-size:11px;cursor:pointer;max-width:140px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;justify-content:center;align-items:center;z-index:3000;padding:20px}
 .modal.show{display:flex}
 .modal-box{background:linear-gradient(135deg,#1a1a2e,#0d0d18);border:2px solid #fa0;border-radius:12px;padding:20px;max-width:420px;width:100%;animation:modalPop .2s ease-out}
@@ -207,25 +219,21 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .skin-info .sweapon{font-size:11px;color:#888;letter-spacing:2px;margin-bottom:6px}
 .skin-info .srarity{font-size:11px;letter-spacing:3px;font-weight:bold}
 .skin-info .sprice{font-size:14px;color:#4f4;font-weight:bold;margin-top:8px}
-/* === ПРИЦЕЛ AWM === */
 #awp-scope{position:fixed;inset:0;z-index:850;display:none;pointer-events:auto;background:radial-gradient(circle at 50% 50%, transparent 0%, transparent 25%, rgba(0,0,0,.95) 30%, rgba(0,0,0,.98) 100%)}
 #awp-scope.active{display:block}
 #awp-scope .scope-circle{position:absolute;top:50%;left:50%;width:65vmin;height:65vmin;transform:translate(-50%,-50%);border:3px solid #000;border-radius:50%;box-shadow:inset 0 0 30px rgba(0,0,0,.5);pointer-events:none}
 #awp-scope .scope-cross-h{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:65vmin;height:1px;background:rgba(0,0,0,.9);pointer-events:none}
 #awp-scope .scope-cross-v{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1px;height:65vmin;background:rgba(0,0,0,.9);pointer-events:none}
 #awp-scope .scope-mark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:4px;height:4px;background:#000;border-radius:50%;pointer-events:none}
-#awp-scope .scope-line-h1{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:65vmin;height:1px;background:rgba(0,0,0,.9)}
-#awp-scope .scope-line-v1{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1px;height:65vmin;background:rgba(0,0,0,.9)}
 #awp-scope .scope-ticks{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60vmin;height:60vmin;border:1px dashed rgba(0,0,0,.4);border-radius:50%}
 #awp-scope .awp-close{position:absolute;top:14px;right:14px;width:44px;height:44px;background:rgba(0,0,0,.85);border:2px solid #fa0;border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;padding:10px;z-index:10}
 #awp-scope .awp-close:active{background:#fa0;color:#111}
 #awp-scope .awp-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);color:#fa0;font-size:11px;letter-spacing:2px;background:rgba(0,0,0,.7);padding:6px 14px;border-radius:20px;border:1px solid #fa0;pointer-events:none}
-#awp-scope .awp-x{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#000;font-size:32px;font-weight:bold;font-family:Arial;pointer-events:none}
 #button-editor{position:fixed;inset:0;z-index:3001;display:none;background:rgba(5,5,15,.9)}
 #button-editor.active{display:block}
 .editor-btn{position:absolute;background:rgba(255,170,0,.35);border:3px dashed #fa0;border-radius:50%;cursor:move;touch-action:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;padding:2px;text-align:center;font-weight:bold;pointer-events:auto}
 .editor-btn.selected{border-color:#4f4;border-style:solid;background:rgba(68,255,68,.25)}
-.editor-btn.rect{border-radius:8px}
+.editor-btn.rect{border-radius:12px}
 .editor-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fa0;padding:8px 16px;border-radius:8px;font-size:11px;letter-spacing:1px;border:1px solid #fa0;z-index:10;text-align:center;max-width:90vw}
 .editor-info{position:absolute;top:44px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#4f4;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:bold;border:1px solid #4f4;z-index:10;display:none}
 .editor-info.show{display:block}
@@ -265,11 +273,16 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .inv-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;max-width:900px;margin-left:auto;margin-right:auto}
 .inv-tab{padding:6px 14px;background:#1a1a2a;border:1px solid #333;border-radius:6px;font-size:11px;color:#888;letter-spacing:2px;font-weight:bold;cursor:pointer}
 .inv-tab.active{background:#fa0;color:#111;border-color:#fa0}
+/* РЕДАКТОР ПРИЦЕЛА */
+.crosshair-preview{width:80px;height:80px;margin:0 auto 16px;position:relative;background:rgba(0,0,0,.5);border-radius:8px}
+.crosshair-preview .ch-h{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--cc,#fa0)}
+.crosshair-preview .ch-v{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--cc,#fa0)}
 @media (orientation:landscape) and (max-height:500px){
     #joy-move{width:90px;height:90px;bottom:10px;left:10px}
     #hud .ctrl-btn.small{width:34px;height:34px}
     #hud .ctrl-btn.medium{width:42px;height:42px}
     #hud .ctrl-btn.big{width:54px;height:54px}
+    #fire-zone{width:60px;height:60px;top:6px;left:6px}
     #btn-fire{bottom:8px;right:8px}
     #btn-aim{bottom:66px;right:66px}
     #btn-jump{bottom:66px;right:8px}
@@ -308,12 +321,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="p-exp">0 / 100 EXP</div>
 <div id="p-lock"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg><span>Рейтинг недоступен</span></div>
 </div>
-<div id="friends-panel">
-<h4>Друзья (3)</h4>
-<div class="friend"><div class="f-av">A</div><div class="f-name">Alex</div><div class="f-status"></div></div>
-<div class="friend"><div class="f-av">M</div><div class="f-name">Maxim</div><div class="f-status"></div></div>
-<div class="friend offline"><div class="f-av">K</div><div class="f-name">Kirill</div><div class="f-status"></div></div>
-</div>
 </div>
 <div id="center-panel">
 <div class="wheat"><svg viewBox="0 0 24 24"><path d="M12 2C10 2 8.5 3.5 8.5 5.5c0 .5.1 1 .3 1.4-.3-.1-.6-.1-.9-.1C6 6.8 4.5 8.3 4.5 10.2c0 .6.2 1.2.5 1.7-.4-.2-.9-.3-1.4-.3-1.9 0-3.4 1.5-3.4 3.4 0 1.3.7 2.4 1.8 3-.2.4-.3.9-.3 1.4 0 1.9 1.5 3.4 3.4 3.4.5 0 1-.1 1.4-.3-.2.4-.3.9-.3 1.4 0 1.9 1.5 3.4 3.4 3.4s3.4-1.5 3.4-3.4c0-.5-.1-1-.3-1.4.4.2.9.3 1.4.3 1.9 0 3.4-1.5 3.4-3.4 0-.5-.1-1-.3-1.4 1.1-.6 1.8-1.7 1.8-3 0-1.9-1.5-3.4-3.4-3.4-.5 0-1 .1-1.4.3.3-.5.5-1.1.5-1.7 0-1.9-1.5-3.4-3.4-3.4-.3 0-.6 0-.9.1.2-.4.3-.9.3-1.4C13.5 3.5 12 2 12 2z"/></svg></div>
@@ -344,12 +351,14 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="hud">
 <div id="crosshair"></div><div id="hit-marker"></div><div id="hit-flash"></div>
 <div id="reload-msg">ПЕРЕЗАРЯДКА...</div>
+<div id="round-info"><div class="ri-title">РАУНД 1</div><div class="ri-sub">Врагов: 10</div></div>
 <div id="score-top"><div class="lbl">УБИЙСТВА</div><div class="val" id="score">0</div><div class="map" id="map-name">SANDSTONE</div></div>
 <div id="health-bar"><div id="health-fill"></div></div>
 <div id="ammo-hud"><div class="wname" id="weapon-name">AKR-12</div><div class="ammo" id="ammo">30<span class="res">/90</span></div></div>
 <div id="minimap"><canvas id="minimap-canvas" width="88" height="88"></canvas></div>
 <div id="killfeed"></div>
 <div id="debug-hud" style="display:none;position:absolute;top:60px;left:8px;background:rgba(0,0,0,.85);color:#0f0;padding:6px 10px;font-size:11px;border-radius:6px;font-family:monospace;pointer-events:none;z-index:9999;white-space:pre">JOY: --</div>
+<div id="fire-zone"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg></div>
 <div id="joy-move"><div id="joy-move-knob"></div></div>
 <div class="ctrl-btn small" id="btn-pause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></div>
 <div class="ctrl-btn small" id="btn-fullscreen"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
@@ -363,6 +372,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div class="ctrl-btn small" id="btn-reload"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A8 8 0 1 0 19.73 14h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div>
 <div class="ctrl-btn small" id="btn-swap"><svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM7 7l1.41 1.41L5.83 11H16v2H5.83l2.58 2.58L7 17l-5-5z"/></svg></div>
 <div class="ctrl-btn medium" id="btn-sprint"><svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/></svg></div>
+<div class="ctrl-btn medium" id="btn-knife"><svg viewBox="0 0 24 24"><path d="M14 2l8 8-2 2-8-8zM4 18l8-8 2 2-8 8z"/></svg></div>
 <div id="paused-msg">
 <div class="pause-title">ПАУЗА</div>
 <button id="btn-resume">▶ ПРОДОЛЖИТЬ</button>
@@ -377,12 +387,23 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div class="scope-cross-v"></div>
 <div class="scope-mark"></div>
 <div class="scope-ticks"></div>
-<div class="awp-x">✕</div>
 <div class="awp-close" id="awp-close-btn"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
 <div class="awp-hint">СНАЙПЕРСКИЙ ПРИЦЕЛ • AWM</div>
 </div>
 
-<div id="game-over"><h1>ВЫ ПОГИБЛИ</h1><div class="result-stats">Убийств: <span id="final-kills">0</span><br>Заработано: <span id="final-money">0</span> $</div><button id="btn-return-menu">В МЕНЮ</button></div>
+<div id="match-end">
+<div class="me-title" id="me-title">ПОБЕДА</div>
+<div class="me-stats">
+<div class="me-row"><span>Убийств</span><span id="me-kills">0</span></div>
+<div class="me-row"><span>Смертей</span><span id="me-deaths">0</span></div>
+<div class="me-row"><span>Заработано</span><span id="me-money">0</span> $</div>
+<div class="me-row"><span>Всего врагов</span><span id="me-total">30</span></div>
+</div>
+<div class="me-btns">
+<button class="primary" id="me-again">ИГРАТЬ СНОВА</button>
+<button class="secondary" id="me-menu">В МЕНЮ</button>
+</div>
+</div>
 
 <div class="modal" id="modal-alert">
 <div class="modal-box">
@@ -458,6 +479,29 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div class="setting-row"><label>Звук</label><input type="checkbox" id="set-sound" checked></div>
 <div class="setting-row"><label>Вибрация</label><input type="checkbox" id="set-vibe" checked></div>
 <div class="setting-row"><label>Показывать координаты</label><input type="checkbox" id="set-debug"></div>
+</div>
+<div class="settings-section"><h4>🎯 Редактор прицела</h4>
+<div class="crosshair-preview" id="ch-preview">
+<div class="ch-h" style="width:2px;height:22px"></div>
+<div class="ch-v" style="width:22px;height:2px"></div>
+</div>
+<div class="setting-row"><label>Цвет прицела</label><select id="ch-color">
+<option value="#fa0">Оранжевый</option>
+<option value="#4f4">Зелёный</option>
+<option value="#f22">Красный</option>
+<option value="#4af">Голубой</option>
+<option value="#a4f">Фиолетовый</option>
+<option value="#fff">Белый</option>
+<option value="#000">Чёрный</option>
+</select></div>
+<div class="setting-row"><label>Толщина</label><input type="range" id="ch-thickness" min="1" max="6" value="2"><span class="val" id="ch-thickness-val">2</span></div>
+<div class="setting-row"><label>Длина</label><input type="range" id="ch-length" min="10" max="40" value="22"><span class="val" id="ch-length-val">22</span></div>
+<div class="setting-row"><label>Стиль</label><select id="ch-style">
+<option value="cross">Крест</option>
+<option value="dot">Точка</option>
+<option value="cross-dot">Крест + точка</option>
+<option value="circle">Круг</option>
+</select></div>
 </div>
 <div class="settings-section"><h4>🎯 Кнопки управления</h4>
 <div class="setting-row"><label>Размер кнопок</label><input type="range" id="set-btnsize" min="50" max="150" value="100"><span class="val" id="set-btnsize-val">100%</span></div>
@@ -559,6 +603,7 @@ function myPrompt(text, value = '', title = 'ВВОД', maxLength = 30){
     return new Promise(resolve => showModal({type:'prompt', title, text, value, maxLength, onOk: (v)=>resolve(v), onCancel: ()=>resolve(null)}));
 }
 const WEAPONS = {
+    knife:{name:'НОЖ',damage:55,headshotMult:3,rpm:120,magSize:999,reserveMax:999,reloadTime:0,auto:false,spread:0,range:2.5,model:'knife',isMelee:true},
     pistol:{name:'P-9 PISTOL',damage:25,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,range:60,model:'pistol'},
     akr:{name:'AKR-12',damage:35,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,range:80,model:'rifle'},
     awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,range:150,model:'sniper'}
@@ -576,7 +621,7 @@ const SKINS = {
     awp_neon:{name:'AWM | Неон',weapon:'awp',rarity:'epic',color:'#a4f',price:1500},
     akr_dragon:{name:'AKR-12 | Дракон',weapon:'akr',rarity:'legendary',color:'#fa0',price:3500},
     awp_dragon:{name:'AWM | Дракон',weapon:'awp',rarity:'legendary',color:'#fa0',price:4000},
-    knife_gold:{name:'Нож | Золото',weapon:'pistol',rarity:'legendary',color:'#fa0',price:5000}
+    knife_gold:{name:'Нож | Золото',weapon:'knife',rarity:'legendary',color:'#fa0',price:5000}
 };
 const RARITY = {
     common:{name:'ОБЫЧНЫЙ',color:'#888',chance:60},
@@ -591,33 +636,37 @@ const CASES = {
     legend_case:{name:'ЛЕГЕНДАРНЫЙ',price:3000,rarity:'legend',skins:['akr_neon','awp_neon','akr_dragon','awp_dragon','knife_gold']}
 };
 const playerData = {
-    money:5000,totalKills:0,ownedWeapons:['pistol','akr','awp'],equippedWeapon:'akr',
+    money:5000,totalKills:0,ownedWeapons:['knife','pistol','akr','awp'],equippedWeapon:'akr',
     playerId:'73396228',playerName:'Игрок',avatar:null,level:1,exp:0,
     ownedSkins:[],equippedSkins:{},clanName:null,clanTag:'—',clanColor:'#888',
     lastFreeCase:0,lastDailyReward:0,customClans:[],
     buttonLayout:null,buttonSize:100,buttonOpacity:72,
-    sensitivity:8,soundEnabled:true,vibeEnabled:true,showDebug:false
+    sensitivity:8,soundEnabled:true,vibeEnabled:true,showDebug:false,
+    crosshair:{color:'#fa0',thickness:2,length:22,style:'cross'}
 };
 const state = {
     scene:null,camera:null,renderer:null,raycaster:null,clock:null,
     mapKey:'sandstone',magAmmo:0,reserveAmmo:0,health:100,maxHealth:100,
-    score:0,sessionMoney:0,isReloading:false,isGameOver:false,isPaused:false,
+    score:0,sessionMoney:0,deaths:0,isReloading:false,isGameOver:false,isPaused:false,
     lastShootTime:0,enemies:[],colliders:[],bloodParticles:[],
     velocity:new THREE.Vector3(),canJump:true,minimapCtx:null,
     weaponModel:null,muzzleFlash:null,autoFire:false,spawnPoints:[],
     isCrouching:false,isAiming:false,yaw:0,pitch:0,
     keys:{w:false,a:false,s:false,d:false,space:false,shift:false},
-    muzzleFlashTimer:0,hitMarkerTimer:0,hitFlashTimer:0
+    muzzleFlashTimer:0,hitMarkerTimer:0,hitFlashTimer:0,
+    matchState:'idle',wave:0,totalKillsNeeded:30,currentWaveEnemies:0,waveTimer:0,
+    recoilPitch:0,recoilYaw:0,isMoving:false,isShooting:false
 };
 const PLAYER_HEIGHT=1.7,PLAYER_RADIUS=.6,WORLD_SIZE=90,HALF_WORLD=WORLD_SIZE/2-2,
       GRAVITY=22,JUMP_SPEED=7,MOVE_SPEED=6,BASE_LOOK=0.004;
 const mobile = {moveX:0,moveY:0,joyMoveActive:false,joyMoveStart:{x:0,y:0},lookActive:false,lookId:null,lookLast:{x:0,y:0}};
-const SAVE_KEY = 'standoff_save_v11';
+const SAVE_KEY = 'standoff_save_v12';
 function saveProfile(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){} }
 function loadProfile(){
     try { const s = localStorage.getItem(SAVE_KEY); if(s){ const p = JSON.parse(s); Object.keys(p).forEach(k=>{ if(k in playerData) playerData[k]=p[k]; }); } } catch(e){}
-    ['pistol','akr','awp'].forEach(w=>{ if(!playerData.ownedWeapons.includes(w)) playerData.ownedWeapons.push(w); });
+    ['knife','pistol','akr','awp'].forEach(w=>{ if(!playerData.ownedWeapons.includes(w)) playerData.ownedWeapons.push(w); });
     updateProfileUI();
+    applyCrosshair();
 }
 function updateProfileUI(){
     document.getElementById('p-id-val').textContent = playerData.playerId;
@@ -628,6 +677,26 @@ function updateProfileUI(){
     document.querySelector('#p-level .lv-badge').textContent = 'LVL ' + playerData.level;
     document.getElementById('p-exp').textContent = playerData.exp + ' / 100 EXP';
     document.querySelector('#p-level .lv-bar-fill').style.width = (playerData.exp) + '%';
+}
+function applyCrosshair(){
+    const ch = playerData.crosshair || {color:'#fa0',thickness:2,length:22,style:'cross'};
+    document.documentElement.style.setProperty('--crosshair-color', ch.color);
+    const el = document.getElementById('crosshair');
+    if(!el) return;
+    const t = ch.thickness, l = ch.length;
+    let html = '';
+    if(ch.style === 'cross'){
+        html = `<style>#crosshair::before{width:${t}px;height:${l}px;left:${11-t/2}px;top:${(22-l)/2}px}#crosshair::after{width:${l}px;height:${t}px;left:${(22-l)/2}px;top:${11-t/2}px}</style>`;
+    } else if(ch.style === 'dot'){
+        html = `<style>#crosshair::before{width:${t+2}px;height:${t+2}px;left:${10-t/2}px;top:${10-t/2}px;border-radius:50%}#crosshair::after{display:none}</style>`;
+    } else if(ch.style === 'cross-dot'){
+        html = `<style>#crosshair::before{width:${t}px;height:${l}px;left:${11-t/2}px;top:${(22-l)/2}px}#crosshair::after{width:${l}px;height:${t}px;left:${(22-l)/2}px;top:${11-t/2}px}#crosshair{background:radial-gradient(circle at 50% 50%,${ch.color} 2px,transparent 3px)}</style>`;
+    } else if(ch.style === 'circle'){
+        html = `<style>#crosshair::before{width:${l}px;height:${l}px;left:${11-l/2}px;top:${11-l/2}px;background:transparent;border:${t}px solid ${ch.color};border-radius:50%}#crosshair::after{display:none}</style>`;
+    }
+    let styleEl = document.getElementById('ch-dynamic-style');
+    if(!styleEl){ styleEl = document.createElement('style'); styleEl.id = 'ch-dynamic-style'; document.head.appendChild(styleEl); }
+    styleEl.innerHTML = html.replace(/<\/?style>/g,'');
 }
 const avatarInput = document.getElementById('avatar-input');
 document.getElementById('avatar').addEventListener('click', ()=>avatarInput.click());
@@ -887,11 +956,33 @@ function initSettings(){
     document.getElementById('set-btnsize-val').textContent = playerData.buttonSize + '%';
     document.getElementById('set-btnopacity').value = playerData.buttonOpacity;
     document.getElementById('set-btnopacity-val').textContent = playerData.buttonOpacity + '%';
+    // прицел
+    const ch = playerData.crosshair;
+    document.getElementById('ch-color').value = ch.color;
+    document.getElementById('ch-thickness').value = ch.thickness;
+    document.getElementById('ch-thickness-val').textContent = ch.thickness;
+    document.getElementById('ch-length').value = ch.length;
+    document.getElementById('ch-length-val').textContent = ch.length;
+    document.getElementById('ch-style').value = ch.style;
+    updateCrosshairPreview();
     updateDebugVisibility();
 }
-function updateDebugVisibility(){
-    const el = document.getElementById('debug-hud');
-    if(el) el.style.display = playerData.showDebug ? 'block' : 'none';
+function updateCrosshairPreview(){
+    const ch = playerData.crosshair;
+    const p = document.getElementById('ch-preview');
+    if(!p) return;
+    p.style.setProperty('--cc', ch.color);
+    let innerHTML = '';
+    if(ch.style === 'cross'){
+        innerHTML = `<div class="ch-h" style="width:${ch.thickness}px;height:${ch.length}px"></div><div class="ch-v" style="width:${ch.length}px;height:${ch.thickness}px"></div>`;
+    } else if(ch.style === 'dot'){
+        innerHTML = `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:${ch.thickness+2}px;height:${ch.thickness+2}px;background:${ch.color};border-radius:50%"></div>`;
+    } else if(ch.style === 'cross-dot'){
+        innerHTML = `<div class="ch-h" style="width:${ch.thickness}px;height:${ch.length}px"></div><div class="ch-v" style="width:${ch.length}px;height:${ch.thickness}px"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:${ch.thickness+2}px;height:${ch.thickness+2}px;background:${ch.color};border-radius:50%"></div>`;
+    } else if(ch.style === 'circle'){
+        innerHTML = `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:${ch.length}px;height:${ch.length}px;border:${ch.thickness}px solid ${ch.color};border-radius:50%"></div>`;
+    }
+    p.innerHTML = innerHTML;
 }
 document.getElementById('set-sens').addEventListener('input',(e)=>{ playerData.sensitivity = +e.target.value; document.getElementById('set-sens-val').textContent = playerData.sensitivity; saveProfile(); });
 document.getElementById('set-sound').addEventListener('change',(e)=>{ playerData.soundEnabled = e.target.checked; saveProfile(); });
@@ -899,6 +990,15 @@ document.getElementById('set-vibe').addEventListener('change',(e)=>{ playerData.
 document.getElementById('set-debug').addEventListener('change',(e)=>{ playerData.showDebug = e.target.checked; updateDebugVisibility(); saveProfile(); });
 document.getElementById('set-btnsize').addEventListener('input',(e)=>{ playerData.buttonSize = +e.target.value; document.getElementById('set-btnsize-val').textContent = playerData.buttonSize + '%'; applyButtonSettings(); saveProfile(); });
 document.getElementById('set-btnopacity').addEventListener('input',(e)=>{ playerData.buttonOpacity = +e.target.value; document.getElementById('set-btnopacity-val').textContent = playerData.buttonOpacity + '%'; applyButtonSettings(); saveProfile(); });
+// прицел
+document.getElementById('ch-color').addEventListener('change',(e)=>{ playerData.crosshair.color = e.target.value; applyCrosshair(); updateCrosshairPreview(); saveProfile(); });
+document.getElementById('ch-thickness').addEventListener('input',(e)=>{ playerData.crosshair.thickness = +e.target.value; document.getElementById('ch-thickness-val').textContent = e.target.value; applyCrosshair(); updateCrosshairPreview(); saveProfile(); });
+document.getElementById('ch-length').addEventListener('input',(e)=>{ playerData.crosshair.length = +e.target.value; document.getElementById('ch-length-val').textContent = e.target.value; applyCrosshair(); updateCrosshairPreview(); saveProfile(); });
+document.getElementById('ch-style').addEventListener('change',(e)=>{ playerData.crosshair.style = e.target.value; applyCrosshair(); updateCrosshairPreview(); saveProfile(); });
+function updateDebugVisibility(){
+    const el = document.getElementById('debug-hud');
+    if(el) el.style.display = playerData.showDebug ? 'block' : 'none';
+}
 function applyButtonSettings(){
     const sizeMult = playerData.buttonSize / 100;
     document.querySelectorAll('#hud .ctrl-btn').forEach(btn=>{
@@ -921,8 +1021,8 @@ function applyButtonSettings(){
     }
   }
   let editorState = { active:false, selected:null, dragging:null, layout:{} };
-const EDITOR_BTNS = ['minimap','joy-move','btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen'];
-const BTN_LABELS = {'minimap':'МИНИКАРТА','joy-move':'ДЖОЙСТИК','btn-fire':'ОГОНЬ','btn-aim':'ПРИЦЕЛ','btn-jump':'ПРЫЖОК','btn-crouch':'ПРИСЕД','btn-reload':'ПЕРЕЗАР','btn-swap':'СМЕНА','btn-sprint':'БЕГ','btn-pause':'ПАУЗА','btn-fullscreen':'ФУЛЛСКРИН'};
+const EDITOR_BTNS = ['minimap','fire-zone','joy-move','btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen','btn-knife'];
+const BTN_LABELS = {'minimap':'МИНИКАРТА','fire-zone':'ЗОНА СТРЕЛЬБЫ','joy-move':'ДЖОЙСТИК','btn-fire':'ОГОНЬ','btn-aim':'ПРИЦЕЛ','btn-jump':'ПРЫЖОК','btn-crouch':'ПРИСЕД','btn-reload':'ПЕРЕЗАР','btn-swap':'СМЕНА','btn-sprint':'БЕГ','btn-pause':'ПАУЗА','btn-fullscreen':'ФУЛЛСКРИН','btn-knife':'НОЖ'};
 function openButtonEditor(){
     editorState.active = true;
     editorState.layout = {};
@@ -934,11 +1034,11 @@ function openButtonEditor(){
         const src = document.getElementById(id); if(!src) return;
         const rect = src.getBoundingClientRect();
         const clone = document.createElement('div');
-        clone.className = 'editor-btn' + (id === 'minimap' ? ' rect' : '');
+        clone.className = 'editor-btn' + (id === 'minimap' || id === 'fire-zone' ? ' rect' : '');
         clone.dataset.id = id;
         clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
         clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
-        clone.textContent = BTN_LABELS[id].slice(0,8);
+        clone.textContent = BTN_LABELS[id].slice(0,9);
         editorState.layout[id] = { x: Math.round(rect.left), y: Math.round(rect.top), size: Math.round(rect.width) };
         editor.appendChild(clone);
     });
@@ -974,7 +1074,7 @@ function changeSize(delta){
     const el = document.querySelector(`.editor-btn[data-id="${editorState.selected}"]`);
     if(!el) return;
     const cur = editorState.layout[editorState.selected].size;
-    const ns = Math.max(30, Math.min(250, cur + delta));
+    const ns = Math.max(30, Math.min(300, cur + delta));
     el.style.width = ns + 'px'; el.style.height = ns + 'px';
     editorState.layout[editorState.selected].size = ns;
     const lbl = document.getElementById('ed-size-label');
@@ -1015,7 +1115,7 @@ function saveButtonEditor(){
     });
     playerData.buttonLayout = layout;
     saveProfile(); applyButtonLayout(); closeButtonEditor();
-    myAlert('Расположение кнопок сохранено!', 'ГОТОВО');
+    myAlert('Расположение сохранено!', 'ГОТОВО');
 }
 function applyButtonLayout(){
     if(!playerData.buttonLayout) return;
@@ -1033,7 +1133,7 @@ async function resetButtonLayout(){
     if(!ok) return;
     playerData.buttonLayout = null; playerData.buttonSize = 100; playerData.buttonOpacity = 72;
     saveProfile();
-    document.querySelectorAll('#hud .ctrl-btn, #joy-move, #minimap').forEach(b=>{ b.style.left=''; b.style.top=''; b.style.right=''; b.style.bottom=''; b.style.width=''; b.style.height=''; });
+    document.querySelectorAll('#hud .ctrl-btn, #joy-move, #minimap, #fire-zone').forEach(b=>{ b.style.left=''; b.style.top=''; b.style.right=''; b.style.bottom=''; b.style.width=''; b.style.height=''; });
     applyButtonSettings(); initSettings();
 }
 async function resetAllData(){
@@ -1046,6 +1146,7 @@ document.getElementById('btn-open-editor').addEventListener('click', openButtonE
 document.getElementById('btn-reset-layout').addEventListener('click', resetButtonLayout);
 document.getElementById('btn-reset-data').addEventListener('click', resetAllData);
 
+// ==== КАРТЫ С ПОЛНЫМИ КОЛЛИЗИЯМИ ====
 function addCollider(x,y,z,w,h,d){state.colliders.push({min:new THREE.Vector3(x-w/2,y-h/2,z-d/2),max:new THREE.Vector3(x+w/2,y+h/2,z+d/2)});}
 function addBox(x,y,z,w,h,d,mat,collide=true){
     const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
@@ -1123,19 +1224,19 @@ function buildTempl(){
     state.clock=new THREE.Clock();
     state.yaw=0; state.pitch=0;
     state.muzzleFlashTimer=0; state.hitMarkerTimer=0; state.hitFlashTimer=0;
+    state.recoilPitch=0; state.recoilYaw=0;
     state.scene.add(new THREE.AmbientLight(map.ambient,map.ambientIntensity));
     const sun=new THREE.DirectionalLight(map.sunColor,1.1);
     sun.position.set(30,40,20); sun.castShadow=false;
     state.scene.add(sun);
     state.colliders=[]; state.spawnPoints=[];
     map.generate();
-    spawnEnemies(8);
     createWeaponModel();
     state.minimapCtx=document.getElementById('minimap-canvas').getContext('2d');
     updateCameraFromYawPitch();
 }
 function updateCameraFromYawPitch(){
-    const e = new THREE.Euler(state.pitch, state.yaw, 0, 'YXZ');
+    const e = new THREE.Euler(state.pitch + state.recoilPitch, state.yaw + state.recoilYaw, 0, 'YXZ');
     state.camera.quaternion.setFromEuler(e);
 }
 function createWeaponModel(){
@@ -1146,7 +1247,13 @@ function createWeaponModel(){
     const grip=new THREE.MeshStandardMaterial({color:0x222,roughness:.9});
     const accent=new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:.5,metalness:.8});
     const wood=new THREE.MeshStandardMaterial({color:0x5a3a1a,roughness:.8});
-    if(wData.model==='pistol'){
+    const bladeMat=new THREE.MeshStandardMaterial({color:0xc0c0c0,metalness:.9,roughness:.2});
+    if(wData.model==='knife'){
+        const blade=new THREE.Mesh(new THREE.BoxGeometry(.04,.02,.28),bladeMat); blade.position.set(0,.01,-.18); g.add(blade);
+        const bladeTip=new THREE.Mesh(new THREE.ConeGeometry(.02,.08,4),bladeMat); bladeTip.rotation.x=-Math.PI/2; bladeTip.position.set(0,.01,-.36); g.add(bladeTip);
+        const handle=new THREE.Mesh(new THREE.BoxGeometry(.05,.05,.14),grip); handle.position.set(0,-.01,.02); g.add(handle);
+        const guard=new THREE.Mesh(new THREE.BoxGeometry(.09,.02,.02),accent); guard.position.set(0,0,-.08); g.add(guard);
+    }else if(wData.model==='pistol'){
         const s=new THREE.Mesh(new THREE.BoxGeometry(.08,.09,.34),dark); s.position.set(0,0,-.15); g.add(s);
         const b=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.12,8),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.34); g.add(b);
         const gr=new THREE.Mesh(new THREE.BoxGeometry(.08,.18,.1),grip); gr.position.set(0,-.13,.02); gr.rotation.x=.2; g.add(gr);
@@ -1168,7 +1275,9 @@ function createWeaponModel(){
     state.camera.add(g);
     state.weaponModel=g;
 }
-function spawnEnemies(c){for(let i=0;i<c;i++)spawnEnemy();}
+function spawnEnemies(count){
+    for(let i=0;i<count;i++) spawnEnemy();
+}
 function spawnEnemy(){
     if(!state.spawnPoints||!state.spawnPoints.length) return;
     const p=state.camera.position;
@@ -1187,6 +1296,34 @@ function spawnEnemy(){
 function shoot(){
     if(state.isReloading||state.isGameOver||state.isPaused) return;
     const w=WEAPONS[playerData.equippedWeapon];
+    // НОЖ - мгновенный удар
+    if(w.isMelee){
+        const now = performance.now();
+        if(now-state.lastShootTime < 500) return;
+        state.lastShootTime = now;
+        // Проверяем врага вблизи в направлении взгляда
+        const pp = state.camera.position;
+        const fwd = new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion);
+        let hitEnemy = null, isHead = false;
+        for(const e of state.enemies){
+            const dx = e.position.x - pp.x, dz = e.position.z - pp.z;
+            const dist = Math.hypot(dx, dz);
+            if(dist < 2.5){
+                const dot = (dx*fwd.x + dz*fwd.z) / dist;
+                if(dot > 0.6){ hitEnemy = e; if(Math.abs(e.position.y - pp.y + 1.3) < 0.5 && Math.random() < 0.5) isHead = true; break; }
+            }
+        }
+        if(hitEnemy){
+            const dmg = w.damage * (isHead ? w.headshotMult : 1);
+            hitEnemy.userData.hp -= dmg;
+            document.getElementById('hit-marker').style.opacity='1';
+            document.getElementById('crosshair').classList.add('hit');
+            state.hitMarkerTimer = 0.1;
+            spawnParticles(hitEnemy.position.clone().add(new THREE.Vector3(0,1,0)), 0xff2222, 8);
+            if(hitEnemy.userData.hp <= 0) killEnemy(hitEnemy, isHead);
+        }
+        return;
+    }
     const now=performance.now(), cd=60000/w.rpm;
     if(now-state.lastShootTime<cd) return;
     state.lastShootTime=now;
@@ -1194,18 +1331,28 @@ function shoot(){
     state.magAmmo--; updateAmmoUI();
     state.muzzleFlash.intensity=3;
     state.muzzleFlashTimer=0.05;
-    state.pitch+=.01; updateCameraFromYawPitch();
+    // ОТДАЧА - добавляем к recoilPitch, контролируется движением камеры
+    const recoilAmount = w.damage > 100 ? 0.05 : (w.damage > 30 ? 0.02 : 0.015);
+    state.recoilPitch += recoilAmount;
+    state.recoilPitch = Math.min(state.recoilPitch, 0.15);
+    // случайное отклонение в сторону
+    state.recoilYaw += (Math.random() - 0.5) * 0.01;
+    state.recoilYaw = Math.max(-0.05, Math.min(0.05, state.recoilYaw));
+    updateCameraFromYawPitch();
     const dir=new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion);
     const sp=state.isAiming?w.spread*.3:w.spread;
     dir.x+=(Math.random()-.5)*sp; dir.y+=(Math.random()-.5)*sp;
     dir.normalize();
     state.raycaster.set(state.camera.getWorldPosition(new THREE.Vector3()),dir);
     state.raycaster.far=w.range;
+    // ЦЕЛИ: враги + коллайдеры (стены/ящики) - для предотвращения стрельбы через стены
     const targets=[];
     state.enemies.forEach(e=>{targets.push(e.userData.body,e.userData.head);});
-    const hits=state.raycaster.intersectObjects(targets,false);
-    if(hits.length>0){
-        const hit=hits[0];
+    // Добавляем стены в цели
+    if(!state.wallMeshes) state.wallMeshes = [];
+    const allHits = state.raycaster.intersectObjects([...targets, ...state.scene.children.filter(c => c.isMesh && c.geometry && c.geometry.type === 'BoxGeometry')], false);
+    if(allHits.length>0){
+        const hit=allHits[0];
         let enemy=null, isHead=false;
         state.enemies.forEach(e=>{
             if(hit.object===e.userData.body) enemy=e;
@@ -1219,7 +1366,10 @@ function shoot(){
             state.hitMarkerTimer=0.08;
             spawnParticles(hit.point,0xff2222,6);
             if(enemy.userData.hp<=0) killEnemy(enemy,isHead);
-        } else spawnParticles(hit.point,0xffaa00,4);
+        } else {
+            // Попали в стену - искры
+            spawnParticles(hit.point,0xffaa00,4);
+        }
     }
     if(state.magAmmo===0&&state.reserveAmmo>0) reload();
 }
@@ -1246,12 +1396,16 @@ function killEnemy(e,isHead){
     const idx=state.enemies.indexOf(e);
     if(idx>-1) state.enemies.splice(idx,1);
     state.scene.remove(e);
-    state.score++; playerData.totalKills++;
+    state.score++; playerData.totalKills++; state.currentWaveEnemies--;
     const reward=isHead?400:300;
     state.sessionMoney+=reward;
     document.getElementById('score').textContent=state.score;
     addKillfeed(isHead?'HEADSHOT!':'KILL',reward);
-    setTimeout(()=>{if(!state.isGameOver)spawnEnemy();},1200);
+    updateRoundInfo();
+    // ПРОВЕРКА ПОБЕДЫ
+    if(state.score >= state.totalKillsNeeded){
+        endMatch(true);
+    }
 }
 function addKillfeed(text,reward){
     const kf=document.getElementById('killfeed');
@@ -1263,6 +1417,7 @@ function addKillfeed(text,reward){
 function reload(){
     if(state.isReloading) return;
     const w=WEAPONS[playerData.equippedWeapon];
+    if(w.isMelee) return;
     if(state.reserveAmmo<=0||state.magAmmo===w.magSize) return;
     state.isReloading=true;
     document.getElementById('reload-msg').style.display='block';
@@ -1277,7 +1432,8 @@ function reload(){
 function updateAmmoUI(){
     const w=WEAPONS[playerData.equippedWeapon];
     document.getElementById('weapon-name').textContent=w.name;
-    document.getElementById('ammo').innerHTML=`${state.magAmmo}<span class="res">/${state.reserveAmmo}</span>`;
+    if(w.isMelee) document.getElementById('ammo').innerHTML = `∞`;
+    else document.getElementById('ammo').innerHTML=`${state.magAmmo}<span class="res">/${state.reserveAmmo}</span>`;
 }
 function switchWeapon(){
     const list=playerData.ownedWeapons;
@@ -1290,12 +1446,13 @@ function switchWeaponTo(k){
     playerData.equippedWeapon=k;
     createWeaponModel();
     const w=WEAPONS[k];
-    state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
+    if(w.isMelee){ state.magAmmo=0; state.reserveAmmo=0; }
+    else { state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax; }
     updateAmmoUI(); saveProfile();
-    // если переключились с AWP на другое - закрываем прицел
     if(k !== 'awp'){
         document.getElementById('awp-scope').classList.remove('active');
         state.isAiming = false;
+        document.getElementById('crosshair').style.opacity = '0.95';
         state.camera.fov = 80;
         state.camera.updateProjectionMatrix();
     }
@@ -1332,8 +1489,10 @@ function updateMovement(dt){
         mv.addScaledVector(right,ix); mv.addScaledVector(fwd,iz);
         if(mv.lengthSq()>0) mv.normalize();
     }
-    v.x=THREE.MathUtils.lerp(v.x,mv.x*speed,12*dt);
-    v.z=THREE.MathUtils.lerp(v.z,mv.z*speed,12*dt);
+    // в прицеле скорость снижена
+    const aimMult = state.isAiming ? (playerData.equippedWeapon === 'awp' ? 0.3 : 0.6) : 1;
+    v.x=THREE.MathUtils.lerp(v.x,mv.x*speed*aimMult,12*dt);
+    v.z=THREE.MathUtils.lerp(v.z,mv.z*speed*aimMult,12*dt);
     v.y-=GRAVITY*dt;
     const pos=state.camera.position;
     const nx=pos.x+v.x*dt, nz=pos.z+v.z*dt;
@@ -1376,7 +1535,7 @@ function damagePlayer(amt){
     document.getElementById('hit-flash').style.opacity='1';
     state.hitFlashTimer=0.1;
     if(playerData.vibeEnabled && navigator.vibrate) navigator.vibrate(50);
-    if(state.health<=0) endGame();
+    if(state.health<=0) endMatch(false);
 }
 function drawMinimap(){
     const ctx=state.minimapCtx, size=88, scale=size/WORLD_SIZE;
@@ -1432,10 +1591,7 @@ function drawMinimap(){
         if(activeTouchId === null) return;
         e.preventDefault(); e.stopPropagation();
         for(const t of e.changedTouches){
-            if(t.identifier === activeTouchId){
-                updateJoystick(t.clientX, t.clientY);
-                break;
-            }
+            if(t.identifier === activeTouchId){ updateJoystick(t.clientX, t.clientY); break; }
         }
     }, {passive:false});
     const endTouch = (e)=>{
@@ -1459,9 +1615,7 @@ function drawMinimap(){
         mobile.joyMoveStart = getCenter();
         updateJoystick(e.clientX, e.clientY);
     });
-    document.addEventListener('mousemove', (e)=>{
-        if(mouseActive) updateJoystick(e.clientX, e.clientY);
-    });
+    document.addEventListener('mousemove', (e)=>{ if(mouseActive) updateJoystick(e.clientX, e.clientY); });
     document.addEventListener('mouseup', ()=>{
         if(mouseActive){
             mouseActive = false;
@@ -1475,6 +1629,7 @@ function drawMinimap(){
         if(e.target && e.target.closest){
             if(e.target.closest('#joy-move')) return;
             if(e.target.closest('.ctrl-btn')) return;
+            if(e.target.closest('#fire-zone')) return;
             if(e.target.closest('.overlay')) return;
             if(e.target.closest('.modal')) return;
             if(e.target.closest('#button-editor')) return;
@@ -1497,7 +1652,7 @@ function drawMinimap(){
                 const dx = t.clientX - mobile.lookLast.x;
                 const dy = t.clientY - mobile.lookLast.y;
                 mobile.lookLast = {x: t.clientX, y: t.clientY};
-                const sens = BASE_LOOK * (playerData.sensitivity/8) * (state.isAiming ? 0.5 : 1);
+                const sens = BASE_LOOK * (playerData.sensitivity/8) * (state.isAiming ? 0.4 : 1);
                 state.yaw -= dx * sens;
                 state.pitch -= dy * sens;
                 state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
@@ -1520,7 +1675,7 @@ function drawMinimap(){
     let mouseLookActive = false;
     document.addEventListener('mousedown', (e)=>{
         if(e.button === 2){
-            if(e.target && e.target.closest && (e.target.closest('#joy-move') || e.target.closest('.ctrl-btn'))) return;
+            if(e.target && e.target.closest && (e.target.closest('#joy-move') || e.target.closest('.ctrl-btn') || e.target.closest('#fire-zone'))) return;
             mouseLookActive = true;
             mobile.lookLast = {x: e.clientX, y: e.clientY};
         }
@@ -1530,20 +1685,51 @@ function drawMinimap(){
             const dx = e.clientX - mobile.lookLast.x;
             const dy = e.clientY - mobile.lookLast.y;
             mobile.lookLast = {x: e.clientX, y: e.clientY};
-            const sens = BASE_LOOK * (playerData.sensitivity/8) * (state.isAiming ? 0.5 : 1);
+            const sens = BASE_LOOK * (playerData.sensitivity/8) * (state.isAiming ? 0.4 : 1);
             state.yaw -= dx * sens;
             state.pitch -= dy * sens;
             state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
             updateCameraFromYawPitch();
         }
     });
-    document.addEventListener('mouseup', (e)=>{
-        if(e.button === 2) mouseLookActive = false;
-    });
+    document.addEventListener('mouseup', (e)=>{ if(e.button === 2) mouseLookActive = false; });
     document.addEventListener('contextmenu', (e)=>{
         if(e.target.closest && e.target.closest('#hud')) e.preventDefault();
     });
 }
+
+function toggleAim(){
+    if(playerData.equippedWeapon === 'awp'){
+        state.isAiming = !state.isAiming;
+        const sc = document.getElementById('awp-scope');
+        const btn = document.getElementById('btn-aim');
+        if(state.isAiming){
+            sc.classList.add('active');
+            document.getElementById('crosshair').style.opacity = '0';
+            btn.classList.add('active');
+            state.camera.fov = 30;
+            state.camera.updateProjectionMatrix();
+        } else {
+            sc.classList.remove('active');
+            document.getElementById('crosshair').style.opacity = '0.95';
+            btn.classList.remove('active');
+            state.camera.fov = 80;
+            state.camera.updateProjectionMatrix();
+        }
+    } else {
+        state.isAiming = !state.isAiming;
+        const btn = document.getElementById('btn-aim');
+        if(state.isAiming){
+            btn.classList.add('active');
+            state.camera.fov = 55;
+        } else {
+            btn.classList.remove('active');
+            state.camera.fov = 80;
+        }
+        state.camera.updateProjectionMatrix();
+    }
+}
+
 function setupButtons(){
     const hold=(id,onDown,onUp)=>{
         const el=document.getElementById(id); if(!el) return;
@@ -1562,39 +1748,28 @@ function setupButtons(){
         el.addEventListener('click',(e)=>{ e.stopPropagation(); fn(); });
         el.addEventListener('touchstart',(e)=>{ e.preventDefault(); e.stopPropagation(); fn(); },{passive:false});
     };
-    hold('btn-fire',()=>{state.autoFire=true; if(!WEAPONS[playerData.equippedWeapon].auto) shoot();},()=>{state.autoFire=false;});
-    // ПРИЦЕЛ - открывает AWP-прицел если AWP, иначе стандартный zoom
-    hold('btn-aim',()=>{
-        if(playerData.equippedWeapon === 'awp'){
-            state.isAiming = true;
-            document.getElementById('awp-scope').classList.add('active');
-            document.getElementById('crosshair').style.opacity = '0';
-            state.camera.fov = 30;
-            state.camera.updateProjectionMatrix();
-        } else {
-            state.isAiming = true;
-            state.camera.fov = 55;
-            state.camera.updateProjectionMatrix();
-        }
-    },()=>{
-        if(playerData.equippedWeapon === 'awp'){
-            state.isAiming = false;
-            document.getElementById('awp-scope').classList.remove('active');
-            document.getElementById('crosshair').style.opacity = '0.95';
-            state.camera.fov = 80;
-            state.camera.updateProjectionMatrix();
-        } else {
-            state.isAiming = false;
-            state.camera.fov = 80;
-            state.camera.updateProjectionMatrix();
-        }
-    });
-    // КРЕСТИК ЗАКРЫТИЯ AWP-ПРИЦЕЛА
+    hold('btn-fire',()=>{state.autoFire=true; state.isShooting=true; if(!WEAPONS[playerData.equippedWeapon].auto && !WEAPONS[playerData.equippedWeapon].isMelee) shoot(); else if(WEAPONS[playerData.equippedWeapon].isMelee) shoot();},()=>{state.autoFire=false; state.isShooting=false;});
+    // ЗОНА СТРЕЛЬБЫ
+    const fz = document.getElementById('fire-zone');
+    if(fz){
+        let fzActive=false;
+        const fzDown=(e)=>{ e.preventDefault(); e.stopPropagation(); if(fzActive)return; fzActive=true; fz.classList.add('active'); state.autoFire=true; state.isShooting=true; const w=WEAPONS[playerData.equippedWeapon]; if(w.isMelee || !w.auto) shoot(); };
+        const fzUp=(e)=>{ if(!fzActive)return; fzActive=false; fz.classList.remove('active'); state.autoFire=false; state.isShooting=false; };
+        fz.addEventListener('pointerdown', fzDown);
+        fz.addEventListener('pointerup', fzUp);
+        fz.addEventListener('pointercancel', fzUp);
+        fz.addEventListener('pointerleave', fzUp);
+        fz.addEventListener('touchstart', (e)=>e.stopPropagation(), {passive:true});
+        fz.addEventListener('contextmenu', (e)=>e.preventDefault());
+    }
+    // ПРИЦЕЛ - toggle
+    tap('btn-aim', toggleAim);
     document.getElementById('awp-close-btn').addEventListener('click', (e)=>{
         e.stopPropagation();
         state.isAiming = false;
         document.getElementById('awp-scope').classList.remove('active');
         document.getElementById('crosshair').style.opacity = '0.95';
+        document.getElementById('btn-aim').classList.remove('active');
         state.camera.fov = 80;
         state.camera.updateProjectionMatrix();
     });
@@ -1603,29 +1778,24 @@ function setupButtons(){
         state.isAiming = false;
         document.getElementById('awp-scope').classList.remove('active');
         document.getElementById('crosshair').style.opacity = '0.95';
+        document.getElementById('btn-aim').classList.remove('active');
         state.camera.fov = 80;
         state.camera.updateProjectionMatrix();
     }, {passive:false});
     hold('btn-jump',()=>{if(state.canJump){state.velocity.y=JUMP_SPEED;state.canJump=false;}});
-    // ПРИСЕД - toggle
+    // ПРИСЕД toggle
     tap('btn-crouch', ()=>{
         state.isCrouching = !state.isCrouching;
         const btn = document.getElementById('btn-crouch');
         const down = document.getElementById('crouch-icon-down');
         const up = document.getElementById('crouch-icon-up');
-        if(state.isCrouching){
-            btn.classList.add('active');
-            down.style.display = 'none';
-            up.style.display = 'block';
-        } else {
-            btn.classList.remove('active');
-            down.style.display = 'block';
-            up.style.display = 'none';
-        }
+        if(state.isCrouching){ btn.classList.add('active'); down.style.display='none'; up.style.display='block'; }
+        else { btn.classList.remove('active'); down.style.display='block'; up.style.display='none'; }
     });
     hold('btn-sprint',()=>{state.keys.shift=true;},()=>{state.keys.shift=false;});
     tap('btn-reload',reload);
     tap('btn-swap',switchWeapon);
+    tap('btn-knife',()=>{ switchWeaponTo('knife'); });
     tap('btn-pause',pauseGame);
     tap('btn-resume',resumeGame);
     tap('btn-leave',leaveGame);
@@ -1633,6 +1803,8 @@ function setupButtons(){
     tap('btn-fullscreen',toggleFullscreen);
     tap('fs-toggle-btn',toggleFullscreen);
     tap('btn-return-menu',returnToMenu);
+    tap('me-again',()=>{ document.getElementById('match-end').classList.remove('show'); startGame(); });
+    tap('me-menu',()=>{ document.getElementById('match-end').classList.remove('show'); returnToMenu(); });
 }
 function toggleFullscreen(){
     try{
@@ -1646,6 +1818,8 @@ function toggleFullscreen(){
 function pauseGame(){ state.isPaused=true; document.getElementById('paused-msg').style.display='block'; }
 function resumeGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; }
 function leaveGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; returnToMenu(); }
+
+// МЕНЮ
 const menu=document.getElementById('menu'), hud=document.getElementById('hud');
 const mapSelect=document.getElementById('map-select');
 document.querySelectorAll('.side-icon').forEach(btn=>{
@@ -1672,46 +1846,82 @@ function renderMapSelect(){
 function showProfilePopup(){
     myAlert(`ID: ${playerData.playerId}\nИмя: ${playerData.playerName}\nУровень: ${playerData.level}\nEXP: ${playerData.exp}/100\nДеньги: ${playerData.money}$\nУбийств: ${playerData.totalKills}\nСкинов: ${playerData.ownedSkins.length}\nКлан: ${playerData.clanName||'Нет'}`, 'ПРОФИЛЬ');
 }
+
+// МАТЧ-СИСТЕМА (3 волны по 10 врагов, спавн каждые 20 сек)
+function updateRoundInfo(){
+    const el = document.getElementById('round-info');
+    if(!el) return;
+    const remaining = state.totalKillsNeeded - state.score;
+    el.querySelector('.ri-title').textContent = `ВОЛНА ${state.wave} / 3`;
+    el.querySelector('.ri-sub').textContent = `Врагов осталось: ${remaining}`;
+}
+function startNextWave(){
+    if(state.wave >= 3) return;
+    state.wave++;
+    state.waveTimer = 0;
+    updateRoundInfo();
+    spawnEnemies(10);
+    state.currentWaveEnemies = 10;
+}
+
 function startGame(){
     menu.style.display='none'; mapSelect.style.display='none'; hud.style.display='block';
     if(state.scene) destroyGame();
     state.keys={w:false,a:false,s:false,d:false,space:false,shift:false};
     state.hitMarkerTimer=0; state.hitFlashTimer=0;
     state.isCrouching = false;
+    state.isAiming = false;
+    state.isShooting = false;
+    state.recoilPitch = 0; state.recoilYaw = 0;
+    state.score = 0; state.sessionMoney = 0; state.deaths = 0;
+    state.matchState = 'playing';
+    state.wave = 0;
+    state.currentWaveEnemies = 0;
+    state.totalKillsNeeded = 30;
     createScene();
     const w=WEAPONS[playerData.equippedWeapon];
-    state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
+    if(w.isMelee){ state.magAmmo=0; state.reserveAmmo=0; }
+    else { state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax; }
     updateAmmoUI();
     state.maxHealth=100; state.health=100;
     document.getElementById('health-fill').style.width='100%';
-    state.score=0; state.sessionMoney=0;
     state.isGameOver=false; state.isReloading=false; state.isPaused=false;
     state.velocity.set(0,0,0);
     document.getElementById('score').textContent='0';
     document.getElementById('map-name').textContent=MAPS[state.mapKey].name;
     document.getElementById('game-over').style.display='none';
+    document.getElementById('match-end').classList.remove('show');
     document.getElementById('paused-msg').style.display='none';
     document.getElementById('awp-scope').classList.remove('active');
     document.getElementById('crosshair').style.opacity = '0.95';
+    document.getElementById('btn-aim').classList.remove('active');
+    document.getElementById('round-info').classList.add('show');
     state.renderer.domElement.style.display='block';
     applyButtonSettings(); applyButtonLayout();
     updateDebugVisibility();
-    // сброс иконки приседа
     document.getElementById('crouch-icon-down').style.display = 'block';
     document.getElementById('crouch-icon-up').style.display = 'none';
     document.getElementById('btn-crouch').classList.remove('active');
+    // Первая волна
+    startNextWave();
     state.clock.getDelta();
     checkOrientation();
     animate();
 }
-function endGame(){
+function endMatch(win){
     state.isGameOver=true;
-    document.getElementById('final-kills').textContent=state.score;
-    document.getElementById('final-money').textContent=state.sessionMoney;
-    document.getElementById('game-over').style.display='flex';
-    playerData.money+=state.sessionMoney;
-    playerData.exp+=state.score*10;
-    while(playerData.exp>=100){playerData.exp-=100;playerData.level++;}
+    state.matchState = win ? 'win' : 'lose';
+    document.getElementById('me-title').textContent = win ? 'ПОБЕДА' : 'ПОРАЖЕНИЕ';
+    document.getElementById('me-title').className = 'me-title ' + (win ? 'win' : 'lose');
+    document.getElementById('me-kills').textContent = state.score;
+    document.getElementById('me-deaths').textContent = state.deaths;
+    document.getElementById('me-money').textContent = state.sessionMoney;
+    document.getElementById('me-total').textContent = state.totalKillsNeeded;
+    document.getElementById('match-end').classList.add('show');
+    // Награды
+    playerData.money += state.sessionMoney;
+    playerData.exp += state.score * 10;
+    while(playerData.exp >= 100){ playerData.exp -= 100; playerData.level++; }
     saveProfile(); updateProfileUI();
     if(playerData.vibeEnabled && navigator.vibrate) navigator.vibrate([100,50,100]);
 }
@@ -1728,15 +1938,19 @@ function returnToMenu(){
     destroyGame();
     hud.style.display='none';
     document.getElementById('game-over').style.display='none';
+    document.getElementById('match-end').classList.remove('show');
     document.getElementById('awp-scope').classList.remove('active');
+    document.getElementById('round-info').classList.remove('show');
     menu.style.display='flex';
     updateProfileUI();
 }
 window.returnToMenu = returnToMenu;
+
 function animate(){
     requestAnimationFrame(animate);
     if(!state.renderer||!state.scene) return;
     const dt=Math.min(state.clock.getDelta(),.05);
+    // Таймеры
     if(state.muzzleFlashTimer>0){
         state.muzzleFlashTimer-=dt;
         if(state.muzzleFlashTimer<=0) state.muzzleFlash.intensity=0;
@@ -1752,8 +1966,26 @@ function animate(){
         state.hitFlashTimer-=dt;
         if(state.hitFlashTimer<=0) document.getElementById('hit-flash').style.opacity='0';
     }
+    // Восстановление отдачи
+    if(state.recoilPitch > 0){
+        state.recoilPitch = Math.max(0, state.recoilPitch - dt * 0.3);
+        updateCameraFromYawPitch();
+    }
+    if(Math.abs(state.recoilYaw) > 0){
+        state.recoilYaw *= (1 - dt * 5);
+        if(Math.abs(state.recoilYaw) < 0.001) state.recoilYaw = 0;
+        updateCameraFromYawPitch();
+    }
     if(!state.isGameOver&&!state.isPaused){
-        if(state.autoFire&&WEAPONS[playerData.equippedWeapon].auto) shoot();
+        // Авто-стрельба (АК)
+        if(state.autoFire && WEAPONS[playerData.equippedWeapon].auto && !WEAPONS[playerData.equippedWeapon].isMelee) shoot();
+        // Таймер волны
+        if(state.matchState === 'playing' && state.wave < 3){
+            state.waveTimer += dt;
+            if(state.waveTimer >= 20 && state.currentWaveEnemies <= 0){
+                startNextWave();
+            }
+        }
         updateMovement(dt);
         updateEnemies(dt);
         updateParticles(dt);
@@ -1769,28 +2001,15 @@ function checkOrientation(){
         menu.style.display='none';
         hud.style.display='none';
         mapSelect.style.display='none';
-    } else {
-        rotateHint.style.display='none';
-        if(!state.scene && !state.isGameOver) menu.style.display='flex';
-        if(state.scene && !state.isGameOver) hud.style.display='block';
-    }
-}
-window.addEventListener('resize',()=>{
-    if(state.camera){
-        state.camera.aspect=innerWidth/innerHeight;
-        state.camera.updateProjectionMatrix();
-        state.renderer.setSize(innerWidth,innerHeight);
-    }
-    checkOrientation();
-});
-window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,200));
-loadProfile();
+  }
+  loadProfile();
 setupJoysticks();
 setupButtons();
 checkOrientation();
 initSettings();
 applyButtonLayout();
 updateDebugVisibility();
+applyCrosshair();
 document.getElementById('play-btn').addEventListener('click',()=>{
     if(innerHeight>innerWidth){ checkOrientation(); return; }
     renderMapSelect();
@@ -1799,13 +2018,18 @@ document.getElementById('play-btn').addEventListener('click',()=>{
 document.getElementById('back-to-menu').addEventListener('click',()=>{mapSelect.style.display='none';});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('contextmenu',e=>e.preventDefault());
+
+// КЛАВИАТУРА
 document.addEventListener('keydown',e=>{
     switch(e.code){
-        case 'KeyW':state.keys.w=true;break; case 'KeyS':state.keys.s=true;break;
-        case 'KeyA':state.keys.a=true;break; case 'KeyD':state.keys.d=true;break;
+        case 'KeyW':state.keys.w=true;break;
+        case 'KeyS':state.keys.s=true;break;
+        case 'KeyA':state.keys.a=true;break;
+        case 'KeyD':state.keys.d=true;break;
         case 'Space':state.keys.space=true;e.preventDefault();break;
         case 'ShiftLeft':state.keys.shift=true;break;
         case 'KeyR':reload();break;
+        case 'KeyV':switchWeapon();break;
         case 'ControlLeft':case 'KeyC':
             state.isCrouching = !state.isCrouching;
             const btn = document.getElementById('btn-crouch');
@@ -1814,34 +2038,46 @@ document.addEventListener('keydown',e=>{
             if(state.isCrouching){ btn.classList.add('active'); down.style.display='none'; up.style.display='block'; }
             else { btn.classList.remove('active'); down.style.display='block'; up.style.display='none'; }
             break;
-        case 'Digit1':if(playerData.ownedWeapons.includes('pistol'))switchWeaponTo('pistol');break;
-        case 'Digit2':if(playerData.ownedWeapons.includes('akr'))switchWeaponTo('akr');break;
-        case 'Digit3':if(playerData.ownedWeapons.includes('awp'))switchWeaponTo('awp');break;
+        case 'Digit1':if(playerData.ownedWeapons.includes('knife'))switchWeaponTo('knife');break;
+        case 'Digit2':if(playerData.ownedWeapons.includes('pistol'))switchWeaponTo('pistol');break;
+        case 'Digit3':if(playerData.ownedWeapons.includes('akr'))switchWeaponTo('akr');break;
+        case 'Digit4':if(playerData.ownedWeapons.includes('awp'))switchWeaponTo('awp');break;
+        case 'KeyF':toggleAim();break;
     }
 });
 document.addEventListener('keyup',e=>{
     switch(e.code){
-        case 'KeyW':state.keys.w=false;break; case 'KeyS':state.keys.s=false;break;
-        case 'KeyA':state.keys.a=false;break; case 'KeyD':state.keys.d=false;break;
+        case 'KeyW':state.keys.w=false;break;
+        case 'KeyS':state.keys.s=false;break;
+        case 'KeyA':state.keys.a=false;break;
+        case 'KeyD':state.keys.d=false;break;
         case 'Space':state.keys.space=false;break;
         case 'ShiftLeft':state.keys.shift=false;break;
     }
 });
+// ЛКМ на пустом месте для стрельбы (ПК)
 document.addEventListener('mousedown', (e)=>{
     if(e.button !== 0) return;
     if(!state.scene || state.isGameOver || state.isPaused) return;
     if(e.target && e.target.closest){
         if(e.target.closest('.ctrl-btn')) return;
         if(e.target.closest('#joy-move')) return;
+        if(e.target.closest('#fire-zone')) return;
         if(e.target.closest('.overlay')) return;
         if(e.target.closest('.modal')) return;
         if(e.target.closest('#paused-msg')) return;
         if(e.target.closest('#button-editor')) return;
         if(e.target.closest('#awp-scope')) return;
+        if(e.target.closest('#match-end')) return;
     }
-    shoot();
+    const w = WEAPONS[playerData.equippedWeapon];
+    if(w.isMelee || !w.auto) shoot();
+    state.autoFire = true;
+});
+document.addEventListener('mouseup', (e)=>{
+    if(e.button === 0) state.autoFire = false;
 });
 console.log('🎮 Standoff Mini 3D загружен!');
-</script>
+  </script>
 </body>
 </html>

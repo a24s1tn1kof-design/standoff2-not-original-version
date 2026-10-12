@@ -6,199 +6,340 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0a0a0f">
-<title>Standoff Mini 3D — Mobile</title>
+<title>Standoff Mini 3D</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none}
 html,body{overflow:hidden;width:100%;height:100%;font-family:'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#fff;position:fixed;touch-action:none}
-#menu{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#1a1a2e,#05050a);display:flex;flex-direction:column;z-index:1000;padding:12px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#menu::-webkit-scrollbar{width:6px}
-#menu::-webkit-scrollbar-thumb{background:#fa0;border-radius:3px}
-#menu-header{text-align:center;margin-bottom:10px;padding-top:8px}
-#menu-header h1{font-size:26px;letter-spacing:4px;color:#fa0;text-shadow:0 0 20px #fa08,0 0 40px #fa04;font-weight:900}
-#menu-header p{color:#888;font-size:10px;letter-spacing:3px;margin-top:2px}
-#menu-body{display:flex;gap:8px;flex:1;min-height:0}
-.side-column{width:80px;display:flex;flex-direction:column;gap:8px;flex-shrink:0}
-.side-btn{background:rgba(20,20,30,.9);border:2px solid #333;border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:70px}
-.side-btn.active{background:#fa0;border-color:#fa0;color:#111;box-shadow:0 0 20px #fa06}
-.side-btn .icon{font-size:24px}
-.side-btn .label{font-size:9px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}
-.side-btn:not(.active):hover{border-color:#fa0;color:#fa0}
-#content-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:4px;min-height:0}
-#content-area::-webkit-scrollbar{width:4px}
-#content-area::-webkit-scrollbar-thumb{background:#fa0;border-radius:2px}
-.content-tab{display:none}
-.content-tab.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
-.map-card{border:2px solid #333;border-radius:10px;overflow:hidden;cursor:pointer;transition:all .25s;background:#0d0d15}
-.map-card.selected{border-color:#fa0;box-shadow:0 0 20px #fa06}
-.map-preview{height:80px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative}
-.map-preview.sandstone{background:linear-gradient(135deg,#c9a06a,#8b6f47 50%,#4a3520)}
-.map-preview.templ{background:linear-gradient(135deg,#6a8ab0,#3a5a80 50%,#1a2a40)}
-.map-preview::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 15px,rgba(0,0,0,.1) 15px,rgba(0,0,0,.1) 16px)}
-.map-info{padding:8px 10px}
-.map-info h3{color:#fa0;font-size:13px;letter-spacing:2px;margin-bottom:2px}
-.map-info p{color:#888;font-size:10px;line-height:1.3}
-.weapon-card{background:#0d0d15;border:2px solid #333;border-radius:10px;padding:10px;transition:all .2s;cursor:pointer}
-.weapon-card.owned{border-color:#4f4}
-.weapon-card.equipped{border-color:#fa0;background:#1a1200}
-.weapon-card h3{color:#fa0;font-size:13px;letter-spacing:1px;margin-bottom:6px}
-.weapon-stats{font-size:10px;color:#aaa;line-height:1.6}
-.weapon-stats span{color:#fff;float:right}
-.weapon-price{margin-top:8px;font-size:12px;color:#fa0;font-weight:bold;text-align:right}
-.weapon-price.owned-tag{color:#4f4}
-.clan-card{background:#0d0d15;border:2px solid #333;border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .2s}
-.clan-card.selected{box-shadow:0 0 20px currentColor}
-.clan-emblem{font-size:32px;margin-bottom:4px}
-.clan-name{font-size:12px;font-weight:bold;letter-spacing:1px}
-.clan-desc{font-size:9px;color:#888;margin-top:2px}
-#player-stats{text-align:center;color:#888;font-size:10px;margin-top:8px;letter-spacing:1px;padding:4px}
-#player-stats span{color:#fa0;font-weight:bold}
-#play-btn{width:100%;padding:14px;margin-top:10px;background:linear-gradient(135deg,#fa0,#f80);color:#111;font-size:16px;font-weight:bold;letter-spacing:4px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 0 25px #fa06;flex-shrink:0}
-#play-btn:active{transform:scale(.98)}
+svg{width:100%;height:100%;display:block;fill:currentColor}
 
-/* ==== ВЫБОР КАРТЫ ПОСЛЕ ИГРАТЬ ==== */
-#map-select{position:fixed;inset:0;background:rgba(5,5,10,.97);display:none;flex-direction:column;z-index:1500;padding:16px;backdrop-filter:blur(8px)}
-#map-select h2{text-align:center;color:#fa0;font-size:22px;letter-spacing:4px;margin-bottom:14px;padding-top:10px}
-#map-select-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;max-width:500px;width:100%;margin:0 auto}
-#map-select .map-card{display:flex;flex-direction:row;align-items:center}
-#map-select .map-preview{width:100px;height:100px;flex-shrink:0;font-size:50px}
-#map-select .map-info{flex:1;padding:12px}
-#map-select .map-info h3{font-size:16px}
-#map-select .map-info p{font-size:11px}
-#map-select .back-btn{max-width:500px;width:100%;margin:10px auto 0;padding:12px;background:#222;color:#fa0;border:2px solid #fa0;border-radius:10px;font-weight:bold;letter-spacing:2px;cursor:pointer;flex-shrink:0}
-
-/* ==== HUD ==== */
-#hud{display:none;position:fixed;inset:0;pointer-events:none;z-index:10;font-family:'Segoe UI',sans-serif}
-#crosshair{position:absolute;top:50%;left:50%;width:26px;height:26px;transform:translate(-50%,-50%);opacity:.95}
-#crosshair::before,#crosshair::after{content:'';position:absolute;background:#fa0;box-shadow:0 0 4px #000,0 0 8px #fa08}
-#crosshair::before{width:3px;height:26px;left:11.5px;top:0}
-#crosshair::after{width:26px;height:3px;left:0;top:11.5px}
-#crosshair.hit::before,#crosshair.hit::after{background:#f22}
-#hit-marker{position:absolute;top:50%;left:50%;width:36px;height:36px;transform:translate(-50%,-50%) rotate(45deg);opacity:0;transition:opacity .08s}
-#hit-marker::before,#hit-marker::after{content:'';position:absolute;background:#f22;box-shadow:0 0 10px #f00}
-#hit-marker::before{width:5px;height:36px;left:15px;top:0}
-#hit-marker::after{width:36px;height:5px;left:0;top:15px}
-#hit-flash{position:absolute;inset:0;background:radial-gradient(circle,transparent 40%,rgba(255,0,0,.6));opacity:0;pointer-events:none;transition:opacity .15s}
-#score-top{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(10,10,18,.85);border:2px solid #fa0;border-radius:8px;padding:4px 14px;text-align:center}
-#score-top .lbl{font-size:8px;color:#fa0;letter-spacing:2px}
-#score-top .val{font-size:18px;font-weight:bold}
-#score-top .map{font-size:8px;color:#888;letter-spacing:1px}
-#minimap{position:absolute;top:8px;right:8px;width:100px;height:100px;background:rgba(10,10,18,.9);border:2px solid #fa0;border-radius:50%;overflow:hidden;box-shadow:0 0 15px #fa05}
-#health-bar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:180px;height:10px;background:rgba(0,0,0,.7);border:1px solid #fa0;border-radius:5px;overflow:hidden}
-#health-fill{width:100%;height:100%;background:linear-gradient(90deg,#f22,#fa0,#4f4);transition:width .2s}
-#ammo-hud{position:absolute;bottom:22px;right:12px;background:rgba(10,10,18,.85);border:1px solid #fa0;border-radius:6px;padding:2px 8px;text-align:right}
-#ammo-hud .wname{font-size:8px;color:#fa0;letter-spacing:1px}
-#ammo-hud .ammo{font-size:16px;font-weight:bold}
-#ammo-hud .ammo .res{font-size:10px;color:#888}
-#killfeed{position:absolute;top:46px;right:118px;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
-.kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
-@keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
-#reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:14px;font-weight:bold;background:rgba(0,0,0,.7);padding:6px 16px;border-radius:20px;border:2px solid #fa0;display:none;letter-spacing:2px}
-
-/* ==== КНОПКИ УПРАВЛЕНИЯ ==== */
-.ctrl-btn{position:absolute;background:rgba(15,15,25,.75);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;pointer-events:auto;cursor:pointer;user-select:none;transition:all .1s;backdrop-filter:blur(4px)}
-.ctrl-btn:active{background:rgba(255,170,0,.5);color:#111;transform:scale(.92)}
-.ctrl-btn.small{width:44px;height:44px;font-size:16px}
-.ctrl-btn.medium{width:54px;height:54px;font-size:22px}
-.ctrl-btn.big{width:64px;height:64px;font-size:26px}
-.ctrl-btn.tiny{width:34px;height:34px;font-size:13px}
-#btn-fire{bottom:90px;right:14px;background:rgba(255,50,50,.6);border-color:#f44;color:#fff}
-#btn-fire:active{background:#f44}
-#btn-aim{right:100px;bottom:100px}
-#btn-jump{right:14px;bottom:14px}
-#btn-crouch{right:82px;bottom:14px}
-#btn-reload{bottom:150px;right:76px}
-#btn-swap{bottom:150px;right:14px}
-#btn-pause{top:8px;left:8px;width:38px;height:38px;border-radius:8px;font-size:16px}
-#btn-sprint{bottom:14px;left:14px}
-#btn-fullscreen{top:8px;left:52px;width:38px;height:38px;border-radius:8px;font-size:16px}
-
-/* ==== ДЖОЙСТИКИ ==== */
-#joy-move{position:absolute;bottom:20px;left:20px;width:120px;height:120px;background:rgba(0,0,0,.25);border:2px solid rgba(255,170,0,.5);border-radius:50%;pointer-events:auto;touch-action:none}
-#joy-move-knob{position:absolute;top:50%;left:50%;width:52px;height:52px;background:rgba(255,170,0,.7);border:2px solid #fa0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 15px #fa06}
-#joy-look{position:absolute;inset:0;pointer-events:auto;touch-action:none;background:transparent}
-
-#paused-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:20px;letter-spacing:4px;background:rgba(0,0,0,.85);padding:16px 32px;border-radius:10px;border:2px solid #fa0;display:none;z-index:900;text-align:center}
-#paused-msg button{margin-top:12px;padding:10px 24px;background:#fa0;border:none;border-radius:8px;color:#111;font-weight:bold;font-size:14px;letter-spacing:2px;cursor:pointer}
-
-#game-over{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:1100;backdrop-filter:blur(6px);padding:20px}
-#game-over h1{color:#f22;font-size:32px;letter-spacing:6px;text-shadow:0 0 30px #f22;margin-bottom:14px;text-align:center}
-#game-over .result-stats{font-size:14px;color:#ccc;margin-bottom:20px;line-height:1.8;text-align:center}
-#game-over .result-stats span{color:#fa0;font-weight:bold}
-#game-over button{padding:14px 32px;font-size:14px;background:linear-gradient(135deg,#fa0,#f80);color:#111;font-weight:bold;letter-spacing:3px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 0 20px #fa06}
-
-#rotate-hint{position:fixed;inset:0;background:rgba(5,5,10,.98);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:2000;color:#fa0;text-align:center;padding:30px}
-#rotate-hint .phone{font-size:64px;transform:rotate(90deg);margin-bottom:20px;animation:rotateAnim 2s ease-in-out infinite}
-@keyframes rotateAnim{0%,100%{transform:rotate(90deg)}50%{transform:rotate(0)}}
-#rotate-hint h2{font-size:18px;letter-spacing:3px;margin-bottom:8px}
+/* ==== ROTATE HINT ==== */
+#rotate-hint{position:fixed;inset:0;background:linear-gradient(135deg,#0a0a15,#1a1a2e);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:9999;color:#fa0;text-align:center;padding:20px}
+#rotate-hint .phone{font-size:0;width:80px;height:130px;border:4px solid #fa0;border-radius:12px;margin-bottom:24px;position:relative;animation:rot 2s ease-in-out infinite}
+#rotate-hint .phone::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:24px;height:3px;background:#fa0;border-radius:2px}
+#rotate-hint .phone::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:30px;height:30px;border:2px solid #fa0;border-radius:50%}
+@keyframes rot{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
+#rotate-hint h2{font-size:18px;letter-spacing:4px;margin-bottom:8px}
 #rotate-hint p{font-size:12px;color:#888}
 
+/* ==== MAIN MENU (Standoff style) ==== */
+#menu{position:fixed;inset:0;background:linear-gradient(135deg,#0a0a15 0%,#151528 50%,#0a0a15 100%);display:flex;flex-direction:column;z-index:1000;padding:8px}
+#menu-top{display:flex;flex:1;gap:6px;min-height:0;padding-bottom:6px}
+#menu-bottom{padding:0 4px}
+
+/* Left sidebar */
+#sidebar{width:44px;background:rgba(15,15,25,.9);border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;border:1px solid #222}
+.side-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#666;transition:all .2s;padding:6px}
+.side-icon.active{background:#2a2a3a;color:#fa0;box-shadow:0 0 12px #fa04}
+.side-icon:hover{color:#fa0}
+.side-icon .badge{position:absolute;top:-4px;right:-4px;background:#fa0;color:#111;font-size:8px;padding:1px 4px;border-radius:6px;font-weight:bold}
+
+/* Profile card */
+#profile-panel{width:220px;display:flex;flex-direction:column;gap:6px}
+#profile-card{background:rgba(15,15,25,.9);border:1px solid #222;border-radius:8px;padding:10px;position:relative}
+#avatar-wrap{display:flex;gap:10px;align-items:flex-start}
+#avatar{width:60px;height:60px;border-radius:6px;background:linear-gradient(135deg,#4a2a1a,#8b5a3a);border:2px solid #fa0;cursor:pointer;overflow:hidden;flex-shrink:0;position:relative}
+#avatar img{width:100%;height:100%;object-fit:cover;display:block}
+#avatar .avatar-default{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fa0;font-size:28px}
+#profile-info{flex:1;min-width:0}
+#p-id{font-size:11px;color:#888;letter-spacing:1px;cursor:pointer;padding:2px 0}
+#p-id:hover{color:#fa0}
+#p-id .v{color:#ccc;font-weight:bold}
+#p-name{font-size:13px;font-weight:bold;color:#fff;cursor:pointer;padding:2px 0;letter-spacing:1px}
+#p-name:hover{color:#fa0}
+#p-level{display:flex;align-items:center;gap:6px;margin-top:6px}
+#p-level .lv-badge{background:linear-gradient(135deg,#fa0,#f80);color:#111;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px}
+#p-level .lv-bar{flex:1;height:4px;background:#222;border-radius:2px;overflow:hidden}
+#p-level .lv-bar-fill{height:100%;width:35%;background:linear-gradient(90deg,#fa0,#4f4)}
+#p-exp{font-size:9px;color:#888;margin-top:4px;letter-spacing:1px}
+#p-lock{display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid #222;font-size:10px;color:#888}
+#p-lock svg{width:12px;height:12px;color:#fa0;flex-shrink:0}
+
+/* Friends list */
+#friends-panel{flex:1;background:rgba(15,15,25,.9);border:1px solid #222;border-radius:8px;padding:8px;overflow-y:auto;min-height:80px}
+#friends-panel::-webkit-scrollbar{width:3px}
+#friends-panel::-webkit-scrollbar-thumb{background:#fa0;border-radius:2px}
+#friends-panel h4{font-size:10px;color:#666;letter-spacing:2px;margin-bottom:6px;text-transform:uppercase}
+.friend{display:flex;align-items:center;gap:8px;padding:6px;border-radius:6px;background:#1a1a2a;margin-bottom:4px;font-size:11px}
+.friend .f-av{width:22px;height:22px;border-radius:4px;background:#2a2a3a;display:flex;align-items:center;justify-content:center;color:#fa0;font-size:11px;font-weight:bold}
+.friend .f-name{flex:1;color:#ccc}
+.friend .f-status{width:8px;height:8px;border-radius:50%;background:#4f4;box-shadow:0 0 6px #4f4}
+.friend.offline .f-status{background:#666;box-shadow:none}
+.friend.offline .f-name{color:#666}
+
+/* Center panel - rewards */
+#center-panel{flex:1;background:linear-gradient(135deg,rgba(20,20,35,.95),rgba(30,25,45,.95));border:1px solid #2a2a3a;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;min-width:0}
+#center-panel .rewards-title{font-size:14px;color:#fa0;letter-spacing:3px;font-weight:900;margin-bottom:6px}
+#center-panel .rewards-sub{font-size:10px;color:#888;max-width:200px;margin-bottom:20px;line-height:1.5}
+#center-panel .wheat{width:100px;height:100px;color:#fa0;margin-bottom:14px;filter:drop-shadow(0 0 20px #fa06);animation:wheatGlow 3s ease-in-out infinite}
+@keyframes wheatGlow{0%,100%{filter:drop-shadow(0 0 15px #fa05)}50%{filter:drop-shadow(0 0 30px #fa09)}}
+#get-reward-btn{padding:8px 26px;background:linear-gradient(135deg,#3a3a5a,#2a2a3a);border:1px solid #fa0;color:#fa0;border-radius:6px;font-size:12px;font-weight:bold;letter-spacing:3px;cursor:pointer;transition:all .2s}
+#get-reward-btn:hover{background:linear-gradient(135deg,#fa0,#f80);color:#111;box-shadow:0 0 20px #fa05}
+
+/* Right panel - battle pass */
+#bp-panel{width:280px;background:rgba(15,15,25,.9);border:1px solid #222;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px}
+#bp-header{display:flex;justify-content:space-between;align-items:center}
+#bp-header .bp-logo{font-size:24px;font-weight:900;color:#fa0;letter-spacing:2px;line-height:1}
+#bp-header .bp-logo .z{color:#fff}
+#bp-header .bp-label{font-size:8px;color:#fa0;letter-spacing:2px;text-align:right;line-height:1.3}
+#bp-header .bp-label .big{color:#fff;font-weight:bold;font-size:11px}
+#bp-tabs{display:flex;gap:4px}
+#bp-tabs .bp-tab{flex:1;padding:5px;text-align:center;background:#1a1a2a;border:1px solid #222;border-radius:4px;font-size:9px;letter-spacing:2px;color:#666;font-weight:bold;cursor:pointer}
+#bp-tabs .bp-tab.active{background:linear-gradient(135deg,#fa0,#f80);color:#111;border-color:#fa0}
+#bp-next{font-size:9px;color:#888;letter-spacing:2px;text-align:center;margin-top:2px}
+#bp-rewards{display:flex;gap:6px;flex:1}
+.bp-reward{flex:1;background:#1a1a2a;border:1px solid #2a2a3a;border-radius:6px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;cursor:pointer;transition:all .2s}
+.bp-reward:hover{border-color:#fa0;transform:translateY(-2px)}
+.bp-reward .r-icon{width:40px;height:40px;color:#fff}
+.bp-reward .r-label{font-size:8px;color:#888;letter-spacing:1px;font-weight:bold}
+.bp-reward .r-count{font-size:9px;color:#fa0;font-weight:bold}
+.bp-reward.gold .r-icon{color:#fa0}
+.bp-reward.locked::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px}
+.bp-reward .lock-icon{position:absolute;top:4px;right:4px;width:10px;height:10px;color:#fa0;z-index:2}
+
+/* Play button */
+#play-btn{width:100%;padding:14px;background:linear-gradient(135deg,#5a8aff,#3a5aff);color:#fff;font-size:16px;font-weight:bold;letter-spacing:6px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 0 25px rgba(90,138,255,.5),inset 0 1px 0 rgba(255,255,255,.2);transition:all .2s;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+#play-btn:hover{transform:scale(1.01);box-shadow:0 0 40px rgba(90,138,255,.7)}
+#play-btn:active{transform:scale(.99)}
+
+/* ==== MAP SELECT ==== */
+#map-select{position:fixed;inset:0;background:rgba(5,5,10,.97);display:none;flex-direction:column;z-index:1500;padding:10px;backdrop-filter:blur(8px)}
+#map-select h2{text-align:center;color:#fa0;font-size:16px;letter-spacing:4px;margin-bottom:10px}
+#map-select-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;max-width:520px;width:100%;margin:0 auto}
+.map-card{display:flex;flex-direction:row;align-items:center;border:2px solid #222;border-radius:8px;overflow:hidden;cursor:pointer;background:#0d0d15;transition:all .2s}
+.map-card:hover{border-color:#fa0}
+.map-card.selected{border-color:#fa0;box-shadow:0 0 20px #fa05}
+.map-preview{width:90px;height:70px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0;position:relative}
+.map-preview.sandstone{background:linear-gradient(135deg,#c9a06a,#8b6f47 50%,#4a3520)}
+.map-preview.templ{background:linear-gradient(135deg,#6a8ab0,#3a5a80 50%,#1a2a40)}
+.map-preview svg{width:44px;height:44px;color:rgba(255,255,255,.85);z-index:1}
+.map-info{flex:1;padding:10px}
+.map-info h3{color:#fa0;font-size:13px;letter-spacing:2px;margin-bottom:2px}
+.map-info p{font-size:10px;color:#888;line-height:1.3}
+#back-to-menu{max-width:520px;width:100%;margin:8px auto 0;padding:10px;background:#222;color:#fa0;border:2px solid #fa0;border-radius:8px;font-weight:bold;letter-spacing:2px;cursor:pointer;font-size:12px}
+
+/* ==== HUD ==== */
+#hud{display:none;position:fixed;inset:0;pointer-events:none;z-index:10}
+#crosshair{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%);opacity:.95}
+#crosshair::before,#crosshair::after{content:'';position:absolute;background:#fa0;box-shadow:0 0 4px #000,0 0 8px #fa08}
+#crosshair::before{width:2px;height:22px;left:10px;top:0}
+#crosshair::after{width:22px;height:2px;left:0;top:10px}
+#crosshair.hit::before,#crosshair.hit::after{background:#f22}
+#hit-marker{position:absolute;top:50%;left:50%;width:30px;height:30px;transform:translate(-50%,-50%) rotate(45deg);opacity:0;transition:opacity .08s}
+#hit-marker::before,#hit-marker::after{content:'';position:absolute;background:#f22;box-shadow:0 0 10px #f00}
+#hit-marker::before{width:4px;height:30px;left:13px;top:0}
+#hit-marker::after{width:30px;height:4px;left:0;top:13px}
+#hit-flash{position:absolute;inset:0;background:radial-gradient(circle,transparent 40%,rgba(255,0,0,.6));opacity:0;pointer-events:none;transition:opacity .15s}
+#score-top{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(10,10,18,.85);border:2px solid #fa0;border-radius:8px;padding:3px 12px;text-align:center}
+#score-top .lbl{font-size:8px;color:#fa0;letter-spacing:2px}
+#score-top .val{font-size:16px;font-weight:bold;line-height:1}
+#score-top .map{font-size:7px;color:#888;letter-spacing:1px}
+#minimap{position:absolute;top:6px;right:6px;width:88px;height:88px;background:rgba(10,10,18,.9);border:2px solid #fa0;border-radius:50%;overflow:hidden}
+#health-bar{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:160px;height:8px;background:rgba(0,0,0,.7);border:1px solid #fa0;border-radius:4px;overflow:hidden}
+#health-fill{width:100%;height:100%;background:linear-gradient(90deg,#f22,#fa0,#4f4);transition:width .2s}
+#ammo-hud{position:absolute;bottom:18px;right:8px;background:rgba(10,10,18,.85);border:1px solid #fa0;border-radius:5px;padding:2px 8px;text-align:right}
+#ammo-hud .wname{font-size:7px;color:#fa0;letter-spacing:1px}
+#ammo-hud .ammo{font-size:14px;font-weight:bold;line-height:1}
+#ammo-hud .ammo .res{font-size:9px;color:#888}
+#killfeed{position:absolute;top:40px;right:100px;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
+@keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
+#reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:12px;font-weight:bold;background:rgba(0,0,0,.7);padding:5px 14px;border-radius:16px;border:2px solid #fa0;display:none;letter-spacing:2px}
+
+/* ==== CONTROL BUTTONS ==== */
+#hud .ctrl-btn{position:absolute;background:rgba(15,15,25,.7);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;transition:all .1s;backdrop-filter:blur(4px);z-index:100;padding:8px}
+#hud .ctrl-btn svg{width:100%;height:100%}
+#hud .ctrl-btn:active{background:rgba(255,170,0,.5);color:#111;transform:scale(.92)}
+#hud .ctrl-btn.small{width:38px;height:38px}
+#hud .ctrl-btn.medium{width:48px;height:48px}
+#hud .ctrl-btn.big{width:60px;height:60px}
+#hud #btn-fire{bottom:76px;right:12px;background:rgba(255,50,50,.65);border-color:#f44;color:#fff}
+#hud #btn-fire:active{background:#f44}
+#hud #btn-aim{right:82px;bottom:86px}
+#hud #btn-jump{right:12px;bottom:12px}
+#hud #btn-crouch{right:70px;bottom:12px}
+#hud #btn-reload{bottom:130px;right:64px}
+#hud #btn-swap{bottom:130px;right:12px}
+#hud #btn-sprint{bottom:12px;left:12px}
+#hud #btn-pause{top:6px;left:6px;width:32px;height:32px;border-radius:6px}
+#hud #btn-fullscreen{top:6px;left:44px;width:32px;height:32px;border-radius:6px}
+
+/* ==== JOYSTICKS ==== */
+#joy-move{position:absolute;bottom:14px;left:14px;width:110px;height:110px;background:rgba(0,0,0,.25);border:2px solid rgba(255,170,0,.5);border-radius:50%;pointer-events:auto;touch-action:none;z-index:50}
+#joy-move-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;background:rgba(255,170,0,.7);border:2px solid #fa0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 15px #fa06}
+#joy-look{position:absolute;inset:0;pointer-events:auto;touch-action:none;background:transparent;z-index:1}
+
+#paused-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:16px;letter-spacing:4px;background:rgba(0,0,0,.85);padding:14px 28px;border-radius:10px;border:2px solid #fa0;display:none;z-index:900;text-align:center}
+#paused-msg button{margin-top:10px;padding:8px 20px;background:#fa0;border:none;border-radius:8px;color:#111;font-weight:bold;font-size:12px;letter-spacing:2px;cursor:pointer}
+#game-over{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:1100;padding:20px}
+#game-over h1{color:#f22;font-size:26px;letter-spacing:6px;text-shadow:0 0 30px #f22;margin-bottom:14px;text-align:center}
+#game-over .result-stats{font-size:13px;color:#ccc;margin-bottom:18px;line-height:1.8;text-align:center}
+#game-over .result-stats span{color:#fa0;font-weight:bold}
+#game-over button{padding:12px 28px;font-size:13px;background:linear-gradient(135deg,#fa0,#f80);color:#111;font-weight:bold;letter-spacing:3px;border:none;border-radius:8px;cursor:pointer}
+
 @media (orientation:landscape) and (max-height:500px){
-    #joy-move{width:100px;height:100px;bottom:12px;left:12px}
-    #joy-move-knob{width:44px;height:44px}
-    .ctrl-btn.small{width:38px;height:38px}
-    .ctrl-btn.medium{width:46px;height:46px}
-    .ctrl-btn.big{width:56px;height:56px}
-    #btn-fire{bottom:70px;right:10px}
-    #btn-aim{right:80px;bottom:80px}
-    #btn-reload{bottom:120px;right:60px}
-    #btn-swap{bottom:120px;right:10px}
-    #minimap{width:80px;height:80px}
+    #joy-move{width:90px;height:90px;bottom:10px;left:10px}
+    #joy-move-knob{width:40px;height:40px}
+    #hud .ctrl-btn.small{width:34px;height:34px}
+    #hud .ctrl-btn.medium{width:42px;height:42px}
+    #hud .ctrl-btn.big{width:54px;height:54px}
+    #hud #btn-fire{bottom:62px;right:8px}
+    #hud #btn-aim{right:68px;bottom:72px}
+    #hud #btn-reload{bottom:110px;right:52px}
+    #hud #btn-swap{bottom:110px;right:8px}
+    #minimap{width:72px;height:72px}
 }
 </style>
 </head>
 <body>
-  <!-- ==== МЕНЮ ==== -->
-<div id="menu">
-    <div id="menu-header"><h1>STANDOFF MINI 3D</h1><p>DELUXE MOBILE</p></div>
-    <div id="menu-body">
-        <div class="side-column">
-            <div class="side-btn active" data-tab="maps"><div class="icon">🗺️</div><div class="label">Карты</div></div>
-            <div class="side-btn" data-tab="shop"><div class="icon">🛒</div><div class="label">Магазин</div></div>
-            <div class="side-btn" data-tab="clans"><div class="icon">🛡️</div><div class="label">Кланы</div></div>
-        </div>
-        <div id="content-area">
-            <div class="content-tab active" id="tab-maps"><div class="grid" id="maps-grid"></div></div>
-            <div class="content-tab" id="tab-shop"><div class="grid" id="shop-grid"></div></div>
-            <div class="content-tab" id="tab-clans"><div class="grid" id="clan-grid"></div></div>
-        </div>
-    </div>
-    <div id="player-stats">💰 <span id="balance">5000</span>$ | 🎯 <span id="total-kills">0</span> | 🛡️ <span id="clan-tag">—</span></div>
-    <button id="play-btn">▶ ИГРАТЬ</button>
+ <!-- ROTATE HINT -->
+<div id="rotate-hint">
+    <div class="phone"></div>
+    <h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2>
+    <p>Игра работает только в горизонтальной ориентации</p>
 </div>
 
-<!-- ==== ВЫБОР КАРТЫ ==== -->
+<!-- MAIN MENU -->
+<div id="menu">
+    <div id="menu-top">
+        <!-- LEFT SIDEBAR -->
+        <div id="sidebar">
+            <div class="side-icon active" data-tab="maps" title="Играть">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="side-icon" data-tab="profile" title="Профиль">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <div class="side-icon" data-tab="shop" title="Магазин">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.49 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <div class="side-icon" data-tab="clans" title="Кланы">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            </div>
+            <div class="side-icon" data-tab="settings" title="Настройки">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            </div>
+        </div>
+
+        <!-- LEFT PROFILE -->
+        <div id="profile-panel">
+            <div id="profile-card">
+                <div id="avatar-wrap">
+                    <div id="avatar" title="Нажми чтобы сменить">
+                        <div class="avatar-default">
+                            <svg viewBox="0 0 24 24" style="width:100%;height:100%"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                    </div>
+                    <div id="profile-info">
+                        <div id="p-id">ID <span class="v" id="p-id-val">73396228</span></div>
+                        <div id="p-name" title="Нажми чтобы сменить">Игрок</div>
+                    </div>
+                </div>
+                <div id="p-level">
+                    <span class="lv-badge">LVL 1</span>
+                    <div class="lv-bar"><div class="lv-bar-fill"></div></div>
+                </div>
+                <div id="p-exp">0 / 100 EXP</div>
+                <div id="p-lock">
+                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6z"/></svg>
+                    <span>Соревновательный режим недоступен</span>
+                </div>
+            </div>
+            <div id="friends-panel">
+                <h4>Друзья (3)</h4>
+                <div class="friend"><div class="f-av">A</div><div class="f-name">Alex</div><div class="f-status"></div></div>
+                <div class="friend"><div class="f-av">M</div><div class="f-name">Maxiм</div><div class="f-status"></div></div>
+                <div class="friend offline"><div class="f-av">K</div><div class="f-name">Kirill</div><div class="f-status"></div></div>
+            </div>
+        </div>
+
+        <!-- CENTER - REWARDS -->
+        <div id="center-panel">
+            <div class="wheat">
+                <svg viewBox="0 0 24 24"><path d="M12 2C10 2 8.5 3.5 8.5 5.5c0 .5.1 1 .3 1.4-.3-.1-.6-.1-.9-.1C6 6.8 4.5 8.3 4.5 10.2c0 .6.2 1.2.5 1.7-.4-.2-.9-.3-1.4-.3-1.9 0-3.4 1.5-3.4 3.4 0 1.3.7 2.4 1.8 3-.2.4-.3.9-.3 1.4 0 1.9 1.5 3.4 3.4 3.4.5 0 1-.1 1.4-.3-.2.4-.3.9-.3 1.4 0 1.9 1.5 3.4 3.4 3.4s3.4-1.5 3.4-3.4c0-.5-.1-1-.3-1.4.4.2.9.3 1.4.3 1.9 0 3.4-1.5 3.4-3.4 0-.5-.1-1-.3-1.4 1.1-.6 1.8-1.7 1.8-3 0-1.9-1.5-3.4-3.4-3.4-.5 0-1 .1-1.4.3.3-.5.5-1.1.5-1.7 0-1.9-1.5-3.4-3.4-3.4-.3 0-.6 0-.9.1.2-.4.3-.9.3-1.4C13.5 3.5 12 2 12 2z"/></svg>
+            </div>
+            <div class="rewards-title">COMPETITIVE REWARDS</div>
+            <div class="rewards-sub">Представляем Вам новые наборы в честь выхода Рейтинговой игры</div>
+            <button id="get-reward-btn">ПОЛУЧИТЬ</button>
+        </div>
+
+        <!-- RIGHT - BATTLE PASS -->
+        <div id="bp-panel">
+            <div id="bp-header">
+                <div class="bp-logo"><span class="z">Z</span>9</div>
+                <div class="bp-label">
+                    <div class="big">PROJECT</div>
+                    <div>НЕДЕЛЯ 6</div>
+                </div>
+                <div class="bp-label">
+                    <div class="big">1</div>
+                    <div>УРОВЕНЬ</div>
+                </div>
+            </div>
+            <div id="bp-tabs">
+                <div class="bp-tab active">FREE PASS</div>
+                <div class="bp-tab">GOLD PASS</div>
+            </div>
+            <div id="bp-next">Следующая награда:</div>
+            <div id="bp-rewards">
+                <div class="bp-reward">
+                    <div class="r-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+                    </div>
+                    <div class="r-label">FREE PASS</div>
+                </div>
+                <div class="bp-reward locked">
+                    <div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg></div>
+                    <div class="r-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+                    </div>
+                    <div class="r-label">GOLD</div>
+                </div>
+                <div class="bp-reward locked gold">
+                    <div class="lock-icon"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg></div>
+                    <div class="r-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M3 13.5h8v8H3z"/></svg>
+                    </div>
+                    <div class="r-label">Z9 GOLD</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLAY BUTTON -->
+    <div id="menu-bottom">
+        <button id="play-btn">ИГРАТЬ</button>
+    </div>
+</div>
+
+<!-- MAP SELECT -->
 <div id="map-select">
     <h2>ВЫБЕРИ КАРТУ</h2>
     <div id="map-select-list"></div>
-    <button class="back-btn" id="back-to-menu">← НАЗАД</button>
+    <button id="back-to-menu">← НАЗАД</button>
 </div>
 
-<!-- ==== HUD ==== -->
+<!-- HUD -->
 <div id="hud">
     <div id="crosshair"></div><div id="hit-marker"></div><div id="hit-flash"></div>
     <div id="reload-msg">ПЕРЕЗАРЯДКА...</div>
     <div id="score-top"><div class="lbl">УБИЙСТВА</div><div class="val" id="score">0</div><div class="map" id="map-name">SANDSTONE</div></div>
     <div id="health-bar"><div id="health-fill"></div></div>
     <div id="ammo-hud"><div class="wname" id="weapon-name">P-9 PISTOL</div><div class="ammo" id="ammo">12<span class="res">/48</span></div></div>
-    <div id="minimap"><canvas id="minimap-canvas" width="100" height="100"></canvas></div>
+    <div id="minimap"><canvas id="minimap-canvas" width="88" height="88"></canvas></div>
     <div id="killfeed"></div>
 
-    <!-- Кнопки -->
-    <div class="ctrl-btn" id="btn-pause">⏸</div>
-    <div class="ctrl-btn" id="btn-fullscreen">⛶</div>
-    <div class="ctrl-btn big" id="btn-fire">🔥</div>
-    <div class="ctrl-btn medium" id="btn-aim">🎯</div>
-    <div class="ctrl-btn medium" id="btn-jump">⬆</div>
-    <div class="ctrl-btn medium" id="btn-crouch">⬇</div>
-    <div class="ctrl-btn small" id="btn-reload">🔄</div>
-    <div class="ctrl-btn small" id="btn-swap">🔫</div>
-    <div class="ctrl-btn medium" id="btn-sprint">🏃</div>
-
-    <!-- Джойстики -->
-    <div id="joy-move"><div id="joy-move-knob"></div></div>
     <div id="joy-look"></div>
 
+    <div class="ctrl-btn small" id="btn-pause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></div>
+    <div class="ctrl-btn small" id="btn-fullscreen"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
+    <div class="ctrl-btn big" id="btn-fire"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg></div>
+    <div class="ctrl-btn medium" id="btn-aim"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg></div>
+    <div class="ctrl-btn medium" id="btn-jump"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg></div>
+    <div class="ctrl-btn medium" id="btn-crouch"><svg viewBox="0 0 24 24"><path d="M12 20l8-8h-5V4H9v8H4z"/></svg></div>
+    <div class="ctrl-btn small" id="btn-reload"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A8 8 0 1 0 19.73 14h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></div>
+    <div class="ctrl-btn small" id="btn-swap"><svg viewBox="0 0 24 24"><path d="M7.5 6.5C7.5 5.67 8.17 5 9 5s1.5.67 1.5 1.5S9.83 8 9 8s-1.5-.67-1.5-1.5zM16 5c-.83 0-1.5.67-1.5 1.5S15.17 8 16 8s1.5-.67 1.5-1.5S16.83 5 16 5zM4 11c0 4.42 3.58 8 8 8s8-3.58 8-8H4z"/></svg></div>
+    <div class="ctrl-btn medium" id="btn-sprint"><svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/></svg></div>
+    <div id="joy-move"><div id="joy-move-knob"></div></div>
     <div id="paused-msg">ПАУЗА<button id="btn-resume">ПРОДОЛЖИТЬ</button></div>
 </div>
 
@@ -208,112 +349,193 @@ html,body{overflow:hidden;width:100%;height:100%;font-family:'Segoe UI',Roboto,s
     <button onclick="returnToMenu()">В МЕНЮ</button>
 </div>
 
-<div id="rotate-hint">
-    <div class="phone">📱</div>
-    <h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2>
-    <p>Игра работает только в горизонтальной ориентации</p>
-</div>
+<input type="file" id="avatar-input" accept="image/*" style="display:none">
 
 <script type="importmap">
-{"imports":{"three":"https://unpkg.com/three@0.132.2/build/three.module.js","three/addons/":"https://unpkg.com/three@0.132.2/examples/jsm/"}}
+{"imports":{"three":"https://unpkg.com/three@0.132.2/build/three.module.js"}}
 </script>
 <script type="module">
 import * as THREE from 'three';
-import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
-
-// ==== КОНСТАНТЫ ====
+   // ==== КОНСТАНТЫ ====
 const WEAPONS = {
     pistol:{name:'P-9 PISTOL',damage:25,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,price:0,range:60,model:'pistol'},
     akr:{name:'AKR-12',damage:35,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,price:2700,range:80,model:'rifle'},
     awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,price:4750,range:150,model:'sniper'}
 };
 const CLANS = [
-    {id:'none',name:'БЕЗ КЛАНА',tag:'—',color:'#888',emblem:'🚫',bonus:'Нет бонусов',bonusType:null},
-    {id:'vipers',name:'VIPERS',tag:'[VPR]',color:'#4f4',emblem:'🐍',bonus:'+10% скорости',bonusType:'speed'},
-    {id:'wolves',name:'WOLVES',tag:'[WLV]',color:'#88f',emblem:'🐺',bonus:'+15% здоровья',bonusType:'health'},
-    {id:'phoenix',name:'PHOENIX',tag:'[PHX]',color:'#f62',emblem:'🔥',bonus:'+10% урона',bonusType:'damage'},
-    {id:'shadows',name:'SHADOWS',tag:'[SHD]',color:'#a4f',emblem:'🌑',bonus:'+20% денег',bonusType:'money'}
+    {id:'none',name:'БЕЗ КЛАНА',tag:'—',color:'#888',bonus:'Нет бонусов',bonusType:null},
+    {id:'vipers',name:'VIPERS',tag:'[VPR]',color:'#4f4',bonus:'+10% скорости',bonusType:'speed'},
+    {id:'wolves',name:'WOLVES',tag:'[WLV]',color:'#88f',bonus:'+15% здоровья',bonusType:'health'},
+    {id:'phoenix',name:'PHOENIX',tag:'[PHX]',color:'#f62',bonus:'+10% урона',bonusType:'damage'},
+    {id:'shadows',name:'SHADOWS',tag:'[SHD]',color:'#a4f',bonus:'+20% денег',bonusType:'money'}
 ];
 const MAPS = {
-    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость. Коридоры и площадки.',emoji:'🏜️',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone},
-    templ:{name:'TEMPL',desc:'Древний храм в горах. Узкие проходы.',emoji:'🏛️',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:.5,sunColor:0xccddff,generate:buildTempl}
+    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость. Коридоры и площадки.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>'},
+    templ:{name:'TEMPL',desc:'Древний храм в горах. Узкие проходы.',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:.5,sunColor:0xccddff,generate:buildTempl,icon:'<svg viewBox="0 0 24 24"><path d="M12 2L2 8h20zM4 10v10h2V10zm4 0v10h2V10zm4 0v10h2V10zm4 0v10h2V10zM2 22h20v-2H2z"/></svg>'}
 };
-const playerData = {money:5000,totalKills:0,ownedWeapons:['pistol'],equippedWeapon:'pistol',clanId:'none'};
-const state = {scene:null,camera:null,renderer:null,controls:null,raycaster:null,clock:null,mapKey:'sandstone',magAmmo:0,reserveAmmo:0,health:100,maxHealth:100,score:0,sessionMoney:0,isReloading:false,isGameOver:false,lastShootTime:0,enemies:[],colliders:[],keys:{w:false,a:false,s:false,d:false,space:false,shift:false},velocity:new THREE.Vector3(),canJump:true,minimapCtx:null,weaponModel:null,muzzleFlash:null,bloodParticles:[],autoFire:false,spawnPoints:[],isCrouching:false,isAiming:false,isPaused:false};
-const PLAYER_HEIGHT=1.7, PLAYER_RADIUS=.6, WORLD_SIZE=90, HALF_WORLD=WORLD_SIZE/2-2, GRAVITY=22, JUMP_SPEED=7, MOVE_SPEED=6;
+const playerData = {
+    money:5000,totalKills:0,ownedWeapons:['pistol'],equippedWeapon:'pistol',clanId:'none',
+    playerId:'73396228',playerName:'Игрок',avatar:null,level:1,exp:0
+};
+const state = {
+    scene:null,camera:null,renderer:null,raycaster:null,clock:null,
+    mapKey:'sandstone',magAmmo:0,reserveAmmo:0,health:100,maxHealth:100,
+    score:0,sessionMoney:0,isReloading:false,isGameOver:false,isPaused:false,
+    lastShootTime:0,enemies:[],colliders:[],bloodParticles:[],
+    velocity:new THREE.Vector3(),canJump:true,minimapCtx:null,
+    weaponModel:null,muzzleFlash:null,autoFire:false,spawnPoints:[],
+    isCrouching:false,isAiming:false,
+    yaw:0,pitch:0
+};
+const PLAYER_HEIGHT=1.7, PLAYER_RADIUS=.6, WORLD_SIZE=90, HALF_WORLD=WORLD_SIZE/2-2,
+      GRAVITY=22, JUMP_SPEED=7, MOVE_SPEED=6, LOOK_SENS=0.004;
 
 // ==== МОБИЛЬНОЕ УПРАВЛЕНИЕ ====
 const mobile = {
-    moveX:0, moveY:0, lookX:0, lookY:0,
-    joyMoveActive:false, joyMoveStart:{x:0,y:0}, joyMoveCurrent:{x:0,y:0},
-    lookActive:false, lookStart:{x:0,y:0}, lastLook:{x:0,y:0},
-    prevTouchX:0, prevTouchY:0
+    moveX:0, moveY:0,
+    joyMoveActive:false, joyMoveStart:{x:0,y:0},
+    lookActive:false, lookId:null, lookLast:{x:0,y:0}
 };
-           // ==== МЕНЮ ====
+
+// ==== ПРОФИЛЬ (ID, ИМЯ, АВАТАР) ====
+const avatarInput = document.getElementById('avatar-input');
+function loadProfile(){
+    try {
+        const saved = localStorage.getItem('standoff_profile');
+        if(saved){
+            const p = JSON.parse(saved);
+            Object.assign(playerData, p);
+        }
+    } catch(e){}
+    updateProfileUI();
+}
+function saveProfile(){
+    try {
+        localStorage.setItem('standoff_profile', JSON.stringify({
+            playerId:playerData.playerId, playerName:playerData.playerName,
+            avatar:playerData.avatar, level:playerData.level, exp:playerData.exp,
+            money:playerData.money, totalKills:playerData.totalKills,
+            ownedWeapons:playerData.ownedWeapons, equippedWeapon:playerData.equippedWeapon,
+            clanId:playerData.clanId
+        }));
+    } catch(e){}
+}
+function updateProfileUI(){
+    document.getElementById('p-id-val').textContent = playerData.playerId;
+    document.getElementById('p-name').textContent = playerData.playerName;
+    const av = document.getElementById('avatar');
+    if(playerData.avatar){
+        av.innerHTML = `<img src="${playerData.avatar}" alt="avatar">`;
+    } else {
+        av.innerHTML = `<div class="avatar-default"><svg viewBox="0 0 24 24" style="width:100%;height:100%"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>`;
+    }
+    document.querySelector('#p-level .lv-badge').textContent = 'LVL ' + playerData.level;
+    document.getElementById('p-exp').textContent = playerData.exp + ' / 100 EXP';
+}
+// Клик по аватару — выбрать файл
+document.getElementById('avatar').addEventListener('click', ()=>avatarInput.click());
+avatarInput.addEventListener('change', (e)=>{
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+        playerData.avatar = ev.target.result;
+        updateProfileUI(); saveProfile();
+    };
+    reader.readAsDataURL(file);
+});
+// Клик по ID — редактировать
+document.getElementById('p-id').addEventListener('click', ()=>{
+    const nv = prompt('Введите ваш ID (до 12 цифр):', playerData.playerId);
+    if(nv !== null && nv.trim()){
+        playerData.playerId = nv.trim().slice(0,12);
+        updateProfileUI(); saveProfile();
+    }
+});
+// Клик по имени — редактировать
+document.getElementById('p-name').addEventListener('click', ()=>{
+    const nv = prompt('Введите ваше имя:', playerData.playerName);
+    if(nv !== null && nv.trim()){
+        playerData.playerName = nv.trim().slice(0,20);
+        updateProfileUI(); saveProfile();
+    }
+});
+
+// ==== МЕНЮ (вкладки) ====
 const menu=document.getElementById('menu'), hud=document.getElementById('hud');
 const mapSelect=document.getElementById('map-select');
-document.querySelectorAll('.side-btn').forEach(btn=>{
+document.querySelectorAll('.side-icon').forEach(btn=>{
     btn.addEventListener('click',()=>{
-        document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.content-tab').forEach(c=>c.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+        const tab = btn.dataset.tab;
+        if(tab === 'maps'){ // Открывает выбор карты
+            renderMapSelect();
+            mapSelect.style.display='flex';
+        } else if(tab === 'shop'){
+            openShopOverlay();
+        } else if(tab === 'clans'){
+            openClansOverlay();
+        } else if(tab === 'profile'){
+            showProfilePopup();
+        } else if(tab === 'settings'){
+            showSettingsPopup();
+        }
     });
 });
-function renderMaps(){
-    const grid=document.getElementById('maps-grid'); grid.innerHTML='';
-    Object.entries(MAPS).forEach(([key,map])=>{
-        const card=document.createElement('div');
-        card.className='map-card'+(state.mapKey===key?' selected':'');
-        card.innerHTML=`<div class="map-preview ${key}">${map.emoji}</div><div class="map-info"><h3>${map.name}</h3><p>${map.desc}</p></div>`;
-        card.onclick=()=>{state.mapKey=key;renderMaps();};
-        grid.appendChild(card);
+// Простые оверлеи магазина / кланов / профиля / настроек через prompt-стиль
+function openShopOverlay(){
+    let msg = '🛒 МАГАЗИН ОРУЖИЯ\n\n';
+    Object.entries(WEAPONS).forEach(([k,w])=>{
+        const owned = playerData.ownedWeapons.includes(k);
+        msg += `${w.name} — ${w.price}$ ${owned?'(КУПЛЕНО)':''}\n`;
     });
+    msg += '\nВведи название оружия для покупки/экипировки (pistol/akr/awp):';
+    const nv = prompt(msg, '');
+    if(nv){
+        const key = nv.toLowerCase().trim();
+        if(WEAPONS[key]){
+            if(playerData.ownedWeapons.includes(key)){
+                playerData.equippedWeapon = key;
+                alert('Экипировано: ' + WEAPONS[key].name);
+            } else if(playerData.money >= WEAPONS[key].price){
+                playerData.money -= WEAPONS[key].price;
+                playerData.ownedWeapons.push(key);
+                playerData.equippedWeapon = key;
+                alert('Куплено и экипировано: ' + WEAPONS[key].name);
+            } else alert('Недостаточно денег!');
+            saveProfile();
+        }
+    }
 }
+function openClansOverlay(){
+    let msg = '🛡️ КЛАНЫ\n\n';
+    CLANS.forEach(c=>{ msg += `${c.id} — ${c.name} (${c.bonus})\n`; });
+    msg += '\nВведи id клана (none/vipers/wolves/phoenix/shadows):';
+    const nv = prompt(msg, playerData.clanId);
+    if(nv && CLANS.find(c=>c.id===nv.trim())){
+        playerData.clanId = nv.trim();
+        alert('Клан: ' + CLANS.find(c=>c.id===playerData.clanId).name);
+        saveProfile();
+    }
+}
+function showProfilePopup(){
+    alert(`👤 ПРОФИЛЬ\n\nID: ${playerData.playerId}\nИмя: ${playerData.playerName}\nУровень: ${playerData.level}\nEXP: ${playerData.exp}/100\n💰 Деньги: ${playerData.money}$\n🎯 Убийств: ${playerData.totalKills}`);
+}
+function showSettingsPopup(){
+    alert('⚙️ НАСТРОЙКИ\n\nЧувствительность: стандартная\nЗвук: вкл\nГрафика: средняя\n\n(Изменения появятся в следующих обновлениях)');
+}
+
+// ==== MAP SELECT ====
 function renderMapSelect(){
     const list=document.getElementById('map-select-list'); list.innerHTML='';
     Object.entries(MAPS).forEach(([key,map])=>{
         const card=document.createElement('div');
         card.className='map-card';
-        card.innerHTML=`<div class="map-preview ${key}">${map.emoji}</div><div class="map-info"><h3>${map.name}</h3><p>${map.desc}</p></div>`;
+        card.innerHTML=`<div class="map-preview ${key}">${map.icon}</div><div class="map-info"><h3>${map.name}</h3><p>${map.desc}</p></div>`;
         card.onclick=()=>{state.mapKey=key;mapSelect.style.display='none';startGame();};
         list.appendChild(card);
     });
 }
-function renderShop(){
-    const grid=document.getElementById('shop-grid'); grid.innerHTML='';
-    Object.entries(WEAPONS).forEach(([key,wpn])=>{
-        const owned=playerData.ownedWeapons.includes(key), equipped=playerData.equippedWeapon===key;
-        const card=document.createElement('div');
-        card.className='weapon-card'+(owned?' owned':'')+(equipped?' equipped':'');
-        card.innerHTML=`<h3>${wpn.name}</h3><div class="weapon-stats">Урон: <span>${wpn.damage}</span><br>Скорость: <span>${wpn.rpm} RPM</span><br>Магазин: <span>${wpn.magSize}</span><br>Хедшот: <span>x${wpn.headshotMult}</span></div>${owned?`<div class="weapon-price owned-tag">${equipped?'✔ ЭКИП.':'✔ КУПЛЕНО'}</div>`:`<div class="weapon-price">${wpn.price} $</div>`}`;
-        card.onclick=()=>{
-            if(owned){playerData.equippedWeapon=key;renderShop();}
-            else if(playerData.money>=wpn.price){playerData.money-=wpn.price;playerData.ownedWeapons.push(key);playerData.equippedWeapon=key;updateStats();renderShop();}
-        };
-        grid.appendChild(card);
-    });
-}
-function renderClans(){
-    const grid=document.getElementById('clan-grid'); grid.innerHTML='';
-    CLANS.forEach(clan=>{
-        const sel=playerData.clanId===clan.id;
-        const card=document.createElement('div');
-        card.className='clan-card'+(sel?' selected':'');
-        card.style.color=clan.color; card.style.borderColor=sel?clan.color:'#333';
-        card.innerHTML=`<div class="clan-emblem">${clan.emblem}</div><div class="clan-name" style="color:${clan.color}">${clan.name}</div><div class="clan-desc">${clan.bonus}</div>`;
-        card.onclick=()=>{playerData.clanId=clan.id;renderClans();updateStats();};
-        grid.appendChild(card);
-    });
-}
-function updateStats(){
-    document.getElementById('balance').textContent=playerData.money;
-    document.getElementById('total-kills').textContent=playerData.totalKills;
-    const clan=CLANS.find(c=>c.id===playerData.clanId);
-    const ct=document.getElementById('clan-tag'); ct.textContent=clan.tag; ct.style.color=clan.color;
-}
 
-// ==== КАРТЫ ====
+// ==== ХЕЛПЕРЫ КАРТ ====
 function addCollider(x,y,z,w,h,d){state.colliders.push({min:new THREE.Vector3(x-w/2,y-h/2,z-d/2),max:new THREE.Vector3(x+w/2,y+h/2,z+d/2)});}
 function addBox(x,y,z,w,h,d,mat,collide=true){
     const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
@@ -322,6 +544,8 @@ function addBox(x,y,z,w,h,d,mat,collide=true){
     if(collide) addCollider(x,y,z,w,h,d);
     return m;
 }
+
+// ==== КАРТА SANDSTONE ====
 function buildSandstone(){
     const map=MAPS.sandstone, scene=state.scene;
     const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.95}));
@@ -332,7 +556,7 @@ function buildSandstone(){
     addBox(0,wallH/2,HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
     addBox(-HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
     addBox(HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
-    const crates=[[-8,-8,4,2,4],[8,-8,4,2,4],[-8,8,4,2,4],[8,8,4,2,4],[0,0,5,3,5],[-20,0,3,1.5,10],[20,0,3,1.5,10],[0,-20,10,1.5,3],[0,20,10,1.5,3],[-30,-25,5,2,5],[30,-25,5,2,5],[-30,25,5,2,5],[30,25,5,2,5],[-35,0,3,4,3],[35,0,3,4,3],[0,-35,3,4,3],[0,35,3,4,3],[-15,-30,2,1.5,2],[15,30,2,1.5,2]];
+    const crates=[[-8,-8,4,2,4],[8,-8,4,2,4],[-8,8,4,2,4],[8,8,4,2,4],[0,0,5,3,5],[-20,0,3,1.5,10],[20,0,3,1.5,10],[0,-20,10,1.5,3],[0,20,10,1.5,3],[-30,-25,5,2,5],[30,-25,5,2,5],[-30,25,5,2,5],[30,25,5,2,5],[-35,0,3,4,3],[35,0,3,4,3],[0,-35,3,4,3],[0,35,3,4,3]];
     const cA=new THREE.MeshStandardMaterial({color:0xa07850,roughness:.85});
     const cB=new THREE.MeshStandardMaterial({color:0x7a5838,roughness:.85});
     crates.forEach(([x,z,w,h,d],i)=>addBox(x,h/2,z,w,h,d,i%2?cA:cB));
@@ -343,7 +567,8 @@ function buildSandstone(){
         addCollider(x,3.5,z,1,7,1);
     });
     state.spawnPoints=[[-35,-35],[35,-35],[-35,35],[35,35],[-30,0],[30,0],[0,-30],[0,30]];
-}
+    }
+    // ==== КАРТА TEMPL ====
 function buildTempl(){
     const map=MAPS.templ, scene=state.scene;
     const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.9}));
@@ -393,10 +618,9 @@ function createScene(){
     state.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     state.renderer.domElement.style.display='none';
     document.body.appendChild(state.renderer.domElement);
-    state.controls=new PointerLockControls(state.camera,state.renderer.domElement);
-    state.scene.add(state.controls.getObject());
     state.raycaster=new THREE.Raycaster();
     state.clock=new THREE.Clock();
+    state.yaw=0; state.pitch=0;
     state.scene.add(new THREE.AmbientLight(map.ambient,map.ambientIntensity));
     const sun=new THREE.DirectionalLight(map.sunColor,1.1);
     sun.position.set(30,40,20); sun.castShadow=true;
@@ -411,11 +635,18 @@ function createScene(){
     spawnEnemies(8);
     createWeaponModel();
     state.minimapCtx=document.getElementById('minimap-canvas').getContext('2d');
+    updateCameraFromYawPitch();
+}
+
+// ==== УПРАВЛЕНИЕ КАМЕРОЙ (только yaw/pitch, без наклона) ====
+function updateCameraFromYawPitch(){
+    const euler = new THREE.Euler(state.pitch, state.yaw, 0, 'YXZ');
+    state.camera.quaternion.setFromEuler(euler);
 }
 
 // ==== ОРУЖИЕ В РУКАХ ====
 function createWeaponModel(){
-    if(state.weaponModel) state.scene.remove(state.weaponModel);
+    if(state.weaponModel) state.camera.remove(state.weaponModel);
     const g=new THREE.Group();
     const wData=WEAPONS[playerData.equippedWeapon];
     const dark=new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:.6,metalness:.7});
@@ -462,8 +693,9 @@ function spawnEnemy(){
     e.position.set(bx,0,bz);
     e.userData={hp:30,maxHp:30,head,body,lastAttack:0,attackCooldown:600,speed:2.5+Math.random()*.6,damage:15};
     state.scene.add(e); state.enemies.push(e);
-    }
-    // ==== СТРЕЛЬБА ====
+}
+
+// ==== СТРЕЛЬБА ====
 function shoot(){
     if(state.isReloading||state.isGameOver||state.isPaused) return;
     const w=WEAPONS[playerData.equippedWeapon];
@@ -474,7 +706,7 @@ function shoot(){
     state.magAmmo--; updateAmmoUI();
     state.muzzleFlash.intensity=3;
     setTimeout(()=>{if(state.muzzleFlash)state.muzzleFlash.intensity=0;},50);
-    state.camera.rotation.x+=.02;
+    state.pitch+=.01; updateCameraFromYawPitch();
     const dir=new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion);
     const sp=state.isAiming?w.spread*.3:w.spread;
     dir.x+=(Math.random()-.5)*sp; dir.y+=(Math.random()-.5)*sp; dir.z+=(Math.random()-.5)*sp;
@@ -572,10 +804,9 @@ function switchWeapon(){
     createWeaponModel();
     const w=WEAPONS[next];
     state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
-    updateAmmoUI();
-}
-
-// ==== КОЛЛИЗИИ И ДВИЖЕНИЕ ====
+    updateAmmoUI(); saveProfile();
+    }
+    // ==== КОЛЛИЗИИ ====
 function checkCollision(np){
     if(np.x<-HALF_WORLD+PLAYER_RADIUS||np.x>HALF_WORLD-PLAYER_RADIUS) return true;
     if(np.z<-HALF_WORLD+PLAYER_RADIUS||np.z>HALF_WORLD-PLAYER_RADIUS) return true;
@@ -594,17 +825,15 @@ function updateMovement(dt){
     const clan=CLANS.find(c=>c.id===playerData.clanId);
     const spMult=clan.bonusType==='speed'?1.1:1;
     const baseSpeed=state.isCrouching?MOVE_SPEED*.5:MOVE_SPEED;
-    const sprintMult=state.keys.shift?1.4:1;
+    const sprintMult=(state.keys&&state.keys.shift)?1.4:1;
     const speed=baseSpeed*spMult*sprintMult;
-    const fwd=new THREE.Vector3(); state.camera.getWorldDirection(fwd); fwd.y=0; fwd.normalize();
-    const right=new THREE.Vector3().crossVectors(fwd,new THREE.Vector3(0,1,0)).normalize();
+    const fwd=new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion);
+    fwd.y=0; fwd.normalize();
+    const right=new THREE.Vector3(1,0,0).applyQuaternion(state.camera.quaternion);
+    right.y=0; right.normalize();
     const mv=new THREE.Vector3();
     let ix=0, iz=0;
-    if(state.keys.w) iz+=1;
-    if(state.keys.s) iz-=1;
-    if(state.keys.d) ix+=1;
-    if(state.keys.a) ix-=1;
-    if(mobile.joyMoveActive){ix+=mobile.moveX; iz-=mobile.moveY;}
+    if(mobile.joyMoveActive){ ix+=mobile.moveX; iz-=mobile.moveY; }
     if(ix!==0||iz!==0){
         mv.addScaledVector(right,ix);
         mv.addScaledVector(fwd,iz);
@@ -613,8 +842,7 @@ function updateMovement(dt){
     v.x=THREE.MathUtils.lerp(v.x,mv.x*speed,12*dt);
     v.z=THREE.MathUtils.lerp(v.z,mv.z*speed,12*dt);
     v.y-=GRAVITY*dt;
-    if((state.keys.space)&&state.canJump){v.y=JUMP_SPEED;state.canJump=false;}
-    const pos=state.controls.getObject().position;
+    const pos=state.camera.position;
     const nx=pos.x+v.x*dt, nz=pos.z+v.z*dt;
     if(!checkCollision({x:nx,y:pos.y,z:pos.z})) pos.x=nx; else v.x=0;
     if(!checkCollision({x:pos.x,y:pos.y,z:nz})) pos.z=nz; else v.z=0;
@@ -624,7 +852,7 @@ function updateMovement(dt){
     if(pos.y>20) pos.y=20;
 }
 
-// ==== ИИ ВРАГОВ ====
+// ==== ИИ ====
 function updateEnemies(dt){
     const pp=state.camera.position;
     state.enemies.forEach(e=>{
@@ -664,7 +892,7 @@ function damagePlayer(amt){
 
 // ==== МИНИКАРТА ====
 function drawMinimap(){
-    const ctx=state.minimapCtx, size=100, scale=size/WORLD_SIZE;
+    const ctx=state.minimapCtx, size=88, scale=size/WORLD_SIZE;
     ctx.clearRect(0,0,size,size);
     ctx.fillStyle=state.mapKey==='sandstone'?'#3a2a15':'#1a2a40';
     ctx.fillRect(0,0,size,size);
@@ -678,34 +906,34 @@ function drawMinimap(){
     ctx.fillStyle='#f22';
     state.enemies.forEach(e=>{
         const [x,y]=toMap(e.position.x,e.position.z);
-        ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fill();
     });
     const [mx,my]=toMap(state.camera.position.x,state.camera.position.z);
     ctx.save();
     ctx.translate(mx,my);
-    ctx.rotate(-state.camera.rotation.y);
+    ctx.rotate(-state.yaw);
     ctx.fillStyle='#fa0';
     ctx.beginPath();
-    ctx.moveTo(0,-5);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3);
+    ctx.moveTo(0,-4);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3);
     ctx.closePath();ctx.fill();
     ctx.restore();
 }
 
-// ==== ДЖОЙСТИКИ ====
+// ==== ДЖОЙСТИК ДВИЖЕНИЯ ====
 function setupJoysticks(){
     const joyMove=document.getElementById('joy-move');
     const knob=document.getElementById('joy-move-knob');
     const lookArea=document.getElementById('joy-look');
-    const R=60;
-    const handleMoveStart=(e)=>{
-        e.preventDefault();
+    const R=55;
+    const startMove=(e)=>{
+        e.preventDefault(); e.stopPropagation();
         const t=e.touches?e.touches[0]:e;
         const rect=joyMove.getBoundingClientRect();
         mobile.joyMoveActive=true;
         mobile.joyMoveStart={x:rect.left+rect.width/2,y:rect.top+rect.height/2};
-        handleMoveMove(e);
+        moveUpdate(e);
     };
-    const handleMoveMove=(e)=>{
+    const moveUpdate=(e)=>{
         if(!mobile.joyMoveActive) return;
         e.preventDefault();
         const t=e.touches?e.touches[0]:e;
@@ -714,54 +942,55 @@ function setupJoysticks(){
         const dist=Math.hypot(dx,dy);
         if(dist>R){dx=dx/dist*R;dy=dy/dist*R;}
         knob.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-        mobile.moveX=dx/R;
-        mobile.moveY=dy/R;
+        mobile.moveX=dx/R; mobile.moveY=dy/R;
     };
-    const handleMoveEnd=(e)=>{
-        mobile.joyMoveActive=false;
-        mobile.moveX=0; mobile.moveY=0;
+    const endMove=()=>{
+        mobile.joyMoveActive=false; mobile.moveX=0; mobile.moveY=0;
         knob.style.transform='translate(-50%,-50%)';
     };
-    joyMove.addEventListener('touchstart',handleMoveStart,{passive:false});
-    joyMove.addEventListener('touchmove',handleMoveMove,{passive:false});
-    joyMove.addEventListener('touchend',handleMoveEnd);
-    joyMove.addEventListener('touchcancel',handleMoveEnd);
-    joyMove.addEventListener('mousedown',handleMoveStart);
-    document.addEventListener('mousemove',e=>{if(mobile.joyMoveActive)handleMoveMove(e);});
-    document.addEventListener('mouseup',handleMoveEnd);
-    let lookTouchId=null;
-    const handleLookStart=(e)=>{
+    joyMove.addEventListener('touchstart',startMove,{passive:false});
+    joyMove.addEventListener('touchmove',moveUpdate,{passive:false});
+    joyMove.addEventListener('touchend',endMove);
+    joyMove.addEventListener('touchcancel',endMove);
+    joyMove.addEventListener('mousedown',startMove);
+    document.addEventListener('mousemove',e=>{if(mobile.joyMoveActive)moveUpdate(e);});
+    document.addEventListener('mouseup',endMove);
+
+    // Look area - только поворот камеры (yaw/pitch), без наклона
+    let lookId=null;
+    const startLook=(e)=>{
+        // Пропускаем если клик пришёл по кнопкам
+        if(e.target && e.target.closest && e.target.closest('.ctrl-btn')) return;
         e.preventDefault();
         const t=e.changedTouches?e.changedTouches[0]:e;
-        lookTouchId=t.identifier!==undefined?t.identifier:'mouse';
+        lookId=t.identifier!==undefined?t.identifier:'mouse';
         mobile.lookActive=true;
-        mobile.lastLook={x:t.clientX,y:t.clientY};
+        mobile.lookLast={x:t.clientX,y:t.clientY};
     };
-    const handleLookMove=(e)=>{
+    const updateLook=(e)=>{
         if(!mobile.lookActive) return;
-        e.preventDefault();
         let t=null;
         if(e.changedTouches){
-            for(const tt of e.changedTouches){
-                if(tt.identifier===lookTouchId){t=tt;break;}
-            }
+            for(const tt of e.changedTouches){ if(tt.identifier===lookId){t=tt;break;} }
         } else t=e;
         if(!t) return;
-        const dx=t.clientX-mobile.lastLook.x;
-        const dy=t.clientY-mobile.lastLook.y;
-        mobile.lastLook={x:t.clientX,y:t.clientY};
-        state.camera.rotation.y-=dx*0.004;
-        state.camera.rotation.x-=dy*0.004;
-        state.camera.rotation.x=Math.max(-Math.PI/2,Math.min(Math.PI/2,state.camera.rotation.x));
+        const dx=t.clientX-mobile.lookLast.x;
+        const dy=t.clientY-mobile.lookLast.y;
+        mobile.lookLast={x:t.clientX,y:t.clientY};
+        state.yaw -= dx * LOOK_SENS;
+        state.pitch -= dy * LOOK_SENS;
+        // Ограничиваем pitch чтобы камера не переворачивалась
+        state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
+        updateCameraFromYawPitch();
     };
-    const handleLookEnd=(e)=>{mobile.lookActive=false;};
-    lookArea.addEventListener('touchstart',handleLookStart,{passive:false});
-    lookArea.addEventListener('touchmove',handleLookMove,{passive:false});
-    lookArea.addEventListener('touchend',handleLookEnd);
-    lookArea.addEventListener('touchcancel',handleLookEnd);
-    lookArea.addEventListener('mousedown',handleLookStart);
-    document.addEventListener('mousemove',e=>{if(mobile.lookActive)handleLookMove(e);});
-    document.addEventListener('mouseup',handleLookEnd);
+    const endLook=()=>{mobile.lookActive=false;};
+    lookArea.addEventListener('touchstart',startLook,{passive:false});
+    lookArea.addEventListener('touchmove',updateLook,{passive:false});
+    lookArea.addEventListener('touchend',endLook);
+    lookArea.addEventListener('touchcancel',endLook);
+    lookArea.addEventListener('mousedown',startLook);
+    document.addEventListener('mousemove',e=>{if(mobile.lookActive)updateLook(e);});
+    document.addEventListener('mouseup',endLook);
 }
 
 // ==== КНОПКИ ====
@@ -769,7 +998,7 @@ function setupButtons(){
     const hold=(id,onDown,onUp)=>{
         const el=document.getElementById(id);
         let active=false;
-        const start=(e)=>{e.preventDefault();if(active)return;active=true;onDown();};
+        const start=(e)=>{e.preventDefault();e.stopPropagation();if(active)return;active=true;onDown();};
         const end=(e)=>{if(!active)return;active=false;if(onUp)onUp();};
         el.addEventListener('touchstart',start,{passive:false});
         el.addEventListener('touchend',end);
@@ -782,25 +1011,19 @@ function setupButtons(){
     hold('btn-aim',()=>{state.isAiming=true; state.camera.fov=55; state.camera.updateProjectionMatrix();},()=>{state.isAiming=false; state.camera.fov=80; state.camera.updateProjectionMatrix();});
     hold('btn-jump',()=>{if(state.canJump){state.velocity.y=JUMP_SPEED;state.canJump=false;}});
     hold('btn-crouch',()=>{state.isCrouching=true;},()=>{state.isCrouching=false;});
-    hold('btn-sprint',()=>{state.keys.shift=true;},()=>{state.keys.shift=false;});
-    document.getElementById('btn-reload').addEventListener('click',reload);
-    document.getElementById('btn-swap').addEventListener('click',switchWeapon);
-    document.getElementById('btn-pause').addEventListener('click',pauseGame);
-    document.getElementById('btn-resume').addEventListener('click',resumeGame);
-    document.getElementById('btn-fullscreen').addEventListener('click',()=>{
-        if(!document.fullscreenElement){
-            document.documentElement.requestFullscreen?.();
-        } else document.exitFullscreen?.();
+    hold('btn-sprint',()=>{if(!state.keys)state.keys={};state.keys.shift=true;},()=>{if(state.keys)state.keys.shift=false;});
+    document.getElementById('btn-reload').addEventListener('click',(e)=>{e.stopPropagation();reload();});
+    document.getElementById('btn-swap').addEventListener('click',(e)=>{e.stopPropagation();switchWeapon();});
+    document.getElementById('btn-pause').addEventListener('click',(e)=>{e.stopPropagation();pauseGame();});
+    document.getElementById('btn-resume').addEventListener('click',(e)=>{e.stopPropagation();resumeGame();});
+    document.getElementById('btn-fullscreen').addEventListener('click',(e)=>{
+        e.stopPropagation();
+        if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
     });
 }
-function pauseGame(){
-    state.isPaused=true;
-    document.getElementById('paused-msg').style.display='block';
-}
-function resumeGame(){
-    state.isPaused=false;
-    document.getElementById('paused-msg').style.display='none';
-}
+function pauseGame(){ state.isPaused=true; document.getElementById('paused-msg').style.display='block'; }
+function resumeGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; }
 
 // ==== СТАРТ / КОНЕЦ ====
 function startGame(){
@@ -808,6 +1031,7 @@ function startGame(){
     mapSelect.style.display='none';
     hud.style.display='block';
     if(state.scene) destroyGame();
+    state.keys={w:false,a:false,s:false,d:false,space:false,shift:false};
     createScene();
     const w=WEAPONS[playerData.equippedWeapon];
     state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
@@ -825,6 +1049,7 @@ function startGame(){
     document.getElementById('paused-msg').style.display='none';
     state.renderer.domElement.style.display='block';
     state.clock.getDelta();
+    checkOrientation();
     animate();
 }
 function endGame(){
@@ -833,6 +1058,9 @@ function endGame(){
     document.getElementById('final-money').textContent=state.sessionMoney;
     document.getElementById('game-over').style.display='flex';
     playerData.money+=state.sessionMoney;
+    playerData.exp+=state.score*10;
+    while(playerData.exp>=100){playerData.exp-=100;playerData.level++;}
+    saveProfile(); updateProfileUI();
     if(navigator.vibrate) navigator.vibrate([100,50,100]);
 }
 function destroyGame(){
@@ -848,7 +1076,7 @@ window.returnToMenu=function(){
     destroyGame();
     hud.style.display='none';
     menu.style.display='flex';
-    updateStats(); renderShop();
+    updateProfileUI();
 };
 
 // ==== ЦИКЛ ====
@@ -870,9 +1098,19 @@ function animate(){
 function checkOrientation(){
     const isPortrait=innerHeight>innerWidth;
     const rotateHint=document.getElementById('rotate-hint');
-    if(isPortrait&&hud.style.display==='block'){
+    if(isPortrait){
         rotateHint.style.display='flex';
-    } else rotateHint.style.display='none';
+        document.getElementById('menu').style.display='none';
+        document.getElementById('hud').style.display='none';
+        document.getElementById('map-select').style.display='none';
+    } else {
+        rotateHint.style.display='none';
+        if(state.isGameOver===false && state.scene && state.renderer){
+            document.getElementById('hud').style.display='block';
+        } else if(!state.scene){
+            document.getElementById('menu').style.display='flex';
+        }
+    }
 }
 window.addEventListener('resize',()=>{
     if(state.camera){
@@ -885,16 +1123,45 @@ window.addEventListener('resize',()=>{
 window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,200));
 
 // ==== INIT ====
-renderMaps(); renderShop(); renderClans(); updateStats();
-setupJoysticks(); setupButtons();
+loadProfile();
+setupJoysticks();
+setupButtons();
+checkOrientation();
 document.getElementById('play-btn').addEventListener('click',()=>{
+    if(innerHeight>innerWidth){ checkOrientation(); return; }
     renderMapSelect();
     mapSelect.style.display='flex';
 });
 document.getElementById('back-to-menu').addEventListener('click',()=>{mapSelect.style.display='none';});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('contextmenu',e=>e.preventDefault());
-console.log('🎮 Standoff Mini 3D Mobile загружен!');
+// Клавиатура (для десктоп-теста)
+document.addEventListener('keydown',e=>{
+    if(!state.keys) state.keys={};
+    switch(e.code){
+        case 'KeyW':state.keys.w=true;break; case 'KeyS':state.keys.s=true;break;
+        case 'KeyA':state.keys.a=true;break; case 'KeyD':state.keys.d=true;break;
+        case 'Space':state.keys.space=true;e.preventDefault();break;
+        case 'ShiftLeft':state.keys.shift=true;break;
+        case 'KeyR':reload();break;
+        case 'Digit1':if(playerData.ownedWeapons.includes('pistol')){playerData.equippedWeapon='pistol';createWeaponModel();state.magAmmo=WEAPONS.pistol.magSize;state.reserveAmmo=WEAPONS.pistol.reserveMax;updateAmmoUI();}break;
+        case 'Digit2':if(playerData.ownedWeapons.includes('akr')){playerData.equippedWeapon='akr';createWeaponModel();state.magAmmo=WEAPONS.akr.magSize;state.reserveAmmo=WEAPONS.akr.reserveMax;updateAmmoUI();}break;
+        case 'Digit3':if(playerData.ownedWeapons.includes('awp')){playerData.equippedWeapon='awp';createWeaponModel();state.magAmmo=WEAPONS.awp.magSize;state.reserveAmmo=WEAPONS.awp.reserveMax;updateAmmoUI();}break;
+    }
+});
+document.addEventListener('keyup',e=>{
+    if(!state.keys) return;
+    switch(e.code){
+        case 'KeyW':state.keys.w=false;break; case 'KeyS':state.keys.s=false;break;
+        case 'KeyA':state.keys.a=false;break; case 'KeyD':state.keys.d=false;break;
+        case 'Space':state.keys.space=false;break;
+        case 'ShiftLeft':state.keys.shift=false;break;
+    }
+});
+// Присед на клавиатуре (Ctrl)
+document.addEventListener('keydown',e=>{ if(e.code==='ControlLeft'||e.code==='KeyC') state.isCrouching=true; });
+document.addEventListener('keyup',e=>{ if(e.code==='ControlLeft'||e.code==='KeyC') state.isCrouching=false; });
+console.log('🎮 Standoff Mini 3D Mobile v2 загружен!');
 </script>
 </body>
 </html>

@@ -12,8 +12,7 @@
 html,body{overflow:hidden;width:100%;height:100%;font-family:'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#fff;position:fixed;touch-action:none}
 svg{width:100%;height:100%;display:block;fill:currentColor}
 #rotate-hint{position:fixed;inset:0;background:linear-gradient(135deg,#0a0a15,#1a1a2e);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:9999;color:#fa0;text-align:center;padding:20px}
-#rotate-hint .phone{font-size:0;width:80px;height:130px;border:4px solid #fa0;border-radius:12px;margin-bottom:24px;position:relative;animation:rot 2s ease-in-out infinite}
-#rotate-hint .phone::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:24px;height:3px;background:#fa0;border-radius:2px}
+#rotate-hint .phone{width:80px;height:130px;border:4px solid #fa0;border-radius:12px;margin-bottom:24px;position:relative;animation:rot 2s ease-in-out infinite}
 @keyframes rot{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
 #rotate-hint h2{font-size:18px;letter-spacing:4px;margin-bottom:8px}
 #rotate-hint p{font-size:12px;color:#888}
@@ -22,7 +21,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #menu-bottom{padding:0 4px}
 #sidebar{width:44px;background:rgba(15,15,25,.9);border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;border:1px solid #222}
 .side-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#666;transition:all .2s;padding:6px}
-.side-icon.active{background:#2a2a3a;color:#fa0;box-shadow:0 0 12px #fa04}
+.side-icon.active{background:#2a2a3a;color:#fa0}
 .side-icon:hover{color:#fa0}
 #profile-panel{width:220px;display:flex;flex-direction:column;gap:6px}
 #profile-card{background:rgba(15,15,25,.9);border:1px solid #222;border-radius:8px;padding:10px}
@@ -54,8 +53,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #center-panel{flex:1;background:linear-gradient(135deg,rgba(20,20,35,.95),rgba(30,25,45,.95));border:1px solid #2a2a3a;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
 .rewards-title{font-size:14px;color:#fa0;letter-spacing:3px;font-weight:900;margin-bottom:6px}
 .rewards-sub{font-size:10px;color:#888;max-width:200px;margin-bottom:20px;line-height:1.5}
-.wheat{width:100px;height:100px;color:#fa0;margin-bottom:14px;animation:wheatGlow 3s ease-in-out infinite}
-@keyframes wheatGlow{0%,100%{filter:drop-shadow(0 0 15px #fa05)}50%{filter:drop-shadow(0 0 30px #fa09)}}
+.wheat{width:100px;height:100px;color:#fa0;margin-bottom:14px}
 #get-reward-btn{padding:8px 26px;background:linear-gradient(135deg,#3a3a5a,#2a2a3a);border:1px solid #fa0;color:#fa0;border-radius:6px;font-size:12px;font-weight:bold;letter-spacing:3px;cursor:pointer}
 #bp-panel{width:280px;background:rgba(15,15,25,.9);border:1px solid #222;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px}
 #bp-header{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -68,28 +66,27 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .bp-tab.active{background:linear-gradient(135deg,#fa0,#f80);color:#111;border-color:#fa0}
 #bp-next{font-size:9px;color:#888;letter-spacing:2px;text-align:center}
 #bp-rewards{display:flex;gap:6px;flex:1}
-.bp-reward{flex:1;background:#1a1a2a;border:1px solid #2a2a3a;border-radius:6px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;cursor:pointer}
-.bp-reward:hover{border-color:#fa0}
+.bp-reward{flex:1;background:#1a1a2a;border:1px solid #2a2a3a;border-radius:6px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
 .bp-reward .r-icon{width:40px;height:40px;color:#fff}
 .bp-reward .r-label{font-size:8px;color:#888;letter-spacing:1px;font-weight:bold}
 .bp-reward.locked::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:6px}
 .bp-reward .lock-icon{position:absolute;top:4px;right:4px;width:10px;height:10px;color:#fa0;z-index:2}
-#play-btn{width:100%;padding:14px;background:linear-gradient(135deg,#5a8aff,#3a5aff);color:#fff;font-size:16px;font-weight:bold;letter-spacing:6px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 0 25px rgba(90,138,255,.5);transition:all .2s}
+#play-btn{width:100%;padding:14px;background:linear-gradient(135deg,#5a8aff,#3a5aff);color:#fff;font-size:16px;font-weight:bold;letter-spacing:6px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 0 25px rgba(90,138,255,.5)}
 #play-btn:active{transform:scale(.99)}
 #fs-toggle-btn{position:absolute;top:8px;right:8px;background:rgba(15,15,25,.9);border:2px solid #fa0;border-radius:6px;color:#fa0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:100;padding:6px}
-#map-select{position:fixed;inset:0;background:rgba(5,5,10,.97);display:none;flex-direction:column;z-index:1500;padding:10px;backdrop-filter:blur(8px)}
+#map-select{position:fixed;inset:0;background:rgba(5,5,10,.97);display:none;flex-direction:column;z-index:1500;padding:10px}
 #map-select h2{text-align:center;color:#fa0;font-size:16px;letter-spacing:4px;margin-bottom:10px}
 #map-select-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;max-width:520px;width:100%;margin:0 auto}
 .map-card{display:flex;flex-direction:row;align-items:center;border:2px solid #222;border-radius:8px;overflow:hidden;cursor:pointer;background:#0d0d15;transition:all .2s}
 .map-card:hover{border-color:#fa0}
-.map-card.selected{border-color:#fa0;box-shadow:0 0 20px #fa05}
+.map-card.selected{border-color:#fa0}
 .map-preview{width:90px;height:70px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .map-preview.sandstone{background:linear-gradient(135deg,#c9a06a,#8b6f47 50%,#4a3520)}
 .map-preview.templ{background:linear-gradient(135deg,#6a8ab0,#3a5a80 50%,#1a2a40)}
 .map-preview svg{width:44px;height:44px;color:rgba(255,255,255,.85)}
 .map-info{flex:1;padding:10px}
 .map-info h3{color:#fa0;font-size:13px;letter-spacing:2px;margin-bottom:2px}
-.map-info p{font-size:10px;color:#888;line-height:1.3}
+.map-info p{font-size:10px;color:#888}
 #back-to-menu{max-width:520px;width:100%;margin:8px auto 0;padding:10px;background:#222;color:#fa0;border:2px solid #fa0;border-radius:8px;font-weight:bold;letter-spacing:2px;cursor:pointer;font-size:12px}
 #hud{display:none;position:fixed;inset:0;pointer-events:none;z-index:10}
 #crosshair{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%)}
@@ -105,7 +102,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #score-top{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(10,10,18,.85);border:2px solid #fa0;border-radius:8px;padding:3px 12px;text-align:center}
 #score-top .lbl{font-size:8px;color:#fa0;letter-spacing:2px}
 #score-top .val{font-size:16px;font-weight:bold;line-height:1}
-#score-top .map{font-size:7px;color:#888;letter-spacing:1px}
+#score-top .map{font-size:7px;color:#888}
 #minimap{position:absolute;top:6px;right:6px;width:88px;height:88px;background:rgba(10,10,18,.9);border:2px solid #fa0;border-radius:50%;overflow:hidden}
 #health-bar{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:160px;height:8px;background:rgba(0,0,0,.7);border:1px solid #fa0;border-radius:4px;overflow:hidden}
 #health-fill{width:100%;height:100%;background:linear-gradient(90deg,#f22,#fa0,#4f4);transition:width .2s}
@@ -117,8 +114,18 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
 @keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
 #reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:12px;font-weight:bold;background:rgba(0,0,0,.7);padding:5px 14px;border-radius:16px;border:2px solid #fa0;display:none;letter-spacing:2px}
-#hud .ctrl-btn{position:absolute;background:rgba(15,15,25,.72);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;z-index:100;padding:8px;transition:all .1s}
-#hud .ctrl-btn svg{width:100%;height:100%}
+</style>
+</head>
+<body>
+    <style>
+/* ==== LOOK-AREA — ПОД кнопками ==== */
+#joy-look{position:absolute;inset:0;pointer-events:auto;touch-action:none;z-index:1;background:transparent}
+/* ==== JOY-MOVE — отдельный слой ==== */
+#joy-move{position:absolute;bottom:14px;left:14px;width:110px;height:110px;background:rgba(0,0,0,.25);border:2px solid rgba(255,170,0,.5);border-radius:50%;pointer-events:auto;touch-action:none;z-index:150}
+#joy-move-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;background:rgba(255,170,0,.7);border:2px solid #fa0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+/* ==== КНОПКИ — ВЫШЕ ВСЕХ, z-index:200 ==== */
+#hud .ctrl-btn{position:absolute;background:rgba(15,15,25,.72);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;padding:8px;transition:all .1s;touch-action:none;z-index:200;user-select:none}
+#hud .ctrl-btn svg{width:100%;height:100%;pointer-events:none;fill:currentColor}
 #hud .ctrl-btn:active{background:rgba(255,170,0,.5);color:#111;transform:scale(.92)}
 #hud .ctrl-btn.small{width:38px;height:38px}
 #hud .ctrl-btn.medium{width:48px;height:48px}
@@ -132,10 +139,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #btn-sprint{bottom:14px;left:128px}
 #btn-pause{top:6px;left:6px;width:34px;height:34px;border-radius:6px}
 #btn-fullscreen{top:6px;left:46px;width:34px;height:34px;border-radius:6px}
-#joy-move{position:absolute;bottom:14px;left:14px;width:110px;height:110px;background:rgba(0,0,0,.25);border:2px solid rgba(255,170,0,.5);border-radius:50%;pointer-events:auto;touch-action:none;z-index:50}
-#joy-move-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;background:rgba(255,170,0,.7);border:2px solid #fa0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-#joy-look{position:absolute;inset:0;pointer-events:auto;touch-action:none;z-index:1}
-#paused-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fa0;background:rgba(5,5,15,.95);padding:20px 40px;border-radius:12px;border:2px solid #fa0;display:none;z-index:900;text-align:center;min-width:220px}
+#paused-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fa0;background:rgba(5,5,15,.95);padding:20px 40px;border-radius:12px;border:2px solid #fa0;display:none;z-index:900;text-align:center;min-width:220px;pointer-events:auto}
 #paused-msg .pause-title{font-size:20px;letter-spacing:6px;margin-bottom:16px;font-weight:900}
 #paused-msg button{display:block;width:100%;margin:8px 0;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;font-size:13px;letter-spacing:2px;cursor:pointer}
 #btn-resume{background:linear-gradient(135deg,#4f4,#2a2);color:#111}
@@ -157,10 +161,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .overlay{position:fixed;inset:0;background:rgba(5,5,15,.97);z-index:2000;display:none;flex-direction:column;padding:12px;overflow-y:auto}
 .overlay h2{text-align:center;color:#fa0;font-size:18px;letter-spacing:4px;margin-bottom:12px}
 .overlay-close{position:absolute;top:10px;right:10px;width:36px;height:36px;background:rgba(15,15,25,.9);border:2px solid #fa0;border-radius:8px;color:#fa0;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;padding:8px}
-</style>
-</head>
-<body>
-    <style>
 .cases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:800px;margin:0 auto;width:100%}
 .case-card{background:linear-gradient(135deg,#1a1a2e,#0d0d18);border:2px solid #333;border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s}
 .case-card:hover{border-color:#fa0;transform:translateY(-3px)}
@@ -173,7 +173,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #roulette-strip{position:absolute;top:0;left:0;height:100%;display:flex;align-items:center;gap:8px;padding:0 8px;will-change:transform}
 .roulette-item{flex-shrink:0;width:100px;height:96px;background:#15152a;border:2px solid #333;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px}
 .roulette-item .ri-icon{width:48px;height:48px;margin-bottom:4px}
-.roulette-item .ri-name{font-size:8px;color:#ccc;text-align:center;letter-spacing:1px;line-height:1.1}
+.roulette-item .ri-name{font-size:8px;color:#ccc;text-align:center;line-height:1.1}
 .roulette-item.common{border-color:#666}
 .roulette-item.rare{border-color:#4f4}
 .roulette-item.epic{border-color:#a4f}
@@ -181,8 +181,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #roulette-pointer{position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fa0;transform:translateX(-50%);z-index:5;box-shadow:0 0 15px #fa0}
 #case-result{margin-top:24px;text-align:center;opacity:0;transition:opacity .4s;max-width:400px}
 #case-result.show{opacity:1}
-#case-result .result-icon{width:100px;height:100px;margin:0 auto 12px;animation:resultPop .6s ease-out}
-@keyframes resultPop{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+#case-result .result-icon{width:100px;height:100px;margin:0 auto 12px}
 #case-result .result-name{font-size:20px;font-weight:bold;letter-spacing:3px;margin-bottom:6px}
 #case-result .result-rarity{font-size:12px;letter-spacing:3px;margin-bottom:16px}
 #case-result.common .result-name{color:#aaa}
@@ -200,7 +199,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .setting-row input[type="checkbox"]{width:20px;height:20px;accent-color:#fa0}
 #button-editor{position:fixed;inset:0;z-index:2001;display:none;background:rgba(5,5,15,.85)}
 #button-editor.active{display:block}
-.editor-btn{position:absolute;background:rgba(255,170,0,.3);border:2px dashed #fa0;border-radius:50%;cursor:move;touch-action:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;padding:4px;text-align:center;pointer-events:auto}
+.editor-btn{position:absolute;background:rgba(255,170,0,.3);border:2px dashed #fa0;border-radius:50%;cursor:move;touch-action:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;padding:4px;text-align:center}
 .editor-btn .resize-handle{position:absolute;bottom:-8px;right:-8px;width:20px;height:20px;background:#fa0;border-radius:50%;border:2px solid #111;cursor:nwse-resize;touch-action:none}
 .editor-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fa0;padding:8px 16px;border-radius:8px;font-size:11px;letter-spacing:2px;border:1px solid #fa0;z-index:10}
 .editor-toolbar{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
@@ -235,8 +234,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 </style>
 </head>
 <body>
-
-<div id="rotate-hint"><div class="phone"></div><h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2><p>Игра работает только в горизонтальной ориентации</p></div>
+  <div id="rotate-hint"><div class="phone"></div><h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2><p>Только горизонтальная ориентация</p></div>
 
 <div id="menu">
 <div id="fs-toggle-btn"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
@@ -252,7 +250,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="profile-panel">
 <div id="profile-card">
 <div id="avatar-wrap">
-<div id="avatar" title="Сменить аватар"><div class="avatar-default"><svg viewBox="0 0 24 24" style="width:100%;height:100%"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div></div>
+<div id="avatar" title="Сменить аватар"><div class="avatar-default"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div></div>
 <div id="profile-info">
 <div id="p-id">ID <span class="v" id="p-id-val">73396228</span></div>
 <div id="p-name">Игрок</div>
@@ -272,7 +270,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="center-panel">
 <div class="wheat"><svg viewBox="0 0 24 24"><path d="M12 2C10 2 8.5 3.5 8.5 5.5c0 .5.1 1 .3 1.4-.3-.1-.6-.1-.9-.1C6 6.8 4.5 8.3 4.5 10.2c0 .6.2 1.2.5 1.7-.4-.2-.9-.3-1.4-.3-1.9 0-3.4 1.5-3.4 3.4 0 1.3.7 2.4 1.8 3-.2.4-.3.9-.3 1.4 0 1.9 1.5 3.4 3.4 3.4.5 0 1-.1 1.4-.3-.2.4-.3.9-.3 1.4 0 1.9 1.5 3.4 3.4 3.4s3.4-1.5 3.4-3.4c0-.5-.1-1-.3-1.4.4.2.9.3 1.4.3 1.9 0 3.4-1.5 3.4-3.4 0-.5-.1-1-.3-1.4 1.1-.6 1.8-1.7 1.8-3 0-1.9-1.5-3.4-3.4-3.4-.5 0-1 .1-1.4.3.3-.5.5-1.1.5-1.7 0-1.9-1.5-3.4-3.4-3.4-.3 0-.6 0-.9.1.2-.4.3-.9.3-1.4C13.5 3.5 12 2 12 2z"/></svg></div>
 <div class="rewards-title">COMPETITIVE REWARDS</div>
-<div class="rewards-sub">Представляем Вам новые наборы в честь выхода Рейтинговой игры</div>
+<div class="rewards-sub">Новые наборы в честь выхода рейтинговой игры</div>
 <button id="get-reward-btn" onclick="claimDailyReward()">ПОЛУЧИТЬ</button>
 </div>
 <div id="bp-panel">
@@ -303,7 +301,9 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="ammo-hud"><div class="wname" id="weapon-name">P-9 PISTOL</div><div class="ammo" id="ammo">12<span class="res">/48</span></div></div>
 <div id="minimap"><canvas id="minimap-canvas" width="88" height="88"></canvas></div>
 <div id="killfeed"></div>
+
 <div id="joy-look"></div>
+
 <div class="ctrl-btn small" id="btn-pause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></div>
 <div class="ctrl-btn small" id="btn-fullscreen"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
 <div class="ctrl-btn big" id="btn-fire"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg></div>
@@ -314,6 +314,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div class="ctrl-btn small" id="btn-swap"><svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM7 7l1.41 1.41L5.83 11H16v2H5.83l2.58 2.58L7 17l-5-5z"/></svg></div>
 <div class="ctrl-btn medium" id="btn-sprint"><svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/></svg></div>
 <div id="joy-move"><div id="joy-move-knob"></div></div>
+
 <div id="paused-msg">
 <div class="pause-title">ПАУЗА</div>
 <button id="btn-resume">▶ ПРОДОЛЖИТЬ</button>
@@ -335,37 +336,36 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div class="setting-row"><label>Чувствительность</label><input type="range" id="set-sens" min="1" max="20" value="8"><span class="val" id="set-sens-val">8</span></div>
 <div class="setting-row"><label>Звук</label><input type="checkbox" id="set-sound" checked></div>
 <div class="setting-row"><label>Вибрация</label><input type="checkbox" id="set-vibe" checked></div>
-<div class="setting-row"><label>Показывать FPS</label><input type="checkbox" id="set-fps"></div>
 </div>
 <div class="settings-section"><h4>🎯 Кнопки управления</h4>
 <div class="setting-row"><label>Размер кнопок</label><input type="range" id="set-btnsize" min="50" max="150" value="100"><span class="val" id="set-btnsize-val">100%</span></div>
 <div class="setting-row"><label>Прозрачность</label><input type="range" id="set-btnopacity" min="30" max="100" value="72"><span class="val" id="set-btnopacity-val">72%</span></div>
-<div class="setting-row"><button onclick="openButtonEditor()" style="width:100%;padding:10px;background:linear-gradient(135deg,#fa0,#f80);color:#111;border:none;border-radius:6px;font-weight:bold;letter-spacing:2px;cursor:pointer">📐 НАСТРОИТЬ ПОЛОЖЕНИЕ КНОПОК</button></div>
-<div class="setting-row"><button onclick="resetButtonLayout()" style="width:100%;padding:8px;background:#222;color:#fa0;border:1px solid #fa0;border-radius:6px;font-size:11px;cursor:pointer">↺ СБРОСИТЬ РАСПОЛОЖЕНИЕ</button></div>
+<div class="setting-row"><button onclick="openButtonEditor()" style="width:100%;padding:10px;background:linear-gradient(135deg,#fa0,#f80);color:#111;border:none;border-radius:6px;font-weight:bold;letter-spacing:2px;cursor:pointer">📐 НАСТРОИТЬ ПОЛОЖЕНИЕ</button></div>
+<div class="setting-row"><button onclick="resetButtonLayout()" style="width:100%;padding:8px;background:#222;color:#fa0;border:1px solid #fa0;border-radius:6px;font-size:11px;cursor:pointer">↺ СБРОСИТЬ</button></div>
 </div>
 <div class="settings-section"><h4>💾 Данные</h4>
 <div class="setting-row"><button onclick="resetAllData()" style="width:100%;padding:8px;background:#a22;color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer">🗑️ СБРОСИТЬ ВСЁ</button></div>
 </div>
 </div>
 
-<div id="button-editor"><div class="editor-hint">Перетаскивай кнопки • Тяни за угол для размера</div><div class="editor-toolbar"><button onclick="closeButtonEditor()">ОТМЕНА</button><button class="primary" onclick="saveButtonEditor()">СОХРАНИТЬ</button></div></div>
+<div id="button-editor"><div class="editor-hint">Перетаскивай кнопки • Тяни за угол для размера</div></div>
 
 <div class="overlay" id="clan-overlay"><div class="overlay-close" onclick="closeOverlay('clan-overlay')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div><h2>🛡️ КЛАНЫ</h2>
 <div class="clan-create-form">
-<input type="text" id="clan-name-input" placeholder="Название клана (3-20 символов)" maxlength="20">
-<input type="text" id="clan-tag-input" placeholder="Тег (2-5 символов)" maxlength="5" style="text-transform:uppercase">
+<input type="text" id="clan-name-input" placeholder="Название клана (3-20)" maxlength="20">
+<input type="text" id="clan-tag-input" placeholder="Тег (2-5)" maxlength="5" style="text-transform:uppercase">
 <button onclick="createClan()">➕ СОЗДАТЬ КЛАН</button>
 </div>
 <div class="clans-grid" id="clans-grid"></div>
 </div>
 
 <input type="file" id="avatar-input" accept="image/*" style="display:none">
+
 <script type="importmap">
 {"imports":{"three":"https://unpkg.com/three@0.132.2/build/three.module.js"}}
 </script>
 <script type="module">
 import * as THREE from 'three';
-
 const WEAPONS = {
     pistol:{name:'P-9 PISTOL',damage:25,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,price:0,range:60,model:'pistol'},
     akr:{name:'AKR-12',damage:35,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,price:2700,range:80,model:'rifle'},
@@ -401,11 +401,10 @@ const CASES = {
 const playerData = {
     money:5000,totalKills:0,ownedWeapons:['pistol'],equippedWeapon:'pistol',
     playerId:'73396228',playerName:'Игрок',avatar:null,level:1,exp:0,
-    ownedSkins:[],equippedSkins:{},clanName:null,clanTag:'—',clanColor:'#888',clanBonus:null,
-    lastFreeCase:0,lastDailyReward:0,
+    ownedSkins:[],equippedSkins:{},clanName:null,clanTag:'—',clanColor:'#888',clanBonus:null,clanBonusType:null,
+    lastFreeCase:0,lastDailyReward:0,customClans:[],
     buttonLayout:null,buttonSize:100,buttonOpacity:72,
-    sensitivity:8,soundEnabled:true,vibeEnabled:true,showFps:false,
-    customClans:[]
+    sensitivity:8,soundEnabled:true,vibeEnabled:true
 };
 const state = {
     scene:null,camera:null,renderer:null,raycaster:null,clock:null,
@@ -427,7 +426,7 @@ const mobile = {
 };
 
 // ==== СОХРАНЕНИЕ ====
-const SAVE_KEY = 'standoff_save_v1';
+const SAVE_KEY = 'standoff_save_v2';
 function saveProfile(){
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){}
 }
@@ -438,18 +437,17 @@ function loadProfile(){
     } catch(e){}
     updateProfileUI();
 }
-// ==== ПРОФИЛЬ ====
-const avatarInput = document.getElementById('avatar-input');
 function updateProfileUI(){
     document.getElementById('p-id-val').textContent = playerData.playerId;
     document.getElementById('p-name').textContent = playerData.playerName;
     const av = document.getElementById('avatar');
     if(playerData.avatar) av.innerHTML = `<img src="${playerData.avatar}">`;
-    else av.innerHTML = `<div class="avatar-default"><svg viewBox="0 0 24 24" style="width:100%;height:100%"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>`;
+    else av.innerHTML = `<div class="avatar-default"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>`;
     document.querySelector('#p-level .lv-badge').textContent = 'LVL ' + playerData.level;
     document.getElementById('p-exp').textContent = playerData.exp + ' / 100 EXP';
     document.querySelector('#p-level .lv-bar-fill').style.width = (playerData.exp) + '%';
 }
+const avatarInput = document.getElementById('avatar-input');
 document.getElementById('avatar').addEventListener('click', ()=>avatarInput.click());
 avatarInput.addEventListener('change', (e)=>{
     const f = e.target.files[0]; if(!f) return;
@@ -458,14 +456,13 @@ avatarInput.addEventListener('change', (e)=>{
     r.readAsDataURL(f);
 });
 document.getElementById('p-id').addEventListener('click', ()=>{
-    const nv = prompt('Ваш ID (до 12 цифр):', playerData.playerId);
+    const nv = prompt('Ваш ID:', playerData.playerId);
     if(nv !== null && nv.trim()){ playerData.playerId = nv.trim().slice(0,12); updateProfileUI(); saveProfile(); }
 });
 document.getElementById('p-name').addEventListener('click', ()=>{
-    const nv = prompt('Ваше имя (до 20 символов):', playerData.playerName);
+    const nv = prompt('Ваше имя:', playerData.playerName);
     if(nv !== null && nv.trim()){ playerData.playerName = nv.trim().slice(0,20); updateProfileUI(); saveProfile(); }
 });
-// ==== ЕЖЕДНЕВНАЯ НАГРАДА ====
 function claimDailyReward(){
     const now = Date.now();
     if(now - playerData.lastDailyReward < 86400000){
@@ -479,10 +476,9 @@ function claimDailyReward(){
     saveProfile();
     alert(`💰 Получено ${reward}$!`);
 }
-// ==== ОВЕРЛЕИ ====
 function closeOverlay(id){ document.getElementById(id).style.display='none'; }
 function openOverlay(id){ document.getElementById(id).style.display='flex'; }
-    // ==== РЕНДЕР КЕЙСОВ ====
+    // ==== КЕЙСЫ ====
 function renderCases(){
     const grid = document.getElementById('cases-grid'); if(!grid) return;
     grid.innerHTML = '';
@@ -494,16 +490,8 @@ function renderCases(){
         const card = document.createElement('div');
         card.className = 'case-card';
         card.style.opacity = canOpen ? '1' : '.55';
-        card.innerHTML = `
-            <div class="case-icon"><svg viewBox="0 0 24 24" style="color:${isFree?'#4f4':'#fa0'}"><path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg></div>
-            <div class="case-name">${c.name}</div>
-            <div class="case-price">${isFree ? '<span style="color:#4f4">БЕСПЛАТНО</span>' : `${c.price} $`}</div>
-            <div style="font-size:9px;color:#666;margin-top:4px">${c.skins.length} предметов</div>
-        `;
-        card.onclick = ()=>{
-            if(!canOpen){ alert(isFree ? 'Бесплатный кейс раз в час!' : 'Недостаточно денег!'); return; }
-            openCase(key);
-        };
+        card.innerHTML = `<div class="case-icon"><svg viewBox="0 0 24 24" style="color:${isFree?'#4f4':'#fa0'}"><path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="case-name">${c.name}</div><div class="case-price">${isFree ? '<span style="color:#4f4">БЕСПЛАТНО</span>' : `${c.price} $`}</div><div style="font-size:9px;color:#666;margin-top:4px">${c.skins.length} предметов</div>`;
+        card.onclick = ()=>{ if(!canOpen){ alert(isFree ? 'Бесплатный кейс раз в час!' : 'Недостаточно денег!'); return; } openCase(key); };
         grid.appendChild(card);
     });
 }
@@ -564,10 +552,7 @@ function renderRoulette(items, winner, caseInfo){
         result.classList.add('show');
     }, 4100);
 }
-function closeRoulette(){
-    document.getElementById('case-roulette').style.display = 'none';
-    renderCases();
-}
+function closeRoulette(){ document.getElementById('case-roulette').style.display = 'none'; renderCases(); }
 
 // ==== КЛАНЫ ====
 const DEFAULT_CLANS = [
@@ -582,10 +567,8 @@ function renderClans(){
     const allClans = [...DEFAULT_CLANS, ...(playerData.customClans||[])];
     if(playerData.clanName){
         const cur = document.createElement('div');
-        cur.style.cssText = 'background:linear-gradient(135deg,rgba(40,30,10,.9),rgba(20,20,35,.9));border:2px solid '+(playerData.clanColor||'#fa0')+';border-radius:10px;padding:14px;max-width:500px;margin:0 auto 12px;width:100%;text-align:center';
-        cur.innerHTML = `<div style="font-size:16px;font-weight:bold;color:${playerData.clanColor||'#fa0'};letter-spacing:2px">${playerData.clanName}</div>
-        <div style="font-size:11px;color:#888;margin:4px 0">${playerData.clanTag||'—'} • ${playerData.clanBonus||'Свой клан'}</div>
-        <button onclick="leaveClan()" style="margin-top:8px;padding:8px 20px;background:#a22;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer">ПОКИНУТЬ КЛАН</button>`;
+        cur.style.cssText = `background:linear-gradient(135deg,rgba(40,30,10,.9),rgba(20,20,35,.9));border:2px solid ${playerData.clanColor||'#fa0'};border-radius:10px;padding:14px;max-width:500px;margin:0 auto 12px;width:100%;text-align:center`;
+        cur.innerHTML = `<div style="font-size:16px;font-weight:bold;color:${playerData.clanColor||'#fa0'};letter-spacing:2px">${playerData.clanName}</div><div style="font-size:11px;color:#888;margin:4px 0">${playerData.clanTag||'—'} • ${playerData.clanBonus||'Свой клан'}</div><button onclick="leaveClan()" style="margin-top:8px;padding:8px 20px;background:#a22;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer">ПОКИНУТЬ КЛАН</button>`;
         grid.appendChild(cur);
     }
     allClans.forEach(c => {
@@ -593,9 +576,8 @@ function renderClans(){
         item.className = 'clan-item';
         item.style.borderColor = playerData.clanTag === c.tag ? c.color : '#333';
         const initials = c.tag.replace(/[\[\]]/g,'').slice(0,2);
-        item.innerHTML = `<div class="ci-emblem" style="background:${c.color}">${initials}</div>
-            <div class="ci-info"><div class="ci-name" style="color:${c.color}">${c.name}</div><div class="ci-desc">${c.tag} • ${c.bonus}</div></div>`;
-        item.onclick = ()=>{ joinClan(c); };
+        item.innerHTML = `<div class="ci-emblem" style="background:${c.color}">${initials}</div><div class="ci-info"><div class="ci-name" style="color:${c.color}">${c.name}</div><div class="ci-desc">${c.tag} • ${c.bonus}</div></div>`;
+        item.onclick = ()=> joinClan(c);
         grid.appendChild(item);
     });
 }
@@ -610,13 +592,9 @@ function joinClan(c){
     alert(`Клан: ${c.name}`);
 }
 function leaveClan(){
-    playerData.clanName = null;
-    playerData.clanTag = '—';
-    playerData.clanColor = '#888';
-    playerData.clanBonus = null;
-    playerData.clanBonusType = null;
-    saveProfile();
-    renderClans();
+    playerData.clanName = null; playerData.clanTag = '—'; playerData.clanColor = '#888';
+    playerData.clanBonus = null; playerData.clanBonusType = null;
+    saveProfile(); renderClans();
 }
 function createClan(){
     const name = document.getElementById('clan-name-input').value.trim();
@@ -631,10 +609,8 @@ function createClan(){
     document.getElementById('clan-name-input').value = '';
     document.getElementById('clan-tag-input').value = '';
 }
-
-// ==== МАГАЗИН (оружие) ====
 function openShopOverlay(){
-    let msg = '🛒 МАГАЗИН ОРУЖИЯ\n\n';
+    let msg = '🛒 МАГАЗИН\n\n';
     Object.entries(WEAPONS).forEach(([k,w])=>{
         const owned = playerData.ownedWeapons.includes(k);
         msg += `${w.name} — ${w.price}$ ${owned?'(КУПЛЕНО)':''}\n`;
@@ -644,10 +620,8 @@ function openShopOverlay(){
     if(!nv) return;
     const key = nv.toLowerCase().trim();
     if(WEAPONS[key]){
-        if(playerData.ownedWeapons.includes(key)){
-            playerData.equippedWeapon = key;
-            alert('Экипировано: ' + WEAPONS[key].name);
-        } else if(playerData.money >= WEAPONS[key].price){
+        if(playerData.ownedWeapons.includes(key)){ playerData.equippedWeapon = key; alert('Экипировано: ' + WEAPONS[key].name); }
+        else if(playerData.money >= WEAPONS[key].price){
             playerData.money -= WEAPONS[key].price;
             playerData.ownedWeapons.push(key);
             playerData.equippedWeapon = key;
@@ -655,40 +629,24 @@ function openShopOverlay(){
         } else alert('Недостаточно денег!');
         saveProfile();
     }
-    }
-    // ==== НАСТРОЙКИ ====
+}
+
+// ==== НАСТРОЙКИ ====
 function initSettings(){
     document.getElementById('set-sens').value = playerData.sensitivity;
     document.getElementById('set-sens-val').textContent = playerData.sensitivity;
     document.getElementById('set-sound').checked = playerData.soundEnabled;
     document.getElementById('set-vibe').checked = playerData.vibeEnabled;
-    document.getElementById('set-fps').checked = playerData.showFps;
     document.getElementById('set-btnsize').value = playerData.buttonSize;
     document.getElementById('set-btnsize-val').textContent = playerData.buttonSize + '%';
     document.getElementById('set-btnopacity').value = playerData.buttonOpacity;
     document.getElementById('set-btnopacity-val').textContent = playerData.buttonOpacity + '%';
 }
-document.getElementById('set-sens').addEventListener('input',(e)=>{
-    playerData.sensitivity = +e.target.value;
-    document.getElementById('set-sens-val').textContent = playerData.sensitivity;
-    saveProfile();
-});
+document.getElementById('set-sens').addEventListener('input',(e)=>{ playerData.sensitivity = +e.target.value; document.getElementById('set-sens-val').textContent = playerData.sensitivity; saveProfile(); });
 document.getElementById('set-sound').addEventListener('change',(e)=>{ playerData.soundEnabled = e.target.checked; saveProfile(); });
 document.getElementById('set-vibe').addEventListener('change',(e)=>{ playerData.vibeEnabled = e.target.checked; saveProfile(); });
-document.getElementById('set-fps').addEventListener('change',(e)=>{ playerData.showFps = e.target.checked; saveProfile(); });
-document.getElementById('set-btnsize').addEventListener('input',(e)=>{
-    playerData.buttonSize = +e.target.value;
-    document.getElementById('set-btnsize-val').textContent = playerData.buttonSize + '%';
-    applyButtonSettings();
-    saveProfile();
-});
-document.getElementById('set-btnopacity').addEventListener('input',(e)=>{
-    playerData.buttonOpacity = +e.target.value;
-    document.getElementById('set-btnopacity-val').textContent = playerData.buttonOpacity + '%';
-    applyButtonSettings();
-    saveProfile();
-});
-
+document.getElementById('set-btnsize').addEventListener('input',(e)=>{ playerData.buttonSize = +e.target.value; document.getElementById('set-btnsize-val').textContent = playerData.buttonSize + '%'; applyButtonSettings(); saveProfile(); });
+document.getElementById('set-btnopacity').addEventListener('input',(e)=>{ playerData.buttonOpacity = +e.target.value; document.getElementById('set-btnopacity-val').textContent = playerData.buttonOpacity + '%'; applyButtonSettings(); saveProfile(); });
 function applyButtonSettings(){
     const sizeMult = playerData.buttonSize / 100;
     const opac = playerData.buttonOpacity / 100;
@@ -698,27 +656,18 @@ function applyButtonSettings(){
         else if(btn.classList.contains('big')) baseW = 62;
         btn.style.width = (baseW * sizeMult) + 'px';
         btn.style.height = (baseW * sizeMult) + 'px';
-        const c = btn.style.borderColor || 'rgba(255,170,0,.7)';
-        btn.style.background = btn.style.background.replace(/rgba\(([^)]+),\s*[\d.]+\)/, `rgba($1, ${opac})`);
     });
-    // Применяем кастомное расположение если есть
     if(playerData.buttonLayout){
         Object.entries(playerData.buttonLayout).forEach(([id, pos])=>{
             const el = document.getElementById(id);
             if(el){
-                el.style.left = pos.x + 'px';
-                el.style.top = pos.y + 'px';
-                el.style.right = 'auto';
-                el.style.bottom = 'auto';
-                if(pos.size){
-                    el.style.width = pos.size + 'px';
-                    el.style.height = pos.size + 'px';
-                }
+                el.style.left = pos.x + 'px'; el.style.top = pos.y + 'px';
+                el.style.right = 'auto'; el.style.bottom = 'auto';
+                if(pos.size){ el.style.width = pos.size + 'px'; el.style.height = pos.size + 'px'; }
             }
         });
     }
 }
-
 // ==== РЕДАКТОР КНОПОК ====
 let editorState = { active:false, dragging:null, resizing:null, layout:{} };
 const EDITOR_BTNS = ['btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen'];
@@ -728,28 +677,22 @@ function openButtonEditor(){
     const editor = document.getElementById('button-editor');
     editor.classList.add('active');
     editor.innerHTML = '<div class="editor-hint">Перетаскивай кнопки • Тяни за угол для размера</div>';
-    // Копируем кнопки
     EDITOR_BTNS.forEach(id=>{
         const src = document.getElementById(id);
         if(!src) return;
         const rect = src.getBoundingClientRect();
         const clone = document.createElement('div');
-        clone.className = 'editor-btn';
-        clone.dataset.id = id;
-        clone.style.left = rect.left + 'px';
-        clone.style.top = rect.top + 'px';
-        clone.style.width = rect.width + 'px';
-        clone.style.height = rect.height + 'px';
+        clone.className = 'editor-btn'; clone.dataset.id = id;
+        clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
+        clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
         clone.innerHTML = `${id.replace('btn-','').toUpperCase()}<div class="resize-handle"></div>`;
         editorState.layout[id] = { x: rect.left, y: rect.top, size: rect.width };
         editor.appendChild(clone);
     });
-    // Toolbar
     const toolbar = document.createElement('div');
     toolbar.className = 'editor-toolbar';
     toolbar.innerHTML = '<button onclick="closeButtonEditor()">ОТМЕНА</button><button class="primary" onclick="saveButtonEditor()">СОХРАНИТЬ</button>';
     editor.appendChild(toolbar);
-    // Обработчики
     editor.querySelectorAll('.editor-btn').forEach(btn=>{
         const handle = btn.querySelector('.resize-handle');
         const startDrag = (e)=>{
@@ -769,9 +712,9 @@ function openButtonEditor(){
         handle.addEventListener('mousedown', startResize);
     });
 }
-document.addEventListener('touchmove', (e)=>{
+function editorMoveHandler(e){
     if(!editorState.active) return;
-    const t = e.touches[0];
+    const t = e.touches ? e.touches[0] : e;
     if(editorState.dragging){
         const el = document.querySelector(`.editor-btn[data-id="${editorState.dragging.id}"]`);
         if(el){
@@ -787,80 +730,388 @@ document.addEventListener('touchmove', (e)=>{
         if(el){
             const dx = t.clientX - editorState.resizing.startX;
             const ns = Math.max(30, Math.min(120, editorState.resizing.startSize + dx));
-            el.style.width = ns + 'px';
-            el.style.height = ns + 'px';
-            const l = editorState.layout[editorState.resizing.id];
-            if(l){ l.size = ns; }
-        }
-        e.preventDefault();
-    }
-}, {passive:false});
-document.addEventListener('mousemove', (e)=>{
-    if(!editorState.active) return;
-    if(editorState.dragging){
-        const el = document.querySelector(`.editor-btn[data-id="${editorState.dragging.id}"]`);
-        if(el){
-            const nx = e.clientX - editorState.dragging.ox;
-            const ny = e.clientY - editorState.dragging.oy;
-            el.style.left = Math.max(0, Math.min(window.innerWidth - el.offsetWidth, nx)) + 'px';
-            el.style.top = Math.max(0, Math.min(window.innerHeight - el.offsetHeight, ny)) + 'px';
-            editorState.layout[editorState.dragging.id] = { x: parseInt(el.style.left), y: parseInt(el.style.top), size: el.offsetWidth };
-        }
-    } else if(editorState.resizing){
-        const el = document.querySelector(`.editor-btn[data-id="${editorState.resizing.id}"]`);
-        if(el){
-            const dx = e.clientX - editorState.resizing.startX;
-            const ns = Math.max(30, Math.min(120, editorState.resizing.startSize + dx));
-            el.style.width = ns + 'px';
-            el.style.height = ns + 'px';
+            el.style.width = ns + 'px'; el.style.height = ns + 'px';
             const l = editorState.layout[editorState.resizing.id];
             if(l) l.size = ns;
         }
+        e.preventDefault();
     }
-});
+}
+document.addEventListener('touchmove', editorMoveHandler, {passive:false});
+document.addEventListener('mousemove', editorMoveHandler);
 document.addEventListener('touchend', ()=>{ editorState.dragging = null; editorState.resizing = null; });
 document.addEventListener('mouseup', ()=>{ editorState.dragging = null; editorState.resizing = null; });
-
-function closeButtonEditor(){
-    editorState.active = false;
-    document.getElementById('button-editor').classList.remove('active');
-}
+function closeButtonEditor(){ editorState.active = false; document.getElementById('button-editor').classList.remove('active'); }
 function saveButtonEditor(){
-    // Сохраняем с относительными координатами
     const layout = {};
     Object.entries(editorState.layout).forEach(([id, pos])=>{
         const el = document.querySelector(`.editor-btn[data-id="${id}"]`);
-        if(el){
-            layout[id] = {
-                x: parseInt(el.style.left),
-                y: parseInt(el.style.top),
-                size: el.offsetWidth
-            };
-        }
+        if(el){ layout[id] = { x: parseInt(el.style.left), y: parseInt(el.style.top), size: el.offsetWidth }; }
     });
     playerData.buttonLayout = layout;
-    saveProfile();
-    applyButtonSettings();
-    closeButtonEditor();
+    saveProfile(); applyButtonSettings(); closeButtonEditor();
     alert('✅ Расположение сохранено!');
 }
 function resetButtonLayout(){
     if(!confirm('Сбросить расположение кнопок?')) return;
-    playerData.buttonLayout = null;
-    playerData.buttonSize = 100;
-    playerData.buttonOpacity = 72;
+    playerData.buttonLayout = null; playerData.buttonSize = 100; playerData.buttonOpacity = 72;
     saveProfile();
-    // Сброс inline стилей
     document.querySelectorAll('#hud .ctrl-btn').forEach(b=>{ b.style.left=''; b.style.top=''; b.style.right=''; b.style.bottom=''; b.style.width=''; b.style.height=''; });
-    applyButtonSettings();
-    initSettings();
+    applyButtonSettings(); initSettings();
 }
 function resetAllData(){
-    if(!confirm('СБРОСИТЬ ВСЁ? Это удалит прогресс, скины, клан, деньги!')) return;
+    if(!confirm('СБРОСИТЬ ВСЁ?')) return;
     localStorage.removeItem(SAVE_KEY);
     location.reload();
     }
-    // ==== ДЖОЙСТИКИ ====
+    function addCollider(x,y,z,w,h,d){state.colliders.push({min:new THREE.Vector3(x-w/2,y-h/2,z-d/2),max:new THREE.Vector3(x+w/2,y+h/2,z+d/2)});}
+function addBox(x,y,z,w,h,d,mat,collide=true){
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+    m.position.set(x,y,z); m.castShadow=true; m.receiveShadow=true;
+    state.scene.add(m);
+    if(collide) addCollider(x,y,z,w,h,d);
+    return m;
+}
+function buildSandstone(){
+    const map=MAPS.sandstone, scene=state.scene;
+    const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.95}));
+    g.rotation.x=-Math.PI/2; g.receiveShadow=true; scene.add(g);
+    const wallMat=new THREE.MeshStandardMaterial({color:map.wallColor,roughness:.9});
+    const wallH=8, wallT=2;
+    addBox(0,wallH/2,-HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
+    addBox(0,wallH/2,HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
+    addBox(-HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
+    addBox(HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
+    const crates=[[-8,-8,4,2,4],[8,-8,4,2,4],[-8,8,4,2,4],[8,8,4,2,4],[0,0,5,3,5],[-20,0,3,1.5,10],[20,0,3,1.5,10],[0,-20,10,1.5,3],[0,20,10,1.5,3],[-30,-25,5,2,5],[30,-25,5,2,5],[-30,25,5,2,5],[30,25,5,2,5],[-35,0,3,4,3],[35,0,3,4,3],[0,-35,3,4,3],[0,35,3,4,3]];
+    const cA=new THREE.MeshStandardMaterial({color:0xa07850,roughness:.85});
+    const cB=new THREE.MeshStandardMaterial({color:0x7a5838,roughness:.85});
+    crates.forEach(([x,z,w,h,d],i)=>addBox(x,h/2,z,w,h,d,i%2?cA:cB));
+    const trunkMat=new THREE.MeshStandardMaterial({color:0x6b5030,roughness:1});
+    [[-40,-40],[40,-40],[-40,40],[40,40]].forEach(([x,z])=>{
+        const t=new THREE.Mesh(new THREE.CylinderGeometry(.4,.6,7,8),trunkMat);
+        t.position.set(x,3.5,z); t.castShadow=true; scene.add(t);
+        addCollider(x,3.5,z,1,7,1);
+    });
+    state.spawnPoints=[[-35,-35],[35,-35],[-35,35],[35,35],[-30,0],[30,0],[0,-30],[0,30]];
+}
+function buildTempl(){
+    const map=MAPS.templ, scene=state.scene;
+    const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.9}));
+    g.rotation.x=-Math.PI/2; g.receiveShadow=true; scene.add(g);
+    const wallMat=new THREE.MeshStandardMaterial({color:map.wallColor,roughness:.7,metalness:.1});
+    const wallH=12, wallT=2;
+    addBox(0,wallH/2,-HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
+    addBox(0,wallH/2,HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
+    addBox(-HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
+    addBox(HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
+    const tMat=new THREE.MeshStandardMaterial({color:0x6a7a90,roughness:.6});
+    addBox(0,3,0,14,6,14,tMat); addBox(0,1,0,18,2,18,tMat);
+    const roof=new THREE.Mesh(new THREE.ConeGeometry(12,5,4),new THREE.MeshStandardMaterial({color:0x5a6a80,metalness:.3,roughness:.5}));
+    roof.position.set(0,8.5,0); roof.rotation.y=Math.PI/4; roof.castShadow=true; scene.add(roof);
+    const colMat=new THREE.MeshStandardMaterial({color:0x8a9ab0,roughness:.5});
+    for(let i=0;i<8;i++){
+        const a=(i/8)*Math.PI*2;
+        const x=Math.cos(a)*12, z=Math.sin(a)*12;
+        const c=new THREE.Mesh(new THREE.CylinderGeometry(.7,.8,8,12),colMat);
+        c.position.set(x,4,z); c.castShadow=true; scene.add(c);
+        addCollider(x,4,z,1.6,8,1.6);
+    }
+    const corMat=new THREE.MeshStandardMaterial({color:0x4a5a70,roughness:.75});
+    [[-25,-25,3,5,20],[25,-25,3,5,20],[-25,25,3,5,20],[25,25,3,5,20]].forEach(([x,z,w,h,d])=>addBox(x,h/2,z,w,h,d,corMat));
+    state.spawnPoints=[[-38,-38],[38,-38],[-38,38],[38,38],[-30,0],[30,0],[0,-30],[0,30]];
+}
+function createScene(){
+    const map=MAPS[state.mapKey];
+    state.scene=new THREE.Scene();
+    state.scene.background=new THREE.Color(map.skyColor);
+    state.scene.fog=new THREE.Fog(map.fogColor,5,map.fogFar);
+    state.camera=new THREE.PerspectiveCamera(80,innerWidth/innerHeight,.1,500);
+    state.camera.position.set(0,PLAYER_HEIGHT,0);
+    state.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+    state.renderer.setSize(innerWidth,innerHeight);
+    state.renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    state.renderer.shadowMap.enabled=true;
+    state.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+    state.renderer.domElement.style.display='none';
+    document.body.appendChild(state.renderer.domElement);
+    state.scene.add(state.camera);
+    state.raycaster=new THREE.Raycaster();
+    state.clock=new THREE.Clock();
+    state.yaw=0; state.pitch=0;
+    state.scene.add(new THREE.AmbientLight(map.ambient,map.ambientIntensity));
+    const sun=new THREE.DirectionalLight(map.sunColor,1.1);
+    sun.position.set(30,40,20); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024);
+    state.scene.add(sun);
+    state.colliders=[]; state.spawnPoints=[];
+    map.generate();
+    spawnEnemies(8);
+    createWeaponModel();
+    state.minimapCtx=document.getElementById('minimap-canvas').getContext('2d');
+    updateCameraFromYawPitch();
+}
+function updateCameraFromYawPitch(){
+    const e = new THREE.Euler(state.pitch, state.yaw, 0, 'YXZ');
+    state.camera.quaternion.setFromEuler(e);
+}
+function createWeaponModel(){
+    if(state.weaponModel) state.camera.remove(state.weaponModel);
+    const g=new THREE.Group();
+    const wData=WEAPONS[playerData.equippedWeapon];
+    const dark=new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:.6,metalness:.7});
+    const grip=new THREE.MeshStandardMaterial({color:0x222,roughness:.9});
+    const accent=new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:.5,metalness:.8});
+    const wood=new THREE.MeshStandardMaterial({color:0x5a3a1a,roughness:.8});
+    if(wData.model==='pistol'){
+        const s=new THREE.Mesh(new THREE.BoxGeometry(.08,.09,.34),dark); s.position.set(0,0,-.15); g.add(s);
+        const b=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.12,8),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.34); g.add(b);
+        const gr=new THREE.Mesh(new THREE.BoxGeometry(.08,.18,.1),grip); gr.position.set(0,-.13,.02); gr.rotation.x=.2; g.add(gr);
+    }else if(wData.model==='rifle'){
+        const body=new THREE.Mesh(new THREE.BoxGeometry(.09,.1,.55),dark); body.position.set(0,0,-.2); g.add(body);
+        const b=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.35,8),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.65); g.add(b);
+        const hg=new THREE.Mesh(new THREE.BoxGeometry(.1,.09,.22),wood); hg.position.set(0,-.03,-.5); g.add(hg);
+        const mag=new THREE.Mesh(new THREE.BoxGeometry(.05,.22,.1),grip); mag.position.set(0,-.15,-.1); mag.rotation.x=-.3; g.add(mag);
+        const gr=new THREE.Mesh(new THREE.BoxGeometry(.07,.16,.1),grip); gr.position.set(0,-.12,.1); gr.rotation.x=.3; g.add(gr);
+    }else{
+        const body=new THREE.Mesh(new THREE.BoxGeometry(.09,.11,.7),dark); body.position.set(0,0,-.25); g.add(body);
+        const b=new THREE.Mesh(new THREE.CylinderGeometry(.022,.022,.5,10),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.85); g.add(b);
+        const sc=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.28,12),accent); sc.rotation.x=Math.PI/2; sc.position.set(0,.13,-.15); g.add(sc);
+        const gr=new THREE.Mesh(new THREE.BoxGeometry(.07,.18,.1),grip); gr.position.set(0,-.14,.15); gr.rotation.x=.3; g.add(gr);
+    }
+    state.muzzleFlash=new THREE.PointLight(0xffaa00,0,3);
+    state.muzzleFlash.position.set(0,.02,-.7); g.add(state.muzzleFlash);
+    g.position.set(.28,-.25,-.55); g.rotation.y=.06;
+    state.camera.add(g);
+    state.weaponModel=g;
+}
+function spawnEnemies(c){for(let i=0;i<c;i++)spawnEnemy();}
+function spawnEnemy(){
+    if(!state.spawnPoints||!state.spawnPoints.length) return;
+    const p=state.camera.position;
+    let best=state.spawnPoints[0], bd=0;
+    state.spawnPoints.forEach(pt=>{const d=Math.hypot(pt[0]-p.x,pt[1]-p.z);if(d>bd){bd=d;best=pt;}});
+    const bx=best[0]+(Math.random()-.5)*4, bz=best[1]+(Math.random()-.5)*4;
+    const e=new THREE.Group();
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(.35,.35,1.2,8),new THREE.MeshStandardMaterial({color:0xcc2222,roughness:.7,emissive:0x330000}));
+    body.position.y=.9; body.castShadow=true; e.add(body);
+    const head=new THREE.Mesh(new THREE.SphereGeometry(.28,10,10),new THREE.MeshStandardMaterial({color:0xffcc66,roughness:.6}));
+    head.position.y=1.75; head.castShadow=true; e.add(head);
+    e.position.set(bx,0,bz);
+    e.userData={hp:30,maxHp:30,head,body,lastAttack:0,attackCooldown:600,speed:2.5+Math.random()*.6,damage:15};
+    state.scene.add(e); state.enemies.push(e);
+}
+function shoot(){
+    if(state.isReloading||state.isGameOver||state.isPaused) return;
+    const w=WEAPONS[playerData.equippedWeapon];
+    const now=performance.now(), cd=60000/w.rpm;
+    if(now-state.lastShootTime<cd) return;
+    state.lastShootTime=now;
+    if(state.magAmmo<=0){if(state.reserveAmmo>0)reload();return;}
+    state.magAmmo--; updateAmmoUI();
+    state.muzzleFlash.intensity=3;
+    setTimeout(()=>{if(state.muzzleFlash)state.muzzleFlash.intensity=0;},50);
+    state.pitch+=.01; updateCameraFromYawPitch();
+    const dir=new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion);
+    const sp=state.isAiming?w.spread*.3:w.spread;
+    dir.x+=(Math.random()-.5)*sp; dir.y+=(Math.random()-.5)*sp;
+    dir.normalize();
+    state.raycaster.set(state.camera.getWorldPosition(new THREE.Vector3()),dir);
+    state.raycaster.far=w.range;
+    const targets=[];
+    state.enemies.forEach(e=>{targets.push(e.userData.body,e.userData.head);});
+    const hits=state.raycaster.intersectObjects(targets,false);
+    if(hits.length>0){
+        const hit=hits[0];
+        let enemy=null, isHead=false;
+        state.enemies.forEach(e=>{
+            if(hit.object===e.userData.body) enemy=e;
+            if(hit.object===e.userData.head){enemy=e;isHead=true;}
+        });
+        if(enemy){
+            const mult=(playerData.clanBonusType==='damage')?1.1:1;
+            const dmg=w.damage*(isHead?w.headshotMult:1)*mult;
+            enemy.userData.hp-=dmg;
+            document.getElementById('hit-marker').style.opacity='1';
+            document.getElementById('crosshair').classList.add('hit');
+            setTimeout(()=>{document.getElementById('hit-marker').style.opacity='0';document.getElementById('crosshair').classList.remove('hit');},80);
+            spawnParticles(hit.point,0xff2222,6);
+            if(enemy.userData.hp<=0) killEnemy(enemy,isHead);
+        } else spawnParticles(hit.point,0xffaa00,4);
+    }
+    if(state.magAmmo===0&&state.reserveAmmo>0) reload();
+}
+function spawnParticles(pos,color,count){
+    const geo=new THREE.SphereGeometry(.06,4,4), mat=new THREE.MeshBasicMaterial({color});
+    for(let i=0;i<count;i++){
+        const p=new THREE.Mesh(geo,mat); p.position.copy(pos);
+        p.userData.vel=new THREE.Vector3((Math.random()-.5)*4,Math.random()*3,(Math.random()-.5)*4);
+        p.userData.life=.6;
+        state.scene.add(p); state.bloodParticles.push(p);
+    }
+}
+function updateParticles(dt){
+    for(let i=state.bloodParticles.length-1;i>=0;i--){
+        const p=state.bloodParticles[i];
+        p.userData.vel.y-=12*dt;
+        p.position.addScaledVector(p.userData.vel,dt);
+        p.userData.life-=dt;
+        p.scale.setScalar(Math.max(.1,p.userData.life*1.5));
+        if(p.userData.life<=0){state.scene.remove(p);state.bloodParticles.splice(i,1);}
+    }
+}
+function killEnemy(e,isHead){
+    const idx=state.enemies.indexOf(e);
+    if(idx>-1) state.enemies.splice(idx,1);
+    state.scene.remove(e);
+    state.score++; playerData.totalKills++;
+    const base=isHead?400:300;
+    const mult=(playerData.clanBonusType==='money')?1.2:1;
+    const reward=Math.floor(base*mult);
+    state.sessionMoney+=reward;
+    document.getElementById('score').textContent=state.score;
+    addKillfeed(isHead?'HEADSHOT!':'KILL',reward);
+    setTimeout(()=>{if(!state.isGameOver)spawnEnemy();},1200);
+}
+function addKillfeed(text,reward){
+    const kf=document.getElementById('killfeed');
+    const m=document.createElement('div'); m.className='kill-msg';
+    m.innerHTML=`<span style="color:#fa0">${text}</span> +${reward}$`;
+    kf.appendChild(m);
+    setTimeout(()=>m.remove(),3000);
+}
+function reload(){
+    if(state.isReloading) return;
+    const w=WEAPONS[playerData.equippedWeapon];
+    if(state.reserveAmmo<=0||state.magAmmo===w.magSize) return;
+    state.isReloading=true;
+    document.getElementById('reload-msg').style.display='block';
+    setTimeout(()=>{
+        const need=w.magSize-state.magAmmo, take=Math.min(need,state.reserveAmmo);
+        state.magAmmo+=take; state.reserveAmmo-=take;
+        state.isReloading=false;
+        document.getElementById('reload-msg').style.display='none';
+        updateAmmoUI();
+    },w.reloadTime);
+}
+function updateAmmoUI(){
+    const w=WEAPONS[playerData.equippedWeapon];
+    document.getElementById('weapon-name').textContent=w.name;
+    document.getElementById('ammo').innerHTML=`${state.magAmmo}<span class="res">/${state.reserveAmmo}</span>`;
+}
+function switchWeapon(){
+    const list=playerData.ownedWeapons;
+    const idx=list.indexOf(playerData.equippedWeapon);
+    const next=list[(idx+1)%list.length];
+    switchWeaponTo(next);
+}
+function switchWeaponTo(k){
+    if(!playerData.ownedWeapons.includes(k)) return;
+    if(playerData.equippedWeapon===k) return;
+    playerData.equippedWeapon=k;
+    createWeaponModel();
+    const w=WEAPONS[k];
+    state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
+    updateAmmoUI(); saveProfile();
+    }
+    function checkCollision(np){
+    if(np.x<-HALF_WORLD+PLAYER_RADIUS||np.x>HALF_WORLD-PLAYER_RADIUS) return true;
+    if(np.z<-HALF_WORLD+PLAYER_RADIUS||np.z>HALF_WORLD-PLAYER_RADIUS) return true;
+    for(const c of state.colliders){
+        if(np.x+PLAYER_RADIUS>c.min.x&&np.x-PLAYER_RADIUS<c.max.x&&np.z+PLAYER_RADIUS>c.min.z&&np.z-PLAYER_RADIUS<c.max.z){
+            const py=state.camera.position.y;
+            if(py+1.7>c.min.y&&py-.1<c.max.y) return true;
+        }
+    }
+    return false;
+}
+function updateMovement(dt){
+    if(state.isGameOver||state.isPaused) return;
+    const v=state.velocity;
+    const spMult=(playerData.clanBonusType==='speed')?1.1:1;
+    const baseSpeed=state.isCrouching?MOVE_SPEED*.5:MOVE_SPEED;
+    const sprintMult=state.keys.shift?1.4:1;
+    const speed=baseSpeed*spMult*sprintMult;
+    const fwd=new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion); fwd.y=0; fwd.normalize();
+    const right=new THREE.Vector3(1,0,0).applyQuaternion(state.camera.quaternion); right.y=0; right.normalize();
+    const mv=new THREE.Vector3();
+    let ix=0, iz=0;
+    if(state.keys.w) iz+=1; if(state.keys.s) iz-=1;
+    if(state.keys.d) ix+=1; if(state.keys.a) ix-=1;
+    if(mobile.joyMoveActive){ ix+=mobile.moveX; iz-=mobile.moveY; }
+    if(ix!==0||iz!==0){
+        mv.addScaledVector(right,ix); mv.addScaledVector(fwd,iz);
+        if(mv.lengthSq()>0) mv.normalize();
+    }
+    v.x=THREE.MathUtils.lerp(v.x,mv.x*speed,12*dt);
+    v.z=THREE.MathUtils.lerp(v.z,mv.z*speed,12*dt);
+    v.y-=GRAVITY*dt;
+    const pos=state.camera.position;
+    const nx=pos.x+v.x*dt, nz=pos.z+v.z*dt;
+    if(!checkCollision({x:nx,y:pos.y,z:pos.z})) pos.x=nx; else v.x=0;
+    if(!checkCollision({x:pos.x,y:pos.y,z:nz})) pos.z=nz; else v.z=0;
+    pos.y+=v.y*dt;
+    const targetH=state.isCrouching?PLAYER_HEIGHT*.65:PLAYER_HEIGHT;
+    if(pos.y<targetH){pos.y=targetH;v.y=0;state.canJump=true;}
+    if(pos.y>20) pos.y=20;
+}
+function updateEnemies(dt){
+    const pp=state.camera.position;
+    state.enemies.forEach(e=>{
+        const dx=pp.x-e.position.x, dz=pp.z-e.position.z, dist=Math.hypot(dx,dz);
+        e.rotation.y=Math.atan2(dx,dz);
+        if(dist>2.2){
+            const sp=e.userData.speed*dt;
+            const nx=e.position.x+(dx/dist)*sp, nz=e.position.z+(dz/dist)*sp;
+            let okX=true, okZ=true;
+            for(const c of state.colliders){
+                if(nx+.35>c.min.x&&nx-.35<c.max.x&&e.position.z+.35>c.min.z&&e.position.z-.35<c.max.z&&c.min.y<1.8) okX=false;
+                if(e.position.x+.35>c.min.x&&e.position.x-.35<c.max.x&&nz+.35>c.min.z&&nz-.35<c.max.z&&c.min.y<1.8) okZ=false;
+            }
+            if(okX&&Math.abs(nx)<HALF_WORLD-1) e.position.x=nx;
+            if(okZ&&Math.abs(nz)<HALF_WORLD-1) e.position.z=nz;
+        }
+        if(dist<2.5){
+            const now=performance.now();
+            if(now-e.userData.lastAttack>e.userData.attackCooldown){
+                e.userData.lastAttack=now;
+                damagePlayer(e.userData.damage);
+            }
+        }
+    });
+}
+function damagePlayer(amt){
+    if(state.isGameOver||state.isPaused) return;
+    state.health-=amt; if(state.health<0) state.health=0;
+    document.getElementById('health-fill').style.width=state.health+'%';
+    document.getElementById('hit-flash').style.opacity='1';
+    setTimeout(()=>document.getElementById('hit-flash').style.opacity='0',100);
+    if(playerData.vibeEnabled && navigator.vibrate) navigator.vibrate(50);
+    if(state.health<=0) endGame();
+}
+function drawMinimap(){
+    const ctx=state.minimapCtx, size=88, scale=size/WORLD_SIZE;
+    ctx.clearRect(0,0,size,size);
+    ctx.fillStyle=state.mapKey==='sandstone'?'#3a2a15':'#1a2a40';
+    ctx.fillRect(0,0,size,size);
+    const toMap=(x,z)=>[(x+WORLD_SIZE/2)*scale,(z+WORLD_SIZE/2)*scale];
+    ctx.fillStyle=state.mapKey==='sandstone'?'#6b5030':'#3a4a60';
+    state.colliders.forEach(c=>{
+        if(c.max.y<2) return;
+        const [x1,z1]=toMap(c.min.x,c.min.z), [x2,z2]=toMap(c.max.x,c.max.z);
+        ctx.fillRect(x1,z1,x2-x1,z2-z1);
+    });
+    ctx.fillStyle='#f22';
+    state.enemies.forEach(e=>{
+        const [x,y]=toMap(e.position.x,e.position.z);
+        ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fill();
+    });
+    const [mx,my]=toMap(state.camera.position.x,state.camera.position.z);
+    ctx.save(); ctx.translate(mx,my); ctx.rotate(-state.yaw);
+    ctx.fillStyle='#fa0';
+    ctx.beginPath(); ctx.moveTo(0,-4);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3); ctx.closePath(); ctx.fill();
+    ctx.restore();
+}
+
+// ==== ДЖОЙСТИКИ (правильные с stopPropagation) ====
 function setupJoysticks(){
     const joyMove=document.getElementById('joy-move');
     const knob=document.getElementById('joy-move-knob');
@@ -876,7 +1127,7 @@ function setupJoysticks(){
     };
     const moveUpdate=(e)=>{
         if(!mobile.joyMoveActive) return;
-        e.preventDefault();
+        e.preventDefault(); e.stopPropagation();
         const t=e.touches?e.touches[0]:e;
         let dx=t.clientX-mobile.joyMoveStart.x;
         let dy=t.clientY-mobile.joyMoveStart.y;
@@ -885,7 +1136,7 @@ function setupJoysticks(){
         knob.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
         mobile.moveX=dx/R; mobile.moveY=dy/R;
     };
-    const endMove=()=>{ mobile.joyMoveActive=false; mobile.moveX=0; mobile.moveY=0; knob.style.transform='translate(-50%,-50%)'; };
+    const endMove=(e)=>{ mobile.joyMoveActive=false; mobile.moveX=0; mobile.moveY=0; knob.style.transform='translate(-50%,-50%)'; };
     joyMove.addEventListener('touchstart',startMove,{passive:false});
     joyMove.addEventListener('touchmove',moveUpdate,{passive:false});
     joyMove.addEventListener('touchend',endMove);
@@ -893,9 +1144,16 @@ function setupJoysticks(){
     joyMove.addEventListener('mousedown',startMove);
     document.addEventListener('mousemove',e=>{if(mobile.joyMoveActive)moveUpdate(e);});
     document.addEventListener('mouseup',endMove);
+    // Look - только когда touch НЕ на кнопке и НЕ на джойстике
     let lookId=null;
     const startLook=(e)=>{
-        if(e.target && e.target.closest && e.target.closest('.ctrl-btn')) return;
+        // Проверка: если событие пришло от кнопки или джойстика — игнорируем
+        if(e.target && e.target.closest){
+            if(e.target.closest('.ctrl-btn')) return;
+            if(e.target.closest('#joy-move')) return;
+            if(e.target.closest('#paused-msg')) return;
+            if(e.target.closest('.overlay')) return;
+        }
         e.preventDefault();
         const t=e.changedTouches?e.changedTouches[0]:e;
         lookId=t.identifier!==undefined?t.identifier:'mouse';
@@ -917,8 +1175,8 @@ function setupJoysticks(){
         updateCameraFromYawPitch();
     };
     const endLook=()=>{mobile.lookActive=false;};
-    lookArea.addEventListener('touchstart',startLook,{passive:false});
-    lookArea.addEventListener('touchmove',updateLook,{passive:false});
+    lookArea.addEventListener('touchstart',startLook,{passive:true});
+    lookArea.addEventListener('touchmove',updateLook,{passive:true});
     lookArea.addEventListener('touchend',endLook);
     lookArea.addEventListener('touchcancel',endLook);
     lookArea.addEventListener('mousedown',startLook);
@@ -926,39 +1184,41 @@ function setupJoysticks(){
     document.addEventListener('mouseup',endLook);
 }
 
-// ==== КНОПКИ ====
+// ==== КНОПКИ (pointerdown, stopPropagation) ====
 function setupButtons(){
     const hold=(id,onDown,onUp)=>{
         const el=document.getElementById(id); if(!el) return;
         let active=false;
-        const start=(e)=>{e.preventDefault();e.stopPropagation();if(active)return;active=true;onDown();};
-        const end=(e)=>{if(!active)return;active=false;if(onUp)onUp();};
-        el.addEventListener('touchstart',start,{passive:false});
-        el.addEventListener('touchend',end);
-        el.addEventListener('touchcancel',end);
-        el.addEventListener('mousedown',start);
-        el.addEventListener('mouseup',end);
-        el.addEventListener('mouseleave',end);
+        const down=(e)=>{ e.preventDefault(); e.stopPropagation(); if(active)return; active=true; onDown(); };
+        const up=(e)=>{ if(!active)return; active=false; if(onUp)onUp(); };
+        el.addEventListener('pointerdown', down);
+        el.addEventListener('pointerup', up);
+        el.addEventListener('pointercancel', up);
+        el.addEventListener('pointerleave', up);
+        el.addEventListener('touchstart', (e)=>e.stopPropagation(), {passive:true});
+        el.addEventListener('touchmove', (e)=>e.stopPropagation(), {passive:true});
+        el.addEventListener('contextmenu', (e)=>e.preventDefault());
+    };
+    const tap=(id,fn)=>{
+        const el=document.getElementById(id); if(!el) return;
+        el.addEventListener('click',(e)=>{ e.stopPropagation(); fn(); });
+        el.addEventListener('touchstart',(e)=>{ e.preventDefault(); e.stopPropagation(); fn(); },{passive:false});
     };
     hold('btn-fire',()=>{state.autoFire=true; if(!WEAPONS[playerData.equippedWeapon].auto) shoot();},()=>{state.autoFire=false;});
     hold('btn-aim',()=>{state.isAiming=true; state.camera.fov=55; state.camera.updateProjectionMatrix();},()=>{state.isAiming=false; state.camera.fov=80; state.camera.updateProjectionMatrix();});
     hold('btn-jump',()=>{if(state.canJump){state.velocity.y=JUMP_SPEED;state.canJump=false;}});
     hold('btn-crouch',()=>{state.isCrouching=true;},()=>{state.isCrouching=false;});
     hold('btn-sprint',()=>{state.keys.shift=true;},()=>{state.keys.shift=false;});
-    const click=(id,fn)=>{ const el=document.getElementById(id); if(!el) return;
-        el.addEventListener('click',(e)=>{e.stopPropagation();fn();});
-        el.addEventListener('touchstart',(e)=>{e.preventDefault();e.stopPropagation();fn();},{passive:false});
-    };
-    click('btn-reload',reload);
-    click('btn-swap',switchWeapon);
-    click('btn-pause',pauseGame);
-    click('btn-resume',resumeGame);
-    click('btn-leave',leaveGame);
-    click('btn-settings-pause',()=>{ openOverlay('settings-overlay'); });
-    click('btn-fullscreen',toggleFullscreen);
-    click('fs-toggle-btn',toggleFullscreen);
-    click('fs-accept',()=>{toggleFullscreen();document.getElementById('fs-banner').style.display='none';});
-    click('fs-skip',()=>{document.getElementById('fs-banner').style.display='none';});
+    tap('btn-reload',reload);
+    tap('btn-swap',switchWeapon);
+    tap('btn-pause',pauseGame);
+    tap('btn-resume',resumeGame);
+    tap('btn-leave',leaveGame);
+    tap('btn-settings-pause',()=>{ openOverlay('settings-overlay'); });
+    tap('btn-fullscreen',toggleFullscreen);
+    tap('fs-toggle-btn',toggleFullscreen);
+    tap('fs-accept',()=>{toggleFullscreen();document.getElementById('fs-banner').style.display='none';});
+    tap('fs-skip',()=>{document.getElementById('fs-banner').style.display='none';});
 }
 function toggleFullscreen(){
     try{
@@ -967,7 +1227,7 @@ function toggleFullscreen(){
             if(el.requestFullscreen) el.requestFullscreen();
             else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
             if(screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
-        } else { document.exitFullscreen?.(); }
+        } else { if(document.exitFullscreen) document.exitFullscreen(); }
     } catch(e){}
 }
 function pauseGame(){ state.isPaused=true; document.getElementById('paused-msg').style.display='block'; }
@@ -1053,8 +1313,6 @@ window.returnToMenu=function(){
     menu.style.display='flex';
     updateProfileUI();
 };
-
-// ==== ЦИКЛ ====
 function animate(){
     requestAnimationFrame(animate);
     if(!state.renderer||!state.scene) return;
@@ -1098,7 +1356,6 @@ setupJoysticks();
 setupButtons();
 checkOrientation();
 initSettings();
-// FS banner
 setTimeout(()=>{
     if(!sessionStorage.getItem('fs_shown') && innerHeight<=innerWidth){
         document.getElementById('fs-banner').style.display='flex';
@@ -1136,15 +1393,7 @@ document.addEventListener('keyup',e=>{
         case 'ControlLeft':case 'KeyC':state.isCrouching=false;break;
     }
 });
-function switchWeaponTo(k){
-    if(playerData.equippedWeapon===k) return;
-    playerData.equippedWeapon=k;
-    createWeaponModel();
-    const w=WEAPONS[k];
-    state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
-    updateAmmoUI(); saveProfile();
-}
-console.log('🎮 Standoff Mini 3D Deluxe загружен!');
+console.log('🎮 Standoff Mini 3D загружен!');
 </script>
 </body>
 </html>

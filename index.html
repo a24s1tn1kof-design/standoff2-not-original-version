@@ -286,7 +286,8 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 </style>
 </head>
 <body>
-  <div id="rotate-hint"><div class="phone"></div><h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2><p>Только горизонтальная ориентация</p></div>
+
+<div id="rotate-hint"><div class="phone"></div><h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2><p>Только горизонтальная ориентация</p></div>
 
 <div id="menu">
 <div id="fs-toggle-btn"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
@@ -521,13 +522,9 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 
 <input type="file" id="avatar-input" accept="image/*" style="display:none">
 
-<script type="importmap">
-{"imports":{"three":"https://unpkg.com/three@0.132.2/build/three.module.js"}}
-</script>
-<script type="module">
-import * as THREE from 'three';
-
-// ==== МОДАЛЬНЫЕ ОКНА ====
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+   // ==== МОДАЛЬНЫЕ ОКНА ====
 const modalQueue = [];
 let modalActive = false;
 function showModal(config){
@@ -585,6 +582,7 @@ const WEAPONS = {
     awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,range:150,model:'sniper'}
 };
 
+// ==== КАРТЫ (generate заполнится ниже) ====
 const MAPS = {
     sandstone:{name:'SANDSTONE',desc:'Пустынная крепость.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:1.2,sunColor:0xffdd88,generate:null,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>',spawn:[15,15]},
     templ:{name:'TEMPL',desc:'Древний храм в горах.',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:1.2,sunColor:0xccddff,generate:null,icon:'<svg viewBox="0 0 24 24"><path d="M12 2L2 8h20zM4 10v10h2V10zm4 0v10h2V10zm4 0v10h2V10zm4 0v10h2V10zM2 22h20v-2H2z"/></svg>',spawn:[20,0]}
@@ -644,7 +642,7 @@ const PLAYER_HEIGHT=1.7,PLAYER_RADIUS=.6,WORLD_SIZE=90,HALF_WORLD=WORLD_SIZE/2-2
       GRAVITY=22,JUMP_SPEED=7,MOVE_SPEED=6,BASE_LOOK=0.004;
 const mobile = {moveX:0,moveY:0,joyMoveActive:false,joyMoveStart:{x:0,y:0},lookActive:false,lookId:null,lookLast:{x:0,y:0}};
 
-const SAVE_KEY = 'standoff_save_v15';
+const SAVE_KEY = 'standoff_save_v16';
 function saveProfile(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){} }
 function loadProfile(){
     try { const s = localStorage.getItem(SAVE_KEY); if(s){ const p = JSON.parse(s); Object.keys(p).forEach(k=>{ if(k in playerData) playerData[k]=p[k]; }); } } catch(e){}
@@ -652,7 +650,9 @@ function loadProfile(){
     updateProfileUI();
     applyCrosshair();
 }
-  function updateProfileUI(){
+
+// ==== ПРОФИЛЬ ====
+function updateProfileUI(){
     document.getElementById('p-id-val').textContent = playerData.playerId;
     document.getElementById('p-name').textContent = playerData.playerName;
     const av = document.getElementById('avatar');
@@ -1124,7 +1124,7 @@ document.getElementById('btn-open-editor').addEventListener('click', openButtonE
 document.getElementById('btn-reset-layout').addEventListener('click', resetButtonLayout);
 document.getElementById('btn-reset-data').addEventListener('click', resetAllData);
 
-// ==== КАРТЫ (КАК БЫЛИ) ====
+// ==== КАРТЫ ====
 function addCollider(x,y,z,w,h,d){state.colliders.push({min:new THREE.Vector3(x-w/2,y-h/2,z-d/2),max:new THREE.Vector3(x+w/2,y+h/2,z+d/2)});}
 function addBox(x,y,z,w,h,d,mat,collide=true){
     const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
@@ -1181,11 +1181,11 @@ function buildTempl(){
     [[-25,-25,3,5,20],[25,-25,3,5,20],[-25,25,3,5,20],[25,25,3,5,20]].forEach(([x,z,w,h,d])=>addBox(x,h/2,z,w,h,d,corMat));
     state.spawnPoints=[[-38,-38],[38,-38],[-38,38],[38,38],[-30,0],[30,0],[0,-30],[0,30]];
 }
-
-// ВАЖНО: привязываем функции generate ПОСЛЕ их объявления
+// ПРИВЯЗЫВАЕМ ФУНКЦИИ ГЕНЕРАЦИИ К КАРТАМ
 MAPS.sandstone.generate = buildSandstone;
 MAPS.templ.generate = buildTempl;
-  // ==== СЦЕНА ====
+console.log('=== ЧАСТЬ 2 ЗАГРУЖЕНА, MAPS настроены ===');
+    // ==== СЦЕНА ====
 function createScene(){
     console.log('createScene START');
     const map=MAPS[state.mapKey];
@@ -1221,10 +1221,10 @@ function createScene(){
     state.scene.add(sun);
     state.scene.add(new THREE.HemisphereLight(map.skyColor, map.groundColor, 0.6));
     state.colliders=[]; state.spawnPoints=[];
-    console.log('Before map.generate');
+    console.log('Before map.generate, generate type:', typeof map.generate);
     try {
         map.generate();
-        console.log('Map generated, objects:', state.scene.children.length, 'colliders:', state.colliders.length);
+        console.log('Map generated! Objects:', state.scene.children.length, 'Colliders:', state.colliders.length);
     } catch(err){
         console.error('MAP GENERATE ERROR:', err);
     }
@@ -1289,7 +1289,6 @@ function spawnEnemy(){
     e.userData={hp:30,maxHp:30,head,body,lastAttack:0,attackCooldown:600,speed:2.5+Math.random()*.6,damage:15};
     state.scene.add(e); state.enemies.push(e);
 }
-// ==== СТРЕЛЬБА ====
 function shoot(){
     if(state.isReloading||state.isGameOver||state.isPaused) return;
     const w=WEAPONS[playerData.equippedWeapon];
@@ -1706,17 +1705,11 @@ function toggleAim(){
     } else {
         state.isAiming = !state.isAiming;
         const btn = document.getElementById('btn-aim');
-        if(state.isAiming){
-            btn.classList.add('active');
-            state.camera.fov = 55;
-        } else {
-            btn.classList.remove('active');
-            state.camera.fov = 80;
-        }
+        if(state.isAiming){ btn.classList.add('active'); state.camera.fov = 55; }
+        else { btn.classList.remove('active'); state.camera.fov = 80; }
         state.camera.updateProjectionMatrix();
     }
 }
-// ==== КНОПКИ ====
 function setupButtons(){
     const hold=(id,onDown,onUp)=>{
         const el=document.getElementById(id); if(!el) return;
@@ -1823,7 +1816,6 @@ function toggleFullscreen(){
 function pauseGame(){ state.isPaused=true; document.getElementById('paused-msg').style.display='block'; }
 function resumeGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; }
 function leaveGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; returnToMenu(); }
-// ==== МЕНЮ ====
 const menu=document.getElementById('menu'), hud=document.getElementById('hud');
 const mapSelect=document.getElementById('map-select');
 document.querySelectorAll('.side-icon').forEach(btn=>{
@@ -1871,15 +1863,11 @@ function startGame(){
     if(state.scene) destroyGame();
     state.keys={w:false,a:false,s:false,d:false,space:false,shift:false};
     state.hitMarkerTimer=0; state.hitFlashTimer=0;
-    state.isCrouching = false;
-    state.isAiming = false;
-    state.isShooting = false;
+    state.isCrouching = false; state.isAiming = false; state.isShooting = false;
     state.recoilPitch = 0; state.recoilYaw = 0;
     state.score = 0; state.sessionMoney = 0; state.deaths = 0;
-    state.matchState = 'playing';
-    state.wave = 0;
-    state.currentWaveEnemies = 0;
-    state.totalKillsNeeded = 30;
+    state.matchState = 'playing'; state.wave = 0;
+    state.currentWaveEnemies = 0; state.totalKillsNeeded = 30;
     createScene();
     console.log('createScene returned');
     const w=WEAPONS[playerData.equippedWeapon];
@@ -1945,9 +1933,7 @@ function returnToMenu(){
     document.querySelectorAll('.overlay').forEach(o=>o.style.display='none');
     document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));
     document.getElementById('button-editor').classList.remove('active');
-    menu.style.display='flex';
-    menu.style.visibility='visible';
-    menu.style.opacity='1';
+    menu.style.display='flex'; menu.style.visibility='visible'; menu.style.opacity='1';
     updateProfileUI();
 }
 window.returnToMenu = returnToMenu;
@@ -1984,9 +1970,7 @@ function animate(){
             if(state.autoFire && WEAPONS[playerData.equippedWeapon].auto && !WEAPONS[playerData.equippedWeapon].isMelee) shoot();
             if(state.matchState === 'playing' && state.wave < 3){
                 state.waveTimer += dt;
-                if(state.waveTimer >= 20 && state.currentWaveEnemies <= 0){
-                    startNextWave();
-                }
+                if(state.waveTimer >= 20 && state.currentWaveEnemies <= 0){ startNextWave(); }
             }
             updateMovement(dt);
             updateEnemies(dt);
@@ -2021,7 +2005,6 @@ window.addEventListener('resize',()=>{
     checkOrientation();
 });
 window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,200));
-// ==== INIT ====
 loadProfile();
 setupJoysticks();
 setupButtons();

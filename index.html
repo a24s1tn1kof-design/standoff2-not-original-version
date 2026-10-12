@@ -79,7 +79,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #map-select-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;max-width:520px;width:100%;margin:0 auto}
 .map-card{display:flex;flex-direction:row;align-items:center;border:2px solid #222;border-radius:8px;overflow:hidden;cursor:pointer;background:#0d0d15;transition:all .2s}
 .map-card:hover{border-color:#fa0}
-.map-card.selected{border-color:#fa0}
 .map-preview{width:90px;height:70px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .map-preview.sandstone{background:linear-gradient(135deg,#c9a06a,#8b6f47 50%,#4a3520)}
 .map-preview.templ{background:linear-gradient(135deg,#6a8ab0,#3a5a80 50%,#1a2a40)}
@@ -147,14 +146,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #game-over .result-stats{font-size:13px;color:#ccc;margin-bottom:18px;line-height:1.8;text-align:center}
 #game-over .result-stats span{color:#fa0;font-weight:bold}
 #game-over button{padding:12px 28px;font-size:13px;background:linear-gradient(135deg,#fa0,#f80);color:#111;font-weight:bold;letter-spacing:3px;border:none;border-radius:8px;cursor:pointer}
-#fs-banner{position:fixed;inset:0;background:rgba(5,5,15,.97);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:3000;padding:30px;text-align:center}
-#fs-banner .fs-icon{width:80px;height:80px;color:#fa0;margin-bottom:20px}
-#fs-banner h2{color:#fa0;font-size:20px;letter-spacing:4px;margin-bottom:10px}
-#fs-banner p{color:#aaa;font-size:12px;line-height:1.6;max-width:400px;margin-bottom:24px}
-#fs-banner .fs-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-#fs-banner button{padding:12px 28px;border:none;border-radius:8px;font-weight:bold;font-size:13px;letter-spacing:3px;cursor:pointer}
-#fs-accept{background:linear-gradient(135deg,#fa0,#f80);color:#111}
-#fs-skip{background:#222;color:#888;border:2px solid #333}
 .overlay{position:fixed;inset:0;background:rgba(5,5,15,.97);z-index:2000;display:none;flex-direction:column;padding:12px;overflow-y:auto}
 .overlay h2{text-align:center;color:#fa0;font-size:18px;letter-spacing:4px;margin-bottom:12px;padding-right:48px}
 .overlay-close{position:absolute;top:10px;right:10px;width:36px;height:36px;background:rgba(15,15,25,.9);border:2px solid #fa0;border-radius:8px;color:#fa0;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;padding:8px;pointer-events:auto;touch-action:manipulation}
@@ -196,14 +187,22 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .setting-row .val{font-size:11px;color:#fa0;font-weight:bold;min-width:40px;text-align:right}
 .setting-row input[type="range"]{flex:1;max-width:220px;accent-color:#fa0}
 .setting-row input[type="checkbox"]{width:20px;height:20px;accent-color:#fa0}
-#button-editor{position:fixed;inset:0;z-index:2001;display:none;background:rgba(5,5,15,.85)}
+#button-editor{position:fixed;inset:0;z-index:2001;display:none;background:rgba(5,5,15,.92)}
 #button-editor.active{display:block}
-.editor-btn{position:absolute;background:rgba(255,170,0,.3);border:2px dashed #fa0;border-radius:50%;cursor:move;touch-action:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;padding:4px;text-align:center}
-.editor-btn .resize-handle{position:absolute;bottom:-8px;right:-8px;width:20px;height:20px;background:#fa0;border-radius:50%;border:2px solid #111;cursor:nwse-resize;touch-action:none}
-.editor-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fa0;padding:8px 16px;border-radius:8px;font-size:11px;letter-spacing:2px;border:1px solid #fa0;z-index:10}
+.editor-btn{position:absolute;background:rgba(255,170,0,.4);border:2px dashed #fa0;border-radius:50%;cursor:move;touch-action:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;padding:2px;text-align:center;font-weight:bold;pointer-events:auto}
+.editor-btn.selected{border-color:#4f4;background:rgba(68,255,68,.3);box-shadow:0 0 15px #4f4}
+.editor-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fa0;padding:8px 16px;border-radius:8px;font-size:11px;letter-spacing:1px;border:1px solid #fa0;z-index:10;text-align:center;white-space:nowrap;max-width:90vw}
 .editor-toolbar{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
-.editor-toolbar button{padding:8px 16px;background:#222;color:#fa0;border:2px solid #fa0;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer}
+.editor-toolbar button{padding:10px 20px;background:#222;color:#fa0;border:2px solid #fa0;border-radius:6px;font-size:12px;font-weight:bold;cursor:pointer;letter-spacing:2px}
 .editor-toolbar button.primary{background:#fa0;color:#111}
+.editor-panel{position:absolute;top:50px;left:10px;background:rgba(15,15,25,.95);border:1px solid #fa0;border-radius:8px;padding:8px;z-index:10;display:flex;flex-direction:column;gap:4px;max-height:70vh;overflow-y:auto}
+.editor-panel-title{font-size:9px;color:#fa0;letter-spacing:2px;font-weight:bold;margin-bottom:4px;text-align:center}
+.editor-list-btn{padding:6px 10px;background:#1a1a2a;color:#ccc;border:1px solid #333;border-radius:4px;font-size:10px;cursor:pointer;text-align:left;letter-spacing:1px;white-space:nowrap}
+.editor-list-btn.active{background:#fa0;color:#111;border-color:#fa0;font-weight:bold}
+.editor-size-controls{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;background:rgba(0,0,0,.85);padding:8px;border-radius:8px;border:1px solid #fa0}
+.editor-size-controls button{padding:8px 14px;background:#1a1a2a;color:#fa0;border:1px solid #fa0;border-radius:6px;font-weight:bold;font-size:13px;cursor:pointer;min-width:40px}
+.editor-size-controls button:active{background:#fa0;color:#111}
+.editor-size-label{color:#fa0;font-size:11px;font-weight:bold;align-self:center;margin:0 6px;min-width:40px;text-align:center}
 .clans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;max-width:700px;margin:0 auto;width:100%}
 .clan-item{background:rgba(15,15,25,.9);border:2px solid #333;border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer}
 .clan-item:hover{border-color:#fa0}
@@ -215,7 +214,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .clan-create-form input{width:100%;padding:10px;background:#0a0a15;border:1px solid #333;border-radius:6px;color:#fff;font-size:13px;margin-bottom:8px;outline:none}
 .clan-create-form input:focus{border-color:#fa0}
 .clan-create-form button{width:100%;padding:10px;background:linear-gradient(135deg,#fa0,#f80);color:#111;border:none;border-radius:6px;font-weight:bold;font-size:12px;letter-spacing:2px;cursor:pointer}
-/* ==== ИНВЕНТАРЬ ==== */
 .inventory-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;max-width:900px;margin:0 auto;width:100%}
 .inv-item{background:linear-gradient(135deg,#1a1a2e,#0d0d18);border:2px solid #333;border-radius:10px;padding:10px;text-align:center;transition:all .2s;cursor:pointer;position:relative}
 .inv-item:hover{transform:translateY(-3px)}
@@ -258,7 +256,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div class="side-icon active" data-tab="maps"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
 <div class="side-icon" data-tab="inventory"><svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg></div>
 <div class="side-icon" data-tab="cases"><svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div>
-<div class="side-icon" data-tab="shop"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.49 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
 <div class="side-icon" data-tab="clans"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
 <div class="side-icon" data-tab="profile"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
 <div class="side-icon" data-tab="settings"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/></svg></div>
@@ -338,9 +335,6 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 
 <div id="game-over"><h1>ВЫ ПОГИБЛИ</h1><div class="result-stats">Убийств: <span id="final-kills">0</span><br>Заработано: <span id="final-money">0</span> $</div><button id="btn-return-menu">В МЕНЮ</button></div>
 
-<div id="fs-banner"><div class="fs-icon"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div><h2>ПОЛНОЭКРАННЫЙ РЕЖИМ</h2><p>Для лучшего игрового опыта рекомендуем играть в полноэкранном режиме и горизонтальной ориентации.</p><div class="fs-btns"><button id="fs-accept">ВКЛЮЧИТЬ</button><button id="fs-skip">ПРОПУСТИТЬ</button></div></div>
-
-<!-- ОВЕРЛЕИ -->
 <div class="overlay" id="cases-overlay">
 <div class="overlay-close" data-close="cases-overlay"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
 <h2>🎁 КЕЙСЫ</h2>
@@ -404,8 +398,8 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 import * as THREE from 'three';
     const WEAPONS = {
     pistol:{name:'P-9 PISTOL',damage:25,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,price:0,range:60,model:'pistol'},
-    akr:{name:'AKR-12',damage:35,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,price:2700,range:80,model:'rifle'},
-    awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,price:4750,range:150,model:'sniper'}
+    akr:{name:'AKR-12',damage:35,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,price:0,range:80,model:'rifle'},
+    awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,price:0,range:150,model:'sniper'}
 };
 const MAPS = {
     sandstone:{name:'SANDSTONE',desc:'Пустынная крепость.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>'},
@@ -435,7 +429,7 @@ const CASES = {
     legend_case:{name:'ЛЕГЕНДАРНЫЙ',price:3000,rarity:'legend',skins:['akr_neon','awp_neon','akr_dragon','awp_dragon','knife_gold']}
 };
 const playerData = {
-    money:5000,totalKills:0,ownedWeapons:['pistol'],equippedWeapon:'pistol',
+    money:5000,totalKills:0,ownedWeapons:['pistol','akr','awp'],equippedWeapon:'akr',
     playerId:'73396228',playerName:'Игрок',avatar:null,level:1,exp:0,
     ownedSkins:[],equippedSkins:{},clanName:null,clanTag:'—',clanColor:'#888',clanBonus:null,clanBonusType:null,
     lastFreeCase:0,lastDailyReward:0,customClans:[],
@@ -456,10 +450,14 @@ const PLAYER_HEIGHT=1.7,PLAYER_RADIUS=.6,WORLD_SIZE=90,HALF_WORLD=WORLD_SIZE/2-2
       GRAVITY=22,JUMP_SPEED=7,MOVE_SPEED=6,BASE_LOOK=0.004;
 const mobile = {moveX:0,moveY:0,joyMoveActive:false,joyMoveStart:{x:0,y:0},lookActive:false,lookId:null,lookLast:{x:0,y:0}};
 
-const SAVE_KEY = 'standoff_save_v3';
+const SAVE_KEY = 'standoff_save_v4';
 function saveProfile(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){} }
 function loadProfile(){
     try { const s = localStorage.getItem(SAVE_KEY); if(s){ const p = JSON.parse(s); Object.keys(p).forEach(k=>{ if(k in playerData) playerData[k]=p[k]; }); } } catch(e){}
+    // Гарантируем что оружие есть всегда
+    if(!playerData.ownedWeapons.includes('pistol')) playerData.ownedWeapons.push('pistol');
+    if(!playerData.ownedWeapons.includes('akr')) playerData.ownedWeapons.push('akr');
+    if(!playerData.ownedWeapons.includes('awp')) playerData.ownedWeapons.push('awp');
     updateProfileUI();
 }
 function updateProfileUI(){
@@ -505,17 +503,21 @@ function openOverlay(id){ const el = document.getElementById(id); if(el) el.styl
 window.closeOverlay = closeOverlay;
 window.openOverlay = openOverlay;
 window.claimDailyReward = claimDailyReward;
-// Привязка кнопок закрытия оверлеев
+// КРИТИЧНО: крестики закрывают оверлеи, но не вызывают фуллскрин
 document.querySelectorAll('.overlay-close').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
+    const handler = (e)=>{
+        e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         const id = btn.dataset.close;
         if(id) closeOverlay(id);
-    });
+    };
+    btn.addEventListener('pointerdown', handler, true);
+    btn.addEventListener('touchstart', handler, {passive:false, capture:true});
+    btn.addEventListener('click', handler, true);
 });
-// Привязка "получить награду"
 document.getElementById('get-reward-btn').addEventListener('click', claimDailyReward);
-    // ==== КЕЙСЫ ====
+   // ==== КЕЙСЫ ====
 function renderCases(){
     const grid = document.getElementById('cases-grid'); if(!grid) return;
     grid.innerHTML = '';
@@ -608,23 +610,11 @@ function renderInventory(){
         const equipped = playerData.equippedSkins[s.weapon] === id;
         const card = document.createElement('div');
         card.className = 'inv-item ' + s.rarity;
-        card.innerHTML = `
-            ${equipped ? '<div class="inv-equipped">✔</div>' : ''}
-            <div class="inv-icon" style="color:${s.color}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div>
-            <div class="inv-name">${s.name}</div>
-            <div class="inv-weapon">${WEAPONS[s.weapon].name}</div>
-            <div class="inv-rarity" style="color:${s.color}">${RARITY[s.rarity].name}</div>
-        `;
+        card.innerHTML = `${equipped ? '<div class="inv-equipped">✔</div>' : ''}<div class="inv-icon" style="color:${s.color}"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg></div><div class="inv-name">${s.name}</div><div class="inv-weapon">${WEAPONS[s.weapon].name}</div><div class="inv-rarity" style="color:${s.color}">${RARITY[s.rarity].name}</div>`;
         card.onclick = ()=>{
-            if(playerData.equippedSkins[s.weapon] === id){
-                delete playerData.equippedSkins[s.weapon];
-                alert('Скин снят: ' + s.name);
-            } else {
-                playerData.equippedSkins[s.weapon] = id;
-                alert('✔ Экипировано: ' + s.name);
-            }
-            saveProfile();
-            renderInventory();
+            if(playerData.equippedSkins[s.weapon] === id){ delete playerData.equippedSkins[s.weapon]; alert('Скин снят'); }
+            else { playerData.equippedSkins[s.weapon] = id; alert('✔ ' + s.name); }
+            saveProfile(); renderInventory();
         };
         grid.appendChild(card);
     });
@@ -638,46 +628,39 @@ document.querySelectorAll('.inv-tab').forEach(tab=>{
     });
 });
 
-// ==== КЛАНЫ ====
-const DEFAULT_CLANS = [
-    {id:'vipers',name:'VIPERS',tag:'[VPR]',color:'#4f4',bonus:'+10% скорости',bonusType:'speed'},
-    {id:'wolves',name:'WOLVES',tag:'[WLV]',color:'#88f',bonus:'+15% здоровья',bonusType:'health'},
-    {id:'phoenix',name:'PHOENIX',tag:'[PHX]',color:'#f62',bonus:'+10% урона',bonusType:'damage'},
-    {id:'shadows',name:'SHADOWS',tag:'[SHD]',color:'#a4f',bonus:'+20% денег',bonusType:'money'}
-];
+// ==== КЛАНЫ (без бонусов!) ====
 function renderClans(){
     const grid = document.getElementById('clans-grid'); if(!grid) return;
     grid.innerHTML = '';
-    const allClans = [...DEFAULT_CLANS, ...(playerData.customClans||[])];
     if(playerData.clanName){
         const cur = document.createElement('div');
         cur.style.cssText = `background:linear-gradient(135deg,rgba(40,30,10,.9),rgba(20,20,35,.9));border:2px solid ${playerData.clanColor||'#fa0'};border-radius:10px;padding:14px;max-width:500px;margin:0 auto 12px;width:100%;text-align:center`;
-        cur.innerHTML = `<div style="font-size:16px;font-weight:bold;color:${playerData.clanColor||'#fa0'};letter-spacing:2px">${playerData.clanName}</div><div style="font-size:11px;color:#888;margin:4px 0">${playerData.clanTag||'—'} • ${playerData.clanBonus||'Свой клан'}</div><button id="btn-leave-clan" style="margin-top:8px;padding:8px 20px;background:#a22;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer">ПОКИНУТЬ КЛАН</button>`;
+        cur.innerHTML = `<div style="font-size:16px;font-weight:bold;color:${playerData.clanColor||'#fa0'};letter-spacing:2px">${playerData.clanName}</div><div style="font-size:11px;color:#888;margin:4px 0">${playerData.clanTag||'—'}</div><button id="btn-leave-clan" style="margin-top:8px;padding:8px 20px;background:#a22;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer">ПОКИНУТЬ КЛАН</button>`;
         grid.appendChild(cur);
-        setTimeout(()=>{
-            const b = document.getElementById('btn-leave-clan');
-            if(b) b.onclick = leaveClan;
-        }, 0);
+        setTimeout(()=>{ const b = document.getElementById('btn-leave-clan'); if(b) b.onclick = leaveClan; }, 0);
+    } else {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'text-align:center;color:#666;padding:20px;font-size:12px;width:100%';
+        empty.textContent = 'Вы не в клане — создайте свой выше';
+        grid.appendChild(empty);
     }
-    allClans.forEach(c => {
+    (playerData.customClans||[]).forEach(c => {
         const item = document.createElement('div');
         item.className = 'clan-item';
         item.style.borderColor = playerData.clanTag === c.tag ? c.color : '#333';
         const initials = c.tag.replace(/[\[\]]/g,'').slice(0,2);
-        item.innerHTML = `<div class="ci-emblem" style="background:${c.color}">${initials}</div><div class="ci-info"><div class="ci-name" style="color:${c.color}">${c.name}</div><div class="ci-desc">${c.tag} • ${c.bonus}</div></div>`;
+        item.innerHTML = `<div class="ci-emblem" style="background:${c.color}">${initials}</div><div class="ci-info"><div class="ci-name" style="color:${c.color}">${c.name}</div><div class="ci-desc">${c.tag}</div></div>`;
         item.onclick = ()=> joinClan(c);
         grid.appendChild(item);
     });
 }
 function joinClan(c){
     playerData.clanName = c.name; playerData.clanTag = c.tag; playerData.clanColor = c.color;
-    playerData.clanBonus = c.bonus; playerData.clanBonusType = c.bonusType || null;
     saveProfile(); renderClans();
     alert(`Клан: ${c.name}`);
 }
 function leaveClan(){
     playerData.clanName = null; playerData.clanTag = '—'; playerData.clanColor = '#888';
-    playerData.clanBonus = null; playerData.clanBonusType = null;
     saveProfile(); renderClans();
 }
 function createClan(){
@@ -687,36 +670,13 @@ function createClan(){
     if(tag.length < 2 || tag.length > 5){ alert('Тег: 2-5 символов'); return; }
     if(!playerData.customClans) playerData.customClans = [];
     const colors = ['#4f4','#88f','#f62','#a4f','#fa0','#f44','#4ff','#ff4'];
-    const c = {id:'custom_'+Date.now(),name,tag:'['+tag+']',color:colors[Math.floor(Math.random()*colors.length)],bonus:'Свой клан',bonusType:null};
+    const c = {id:'custom_'+Date.now(),name,tag:'['+tag+']',color:colors[Math.floor(Math.random()*colors.length)]};
     playerData.customClans.push(c);
     joinClan(c);
     document.getElementById('clan-name-input').value = '';
     document.getElementById('clan-tag-input').value = '';
 }
 document.getElementById('btn-create-clan').addEventListener('click', createClan);
-
-// ==== МАГАЗИН ====
-function openShopOverlay(){
-    let msg = '🛒 МАГАЗИН\n\n';
-    Object.entries(WEAPONS).forEach(([k,w])=>{
-        const owned = playerData.ownedWeapons.includes(k);
-        msg += `${w.name} — ${w.price}$ ${owned?'(КУПЛЕНО)':''}\n`;
-    });
-    msg += '\nВведи: pistol / akr / awp';
-    const nv = prompt(msg, '');
-    if(!nv) return;
-    const key = nv.toLowerCase().trim();
-    if(WEAPONS[key]){
-        if(playerData.ownedWeapons.includes(key)){ playerData.equippedWeapon = key; alert('Экипировано: ' + WEAPONS[key].name); }
-        else if(playerData.money >= WEAPONS[key].price){
-            playerData.money -= WEAPONS[key].price;
-            playerData.ownedWeapons.push(key);
-            playerData.equippedWeapon = key;
-            alert('Куплено: ' + WEAPONS[key].name);
-        } else alert('Недостаточно денег!');
-        saveProfile();
-    }
-}
 
 // ==== НАСТРОЙКИ ====
 function initSettings(){
@@ -737,6 +697,7 @@ document.getElementById('set-btnopacity').addEventListener('input',(e)=>{ player
 function applyButtonSettings(){
     const sizeMult = playerData.buttonSize / 100;
     document.querySelectorAll('#hud .ctrl-btn').forEach(btn=>{
+        if(btn.style.width && btn.style.height) return;
         let baseW = 38;
         if(btn.classList.contains('medium')) baseW = 48;
         else if(btn.classList.contains('big')) baseW = 62;
@@ -755,14 +716,30 @@ function applyButtonSettings(){
     }
 }
 // ==== РЕДАКТОР КНОПОК ====
-let editorState = { active:false, dragging:null, resizing:null, layout:{} };
+let editorState = { active:false, selected:null, dragging:null, layout:{} };
 const EDITOR_BTNS = ['btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen'];
+const BTN_LABELS = {'btn-fire':'ОГОНЬ','btn-aim':'ПРИЦЕЛ','btn-jump':'ПРЫЖОК','btn-crouch':'ПРИСЕД','btn-reload':'ПЕРЕЗАР.','btn-swap':'СМЕНА','btn-sprint':'БЕГ','btn-pause':'ПАУЗА','btn-fullscreen':'ФУЛЛСКРИН'};
 function openButtonEditor(){
     editorState.active = true;
     editorState.layout = {};
+    editorState.selected = null;
     const editor = document.getElementById('button-editor');
     editor.classList.add('active');
-    editor.innerHTML = '<div class="editor-hint">Перетаскивай кнопки • Тяни за угол для размера</div>';
+    editor.innerHTML = '<div class="editor-hint">Тапни кнопку → тяни для движения • Используй +/- для размера</div>';
+    // Создаём список кнопок
+    const panel = document.createElement('div');
+    panel.className = 'editor-panel';
+    panel.innerHTML = '<div class="editor-panel-title">КНОПКИ</div>';
+    EDITOR_BTNS.forEach(id=>{
+        const b = document.createElement('div');
+        b.className = 'editor-list-btn';
+        b.dataset.id = id;
+        b.textContent = BTN_LABELS[id];
+        b.onclick = ()=> selectEditorBtn(id);
+        panel.appendChild(b);
+    });
+    editor.appendChild(panel);
+    // Клоны
     EDITOR_BTNS.forEach(id=>{
         const src = document.getElementById(id); if(!src) return;
         const rect = src.getBoundingClientRect();
@@ -770,64 +747,71 @@ function openButtonEditor(){
         clone.className = 'editor-btn'; clone.dataset.id = id;
         clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
         clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
-        clone.innerHTML = `${id.replace('btn-','').toUpperCase()}<div class="resize-handle"></div>`;
+        clone.textContent = BTN_LABELS[id].slice(0,4);
         editorState.layout[id] = { x: rect.left, y: rect.top, size: rect.width };
         editor.appendChild(clone);
+        clone.addEventListener('pointerdown', (e)=>{ startDragEditor(e, id); });
+        clone.addEventListener('touchstart', (e)=>{ startDragEditor(e, id); }, {passive:false});
     });
+    // Размерные кнопки
+    const sizePanel = document.createElement('div');
+    sizePanel.className = 'editor-size-controls';
+    sizePanel.innerHTML = `<button id="ed-size-down">−</button><span class="editor-size-label" id="ed-size-label">—</span><button id="ed-size-up">+</button>`;
+    editor.appendChild(sizePanel);
+    document.getElementById('ed-size-down').onclick = ()=> changeSize(-6);
+    document.getElementById('ed-size-up').onclick = ()=> changeSize(6);
+    // Тулбар
     const toolbar = document.createElement('div');
     toolbar.className = 'editor-toolbar';
     toolbar.innerHTML = '<button id="ed-cancel">ОТМЕНА</button><button class="primary" id="ed-save">СОХРАНИТЬ</button>';
     editor.appendChild(toolbar);
     document.getElementById('ed-cancel').onclick = closeButtonEditor;
     document.getElementById('ed-save').onclick = saveButtonEditor;
-    editor.querySelectorAll('.editor-btn').forEach(btn=>{
-        const handle = btn.querySelector('.resize-handle');
-        const startDrag = (e)=>{
-            if(e.target === handle) return;
-            e.preventDefault();
-            const t = e.touches ? e.touches[0] : e;
-            editorState.dragging = { id: btn.dataset.id, ox: t.clientX - btn.offsetLeft, oy: t.clientY - btn.offsetTop };
-        };
-        const startResize = (e)=>{
-            e.preventDefault(); e.stopPropagation();
-            const t = e.touches ? e.touches[0] : e;
-            editorState.resizing = { id: btn.dataset.id, startX: t.clientX, startSize: btn.offsetWidth };
-        };
-        btn.addEventListener('touchstart', startDrag, {passive:false});
-        btn.addEventListener('mousedown', startDrag);
-        handle.addEventListener('touchstart', startResize, {passive:false});
-        handle.addEventListener('mousedown', startResize);
-    });
+}
+function selectEditorBtn(id){
+    editorState.selected = id;
+    document.querySelectorAll('.editor-list-btn').forEach(b=>b.classList.toggle('active', b.dataset.id === id));
+    document.querySelectorAll('.editor-btn').forEach(b=>b.classList.toggle('selected', b.dataset.id === id));
+    const lbl = document.getElementById('ed-size-label');
+    if(lbl && editorState.layout[id]) lbl.textContent = Math.round(editorState.layout[id].size) + 'px';
+}
+function changeSize(delta){
+    if(!editorState.selected) return;
+    const el = document.querySelector(`.editor-btn[data-id="${editorState.selected}"]`);
+    if(!el) return;
+    const cur = editorState.layout[editorState.selected].size;
+    const ns = Math.max(30, Math.min(140, cur + delta));
+    el.style.width = ns + 'px'; el.style.height = ns + 'px';
+    editorState.layout[editorState.selected].size = ns;
+    const lbl = document.getElementById('ed-size-label');
+    if(lbl) lbl.textContent = ns + 'px';
+}
+function startDragEditor(e, id){
+    e.preventDefault(); e.stopPropagation();
+    selectEditorBtn(id);
+    const t = e.touches ? e.touches[0] : e;
+    const el = document.querySelector(`.editor-btn[data-id="${id}"]`);
+    if(!el) return;
+    editorState.dragging = { id, ox: t.clientX - el.offsetLeft, oy: t.clientY - el.offsetTop };
 }
 function editorMoveHandler(e){
-    if(!editorState.active) return;
+    if(!editorState.active || !editorState.dragging) return;
     const t = e.touches ? e.touches[0] : e;
-    if(editorState.dragging){
-        const el = document.querySelector(`.editor-btn[data-id="${editorState.dragging.id}"]`);
-        if(el){
-            const nx = t.clientX - editorState.dragging.ox;
-            const ny = t.clientY - editorState.dragging.oy;
-            el.style.left = Math.max(0, Math.min(window.innerWidth - el.offsetWidth, nx)) + 'px';
-            el.style.top = Math.max(0, Math.min(window.innerHeight - el.offsetHeight, ny)) + 'px';
-            editorState.layout[editorState.dragging.id] = { x: parseInt(el.style.left), y: parseInt(el.style.top), size: el.offsetWidth };
-        }
-        e.preventDefault();
-    } else if(editorState.resizing){
-        const el = document.querySelector(`.editor-btn[data-id="${editorState.resizing.id}"]`);
-        if(el){
-            const dx = t.clientX - editorState.resizing.startX;
-            const ns = Math.max(30, Math.min(120, editorState.resizing.startSize + dx));
-            el.style.width = ns + 'px'; el.style.height = ns + 'px';
-            const l = editorState.layout[editorState.resizing.id];
-            if(l) l.size = ns;
-        }
-        e.preventDefault();
+    const el = document.querySelector(`.editor-btn[data-id="${editorState.dragging.id}"]`);
+    if(el){
+        const nx = t.clientX - editorState.dragging.ox;
+        const ny = t.clientY - editorState.dragging.oy;
+        el.style.left = Math.max(0, Math.min(window.innerWidth - el.offsetWidth, nx)) + 'px';
+        el.style.top = Math.max(0, Math.min(window.innerHeight - el.offsetHeight, ny)) + 'px';
+        editorState.layout[editorState.dragging.id].x = parseInt(el.style.left);
+        editorState.layout[editorState.dragging.id].y = parseInt(el.style.top);
     }
+    e.preventDefault();
 }
 document.addEventListener('touchmove', editorMoveHandler, {passive:false});
 document.addEventListener('mousemove', editorMoveHandler);
-document.addEventListener('touchend', ()=>{ editorState.dragging = null; editorState.resizing = null; });
-document.addEventListener('mouseup', ()=>{ editorState.dragging = null; editorState.resizing = null; });
+document.addEventListener('touchend', ()=>{ editorState.dragging = null; });
+document.addEventListener('mouseup', ()=>{ editorState.dragging = null; });
 function closeButtonEditor(){ editorState.active = false; document.getElementById('button-editor').classList.remove('active'); }
 function saveButtonEditor(){
     const layout = {};
@@ -1016,8 +1000,7 @@ function shoot(){
             if(hit.object===e.userData.head){enemy=e;isHead=true;}
         });
         if(enemy){
-            const mult=(playerData.clanBonusType==='damage')?1.1:1;
-            const dmg=w.damage*(isHead?w.headshotMult:1)*mult;
+            const dmg=w.damage*(isHead?w.headshotMult:1);
             enemy.userData.hp-=dmg;
             document.getElementById('hit-marker').style.opacity='1';
             document.getElementById('crosshair').classList.add('hit');
@@ -1053,8 +1036,7 @@ function killEnemy(e,isHead){
     state.scene.remove(e);
     state.score++; playerData.totalKills++;
     const base=isHead?400:300;
-    const mult=(playerData.clanBonusType==='money')?1.2:1;
-    const reward=Math.floor(base*mult);
+    const reward=base;
     state.sessionMoney+=reward;
     document.getElementById('score').textContent=state.score;
     addKillfeed(isHead?'HEADSHOT!':'KILL',reward);
@@ -1114,10 +1096,9 @@ function switchWeaponTo(k){
 function updateMovement(dt){
     if(state.isGameOver||state.isPaused) return;
     const v=state.velocity;
-    const spMult=(playerData.clanBonusType==='speed')?1.1:1;
     const baseSpeed=state.isCrouching?MOVE_SPEED*.5:MOVE_SPEED;
     const sprintMult=state.keys.shift?1.4:1;
-    const speed=baseSpeed*spMult*sprintMult;
+    const speed=baseSpeed*sprintMult;
     const fwd=new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion); fwd.y=0; fwd.normalize();
     const right=new THREE.Vector3(1,0,0).applyQuaternion(state.camera.quaternion); right.y=0; right.normalize();
     const mv=new THREE.Vector3();
@@ -1198,7 +1179,6 @@ function drawMinimap(){
     ctx.beginPath(); ctx.moveTo(0,-4);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3); ctx.closePath(); ctx.fill();
     ctx.restore();
 }
-
 // ==== ДЖОЙСТИКИ ====
 function setupJoysticks(){
     const joyMove=document.getElementById('joy-move');
@@ -1240,6 +1220,7 @@ function setupJoysticks(){
             if(e.target.closest('#paused-msg')) return;
             if(e.target.closest('.overlay')) return;
             if(e.target.closest('.overlay-close')) return;
+            if(e.target.closest('#button-editor')) return;
         }
         e.preventDefault();
         const t=e.changedTouches?e.changedTouches[0]:e;
@@ -1270,7 +1251,6 @@ function setupJoysticks(){
     document.addEventListener('mousemove',e=>{if(mobile.lookActive)updateLook(e);});
     document.addEventListener('mouseup',endLook);
 }
-
 // ==== КНОПКИ ====
 function setupButtons(){
     const hold=(id,onDown,onUp)=>{
@@ -1303,8 +1283,6 @@ function setupButtons(){
     tap('btn-settings-pause',()=>{ openOverlay('settings-overlay'); });
     tap('btn-fullscreen',toggleFullscreen);
     tap('fs-toggle-btn',toggleFullscreen);
-    tap('fs-accept',()=>{toggleFullscreen();document.getElementById('fs-banner').style.display='none';});
-    tap('fs-skip',()=>{document.getElementById('fs-banner').style.display='none';});
     tap('btn-return-menu',returnToMenu);
 }
 function toggleFullscreen(){
@@ -1313,14 +1291,12 @@ function toggleFullscreen(){
             const el=document.documentElement;
             if(el.requestFullscreen) el.requestFullscreen();
             else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            if(screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
         } else { if(document.exitFullscreen) document.exitFullscreen(); }
     } catch(e){}
 }
 function pauseGame(){ state.isPaused=true; document.getElementById('paused-msg').style.display='block'; }
 function resumeGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; }
 function leaveGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; returnToMenu(); }
-
 // ==== МЕНЮ ====
 const menu=document.getElementById('menu'), hud=document.getElementById('hud');
 const mapSelect=document.getElementById('map-select');
@@ -1330,7 +1306,6 @@ document.querySelectorAll('.side-icon').forEach(btn=>{
         if(tab==='maps'){ renderMapSelect(); mapSelect.style.display='flex'; }
         else if(tab==='cases'){ renderCases(); openOverlay('cases-overlay'); }
         else if(tab==='inventory'){ renderInventory(); openOverlay('inventory-overlay'); }
-        else if(tab==='shop'){ openShopOverlay(); }
         else if(tab==='clans'){ renderClans(); openOverlay('clan-overlay'); }
         else if(tab==='profile'){ showProfilePopup(); }
         else if(tab==='settings'){ initSettings(); openOverlay('settings-overlay'); }
@@ -1349,8 +1324,6 @@ function renderMapSelect(){
 function showProfilePopup(){
     alert(`👤 ПРОФИЛЬ\n\nID: ${playerData.playerId}\nИмя: ${playerData.playerName}\nУровень: ${playerData.level}\nEXP: ${playerData.exp}/100\n💰 Деньги: ${playerData.money}$\n🎯 Убийств: ${playerData.totalKills}\n🎁 Скинов: ${playerData.ownedSkins.length}\n🛡️ Клан: ${playerData.clanName||'Нет'}`);
 }
-
-// ==== СТАРТ / КОНЕЦ ====
 function startGame(){
     menu.style.display='none'; mapSelect.style.display='none'; hud.style.display='block';
     if(state.scene) destroyGame();
@@ -1359,8 +1332,7 @@ function startGame(){
     const w=WEAPONS[playerData.equippedWeapon];
     state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
     updateAmmoUI();
-    state.maxHealth=(playerData.clanBonusType==='health')?115:100;
-    state.health=state.maxHealth;
+    state.maxHealth=100; state.health=100;
     document.getElementById('health-fill').style.width='100%';
     state.score=0; state.sessionMoney=0;
     state.isGameOver=false; state.isReloading=false; state.isPaused=false;
@@ -1439,19 +1411,12 @@ window.addEventListener('resize',()=>{
     checkOrientation();
 });
 window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,200));
-
 // ==== INIT ====
 loadProfile();
 setupJoysticks();
 setupButtons();
 checkOrientation();
 initSettings();
-setTimeout(()=>{
-    if(!sessionStorage.getItem('fs_shown') && innerHeight<=innerWidth){
-        document.getElementById('fs-banner').style.display='flex';
-        sessionStorage.setItem('fs_shown','1');
-    }
-},600);
 document.getElementById('play-btn').addEventListener('click',()=>{
     if(innerHeight>innerWidth){ checkOrientation(); return; }
     renderMapSelect();
@@ -1460,6 +1425,7 @@ document.getElementById('play-btn').addEventListener('click',()=>{
 document.getElementById('back-to-menu').addEventListener('click',()=>{mapSelect.style.display='none';});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('contextmenu',e=>e.preventDefault());
+// Клавиатура
 document.addEventListener('keydown',e=>{
     switch(e.code){
         case 'KeyW':state.keys.w=true;break; case 'KeyS':state.keys.s=true;break;

@@ -2,123 +2,217 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Standoff Mini 3D — Deluxe</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0f">
+<title>Standoff Mini 3D — Mobile</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{overflow:hidden;font-family:'Segoe UI',sans-serif;background:#0a0a0f;color:#fff;user-select:none}
-#hud{display:none;position:absolute;inset:0;pointer-events:none;z-index:10}
-#crosshair{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%);opacity:.95}
-#crosshair::before,#crosshair::after{content:'';position:absolute;background:#fa0;box-shadow:0 0 4px #000,0 0 8px #fa08}
-#crosshair::before{width:2px;height:22px;left:10px;top:0}
-#crosshair::after{width:22px;height:2px;left:0;top:10px}
-#crosshair.hit::before,#crosshair.hit::after{background:#f22}
-#hit-marker{position:absolute;top:50%;left:50%;width:32px;height:32px;transform:translate(-50%,-50%) rotate(45deg);opacity:0;transition:opacity .08s}
-#hit-marker::before,#hit-marker::after{content:'';position:absolute;background:#f22;box-shadow:0 0 10px #f00}
-#hit-marker::before{width:4px;height:32px;left:14px;top:0}
-#hit-marker::after{width:32px;height:4px;left:0;top:14px}
-.panel{position:absolute;background:rgba(10,10,18,.85);border:2px solid #fa0;border-radius:10px;padding:10px 16px;backdrop-filter:blur(6px);box-shadow:0 0 20px #fa04}
-#health-panel{bottom:24px;left:24px;width:240px}
-#health-label{font-size:11px;color:#fa0;letter-spacing:2px;margin-bottom:4px}
-#health-bar{width:100%;height:16px;background:#1a1a2a;border-radius:8px;overflow:hidden;border:1px solid #333}
-#health-fill{width:100%;height:100%;background:linear-gradient(90deg,#f22,#fa0,#4f4);transition:width .2s}
-#ammo-panel{bottom:24px;right:24px;text-align:right;min-width:180px}
-#weapon-name{font-size:12px;color:#fa0;letter-spacing:2px}
-#ammo{font-size:32px;font-weight:bold;color:#fff;letter-spacing:2px}
-#ammo .reserve{font-size:18px;color:#888}
-#score-panel{top:16px;left:50%;transform:translateX(-50%);text-align:center}
-#score-label{font-size:11px;color:#fa0;letter-spacing:2px}
-#score{font-size:24px;font-weight:bold}
-#map-name{font-size:11px;color:#888}
-#minimap{position:absolute;top:16px;right:16px;width:160px;height:160px;background:rgba(10,10,18,.9);border:2px solid #fa0;border-radius:50%;overflow:hidden;box-shadow:0 0 20px #fa04}
-#killfeed{position:absolute;top:80px;right:200px;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
-.kill-msg{background:rgba(0,0,0,.75);border-left:3px solid #fa0;padding:4px 10px;font-size:12px;border-radius:4px;animation:fo 3s forwards}
-@keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
-#reload-msg{position:absolute;top:60%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:22px;font-weight:bold;background:rgba(0,0,0,.65);padding:10px 28px;border-radius:30px;border:2px solid #fa0;display:none;letter-spacing:3px}
-#hit-flash{position:absolute;inset:0;background:radial-gradient(circle,transparent 40%,rgba(255,0,0,.5));opacity:0;pointer-events:none;transition:opacity .15s}
-#menu{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#1a1a2e,#05050a);display:flex;flex-direction:column;z-index:1000;padding:24px;overflow-y:auto}
-#menu::-webkit-scrollbar{width:8px}
-#menu::-webkit-scrollbar-thumb{background:#fa0;border-radius:4px}
-#menu-header{text-align:center;margin-bottom:20px}
-#menu-header h1{font-size:42px;letter-spacing:6px;color:#fa0;text-shadow:0 0 20px #fa08,0 0 40px #fa04;font-weight:900}
-#menu-header p{color:#888;font-size:13px;letter-spacing:4px;margin-top:4px}
-.menu-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:20px}
-.tab-btn{padding:10px 28px;background:transparent;border:2px solid #444;color:#888;font-size:14px;letter-spacing:2px;cursor:pointer;border-radius:6px;transition:all .2s;font-weight:bold}
-.tab-btn:hover{border-color:#fa0;color:#fa0}
-.tab-btn.active{background:#fa0;color:#111;border-color:#fa0;box-shadow:0 0 20px #fa08}
-.tab-content{display:none;flex:1}
-.tab-content.active{display:block}
-.maps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;max-width:900px;margin:0 auto}
-.map-card{border:2px solid #333;border-radius:12px;overflow:hidden;cursor:pointer;transition:all .25s;background:#0d0d15}
-.map-card:hover{border-color:#fa0;transform:translateY(-4px);box-shadow:0 10px 30px #fa04}
-.map-card.selected{border-color:#fa0;box-shadow:0 0 25px #fa06}
-.map-preview{height:160px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none}
+html,body{overflow:hidden;width:100%;height:100%;font-family:'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#fff;position:fixed;touch-action:none}
+#menu{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#1a1a2e,#05050a);display:flex;flex-direction:column;z-index:1000;padding:12px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#menu::-webkit-scrollbar{width:6px}
+#menu::-webkit-scrollbar-thumb{background:#fa0;border-radius:3px}
+#menu-header{text-align:center;margin-bottom:10px;padding-top:8px}
+#menu-header h1{font-size:26px;letter-spacing:4px;color:#fa0;text-shadow:0 0 20px #fa08,0 0 40px #fa04;font-weight:900}
+#menu-header p{color:#888;font-size:10px;letter-spacing:3px;margin-top:2px}
+#menu-body{display:flex;gap:8px;flex:1;min-height:0}
+.side-column{width:80px;display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.side-btn{background:rgba(20,20,30,.9);border:2px solid #333;border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:70px}
+.side-btn.active{background:#fa0;border-color:#fa0;color:#111;box-shadow:0 0 20px #fa06}
+.side-btn .icon{font-size:24px}
+.side-btn .label{font-size:9px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}
+.side-btn:not(.active):hover{border-color:#fa0;color:#fa0}
+#content-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:4px;min-height:0}
+#content-area::-webkit-scrollbar{width:4px}
+#content-area::-webkit-scrollbar-thumb{background:#fa0;border-radius:2px}
+.content-tab{display:none}
+.content-tab.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.map-card{border:2px solid #333;border-radius:10px;overflow:hidden;cursor:pointer;transition:all .25s;background:#0d0d15}
+.map-card.selected{border-color:#fa0;box-shadow:0 0 20px #fa06}
+.map-preview{height:80px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative}
 .map-preview.sandstone{background:linear-gradient(135deg,#c9a06a,#8b6f47 50%,#4a3520)}
 .map-preview.templ{background:linear-gradient(135deg,#6a8ab0,#3a5a80 50%,#1a2a40)}
-.map-preview::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(0,0,0,.1) 20px,rgba(0,0,0,.1) 21px)}
-.map-info{padding:14px 18px}
-.map-info h3{color:#fa0;font-size:20px;letter-spacing:3px;margin-bottom:4px}
-.map-info p{color:#888;font-size:12px}
-.shop-container,.clan-container{max-width:900px;margin:0 auto}
-.shop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.weapon-card{background:#0d0d15;border:2px solid #333;border-radius:12px;padding:16px;transition:all .2s;cursor:pointer}
-.weapon-card:hover{border-color:#fa0}
+.map-preview::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 15px,rgba(0,0,0,.1) 15px,rgba(0,0,0,.1) 16px)}
+.map-info{padding:8px 10px}
+.map-info h3{color:#fa0;font-size:13px;letter-spacing:2px;margin-bottom:2px}
+.map-info p{color:#888;font-size:10px;line-height:1.3}
+.weapon-card{background:#0d0d15;border:2px solid #333;border-radius:10px;padding:10px;transition:all .2s;cursor:pointer}
 .weapon-card.owned{border-color:#4f4}
 .weapon-card.equipped{border-color:#fa0;background:#1a1200}
-.weapon-card h3{color:#fa0;font-size:18px;letter-spacing:2px;margin-bottom:8px}
-.weapon-stats{font-size:12px;color:#aaa;line-height:1.7}
+.weapon-card h3{color:#fa0;font-size:13px;letter-spacing:1px;margin-bottom:6px}
+.weapon-stats{font-size:10px;color:#aaa;line-height:1.6}
 .weapon-stats span{color:#fff;float:right}
-.weapon-price{margin-top:12px;font-size:16px;color:#fa0;font-weight:bold;text-align:right}
+.weapon-price{margin-top:8px;font-size:12px;color:#fa0;font-weight:bold;text-align:right}
 .weapon-price.owned-tag{color:#4f4}
-.clan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.clan-card{background:#0d0d15;border:2px solid #333;border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:all .2s}
-.clan-card:hover{transform:translateY(-3px)}
-.clan-card.selected{box-shadow:0 0 25px currentColor}
-.clan-emblem{font-size:42px;margin-bottom:8px}
-.clan-name{font-size:16px;font-weight:bold;letter-spacing:2px}
-.clan-desc{font-size:11px;color:#888;margin-top:4px}
-#menu-footer{margin-top:24px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
-.btn{padding:14px 42px;font-size:16px;font-weight:bold;letter-spacing:3px;border:none;border-radius:8px;cursor:pointer;transition:all .2s}
-.btn-primary{background:linear-gradient(135deg,#fa0,#f80);color:#111;box-shadow:0 0 25px #fa08}
-.btn-primary:hover{transform:scale(1.04);box-shadow:0 0 40px #fa0b}
-.btn-secondary{background:#222;color:#fa0;border:2px solid #fa0}
-.btn-secondary:hover{background:#fa0;color:#111}
-#player-stats{text-align:center;color:#888;font-size:12px;margin-top:12px;letter-spacing:2px}
+.clan-card{background:#0d0d15;border:2px solid #333;border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .2s}
+.clan-card.selected{box-shadow:0 0 20px currentColor}
+.clan-emblem{font-size:32px;margin-bottom:4px}
+.clan-name{font-size:12px;font-weight:bold;letter-spacing:1px}
+.clan-desc{font-size:9px;color:#888;margin-top:2px}
+#player-stats{text-align:center;color:#888;font-size:10px;margin-top:8px;letter-spacing:1px;padding:4px}
 #player-stats span{color:#fa0;font-weight:bold}
-#game-over{position:absolute;inset:0;background:rgba(0,0,0,.88);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:1100;backdrop-filter:blur(4px)}
-#game-over h1{color:#f22;font-size:60px;letter-spacing:8px;text-shadow:0 0 40px #f22;margin-bottom:20px}
-#game-over .result-stats{font-size:18px;color:#ccc;margin-bottom:30px;line-height:2}
+#play-btn{width:100%;padding:14px;margin-top:10px;background:linear-gradient(135deg,#fa0,#f80);color:#111;font-size:16px;font-weight:bold;letter-spacing:4px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 0 25px #fa06;flex-shrink:0}
+#play-btn:active{transform:scale(.98)}
+
+/* ==== ВЫБОР КАРТЫ ПОСЛЕ ИГРАТЬ ==== */
+#map-select{position:fixed;inset:0;background:rgba(5,5,10,.97);display:none;flex-direction:column;z-index:1500;padding:16px;backdrop-filter:blur(8px)}
+#map-select h2{text-align:center;color:#fa0;font-size:22px;letter-spacing:4px;margin-bottom:14px;padding-top:10px}
+#map-select-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;max-width:500px;width:100%;margin:0 auto}
+#map-select .map-card{display:flex;flex-direction:row;align-items:center}
+#map-select .map-preview{width:100px;height:100px;flex-shrink:0;font-size:50px}
+#map-select .map-info{flex:1;padding:12px}
+#map-select .map-info h3{font-size:16px}
+#map-select .map-info p{font-size:11px}
+#map-select .back-btn{max-width:500px;width:100%;margin:10px auto 0;padding:12px;background:#222;color:#fa0;border:2px solid #fa0;border-radius:10px;font-weight:bold;letter-spacing:2px;cursor:pointer;flex-shrink:0}
+
+/* ==== HUD ==== */
+#hud{display:none;position:fixed;inset:0;pointer-events:none;z-index:10;font-family:'Segoe UI',sans-serif}
+#crosshair{position:absolute;top:50%;left:50%;width:26px;height:26px;transform:translate(-50%,-50%);opacity:.95}
+#crosshair::before,#crosshair::after{content:'';position:absolute;background:#fa0;box-shadow:0 0 4px #000,0 0 8px #fa08}
+#crosshair::before{width:3px;height:26px;left:11.5px;top:0}
+#crosshair::after{width:26px;height:3px;left:0;top:11.5px}
+#crosshair.hit::before,#crosshair.hit::after{background:#f22}
+#hit-marker{position:absolute;top:50%;left:50%;width:36px;height:36px;transform:translate(-50%,-50%) rotate(45deg);opacity:0;transition:opacity .08s}
+#hit-marker::before,#hit-marker::after{content:'';position:absolute;background:#f22;box-shadow:0 0 10px #f00}
+#hit-marker::before{width:5px;height:36px;left:15px;top:0}
+#hit-marker::after{width:36px;height:5px;left:0;top:15px}
+#hit-flash{position:absolute;inset:0;background:radial-gradient(circle,transparent 40%,rgba(255,0,0,.6));opacity:0;pointer-events:none;transition:opacity .15s}
+#score-top{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(10,10,18,.85);border:2px solid #fa0;border-radius:8px;padding:4px 14px;text-align:center}
+#score-top .lbl{font-size:8px;color:#fa0;letter-spacing:2px}
+#score-top .val{font-size:18px;font-weight:bold}
+#score-top .map{font-size:8px;color:#888;letter-spacing:1px}
+#minimap{position:absolute;top:8px;right:8px;width:100px;height:100px;background:rgba(10,10,18,.9);border:2px solid #fa0;border-radius:50%;overflow:hidden;box-shadow:0 0 15px #fa05}
+#health-bar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:180px;height:10px;background:rgba(0,0,0,.7);border:1px solid #fa0;border-radius:5px;overflow:hidden}
+#health-fill{width:100%;height:100%;background:linear-gradient(90deg,#f22,#fa0,#4f4);transition:width .2s}
+#ammo-hud{position:absolute;bottom:22px;right:12px;background:rgba(10,10,18,.85);border:1px solid #fa0;border-radius:6px;padding:2px 8px;text-align:right}
+#ammo-hud .wname{font-size:8px;color:#fa0;letter-spacing:1px}
+#ammo-hud .ammo{font-size:16px;font-weight:bold}
+#ammo-hud .ammo .res{font-size:10px;color:#888}
+#killfeed{position:absolute;top:46px;right:118px;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
+@keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
+#reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:14px;font-weight:bold;background:rgba(0,0,0,.7);padding:6px 16px;border-radius:20px;border:2px solid #fa0;display:none;letter-spacing:2px}
+
+/* ==== КНОПКИ УПРАВЛЕНИЯ ==== */
+.ctrl-btn{position:absolute;background:rgba(15,15,25,.75);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;pointer-events:auto;cursor:pointer;user-select:none;transition:all .1s;backdrop-filter:blur(4px)}
+.ctrl-btn:active{background:rgba(255,170,0,.5);color:#111;transform:scale(.92)}
+.ctrl-btn.small{width:44px;height:44px;font-size:16px}
+.ctrl-btn.medium{width:54px;height:54px;font-size:22px}
+.ctrl-btn.big{width:64px;height:64px;font-size:26px}
+.ctrl-btn.tiny{width:34px;height:34px;font-size:13px}
+#btn-fire{bottom:90px;right:14px;background:rgba(255,50,50,.6);border-color:#f44;color:#fff}
+#btn-fire:active{background:#f44}
+#btn-aim{right:100px;bottom:100px}
+#btn-jump{right:14px;bottom:14px}
+#btn-crouch{right:82px;bottom:14px}
+#btn-reload{bottom:150px;right:76px}
+#btn-swap{bottom:150px;right:14px}
+#btn-pause{top:8px;left:8px;width:38px;height:38px;border-radius:8px;font-size:16px}
+#btn-sprint{bottom:14px;left:14px}
+#btn-fullscreen{top:8px;left:52px;width:38px;height:38px;border-radius:8px;font-size:16px}
+
+/* ==== ДЖОЙСТИКИ ==== */
+#joy-move{position:absolute;bottom:20px;left:20px;width:120px;height:120px;background:rgba(0,0,0,.25);border:2px solid rgba(255,170,0,.5);border-radius:50%;pointer-events:auto;touch-action:none}
+#joy-move-knob{position:absolute;top:50%;left:50%;width:52px;height:52px;background:rgba(255,170,0,.7);border:2px solid #fa0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 15px #fa06}
+#joy-look{position:absolute;inset:0;pointer-events:auto;touch-action:none;background:transparent}
+
+#paused-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:20px;letter-spacing:4px;background:rgba(0,0,0,.85);padding:16px 32px;border-radius:10px;border:2px solid #fa0;display:none;z-index:900;text-align:center}
+#paused-msg button{margin-top:12px;padding:10px 24px;background:#fa0;border:none;border-radius:8px;color:#111;font-weight:bold;font-size:14px;letter-spacing:2px;cursor:pointer}
+
+#game-over{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:1100;backdrop-filter:blur(6px);padding:20px}
+#game-over h1{color:#f22;font-size:32px;letter-spacing:6px;text-shadow:0 0 30px #f22;margin-bottom:14px;text-align:center}
+#game-over .result-stats{font-size:14px;color:#ccc;margin-bottom:20px;line-height:1.8;text-align:center}
 #game-over .result-stats span{color:#fa0;font-weight:bold}
-.paused-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:32px;letter-spacing:6px;background:rgba(0,0,0,.8);padding:20px 60px;border-radius:12px;border:2px solid #fa0;display:none;z-index:900}
-@media(max-width:600px){#menu-header h1{font-size:26px;letter-spacing:3px}#minimap{width:110px;height:110px}#killfeed{right:140px}}
+#game-over button{padding:14px 32px;font-size:14px;background:linear-gradient(135deg,#fa0,#f80);color:#111;font-weight:bold;letter-spacing:3px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 0 20px #fa06}
+
+#rotate-hint{position:fixed;inset:0;background:rgba(5,5,10,.98);display:none;flex-direction:column;justify-content:center;align-items:center;z-index:2000;color:#fa0;text-align:center;padding:30px}
+#rotate-hint .phone{font-size:64px;transform:rotate(90deg);margin-bottom:20px;animation:rotateAnim 2s ease-in-out infinite}
+@keyframes rotateAnim{0%,100%{transform:rotate(90deg)}50%{transform:rotate(0)}}
+#rotate-hint h2{font-size:18px;letter-spacing:3px;margin-bottom:8px}
+#rotate-hint p{font-size:12px;color:#888}
+
+@media (orientation:landscape) and (max-height:500px){
+    #joy-move{width:100px;height:100px;bottom:12px;left:12px}
+    #joy-move-knob{width:44px;height:44px}
+    .ctrl-btn.small{width:38px;height:38px}
+    .ctrl-btn.medium{width:46px;height:46px}
+    .ctrl-btn.big{width:56px;height:56px}
+    #btn-fire{bottom:70px;right:10px}
+    #btn-aim{right:80px;bottom:80px}
+    #btn-reload{bottom:120px;right:60px}
+    #btn-swap{bottom:120px;right:10px}
+    #minimap{width:80px;height:80px}
+}
 </style>
 </head>
 <body>
+  <!-- ==== МЕНЮ ==== -->
 <div id="menu">
-<div id="menu-header"><h1>STANDOFF MINI 3D</h1><p>DELUXE EDITION</p></div>
-<div class="menu-tabs">
-<button class="tab-btn active" data-tab="maps">🗺️ КАРТЫ</button>
-<button class="tab-btn" data-tab="shop">🛒 МАГАЗИН</button>
-<button class="tab-btn" data-tab="clans">🛡️ КЛАНЫ</button>
-</div>
-<div class="tab-content active" id="tab-maps"><div class="maps-grid" id="maps-grid"></div></div>
-<div class="tab-content" id="tab-shop"><div class="shop-container"><div class="shop-grid" id="shop-grid"></div></div></div>
-<div class="tab-content" id="tab-clans"><div class="clan-container"><div class="clan-grid" id="clan-grid"></div></div></div>
-<div id="player-stats">💰 Баланс: <span id="balance">5000</span> $ &nbsp;|&nbsp; 🎯 Убийств: <span id="total-kills">0</span> &nbsp;|&nbsp; 🛡️ Клан: <span id="clan-tag">НЕТ</span></div>
-<div id="menu-footer"><button class="btn btn-primary" id="play-btn">▶ ИГРАТЬ</button></div>
+    <div id="menu-header"><h1>STANDOFF MINI 3D</h1><p>DELUXE MOBILE</p></div>
+    <div id="menu-body">
+        <div class="side-column">
+            <div class="side-btn active" data-tab="maps"><div class="icon">🗺️</div><div class="label">Карты</div></div>
+            <div class="side-btn" data-tab="shop"><div class="icon">🛒</div><div class="label">Магазин</div></div>
+            <div class="side-btn" data-tab="clans"><div class="icon">🛡️</div><div class="label">Кланы</div></div>
+        </div>
+        <div id="content-area">
+            <div class="content-tab active" id="tab-maps"><div class="grid" id="maps-grid"></div></div>
+            <div class="content-tab" id="tab-shop"><div class="grid" id="shop-grid"></div></div>
+            <div class="content-tab" id="tab-clans"><div class="grid" id="clan-grid"></div></div>
+        </div>
+    </div>
+    <div id="player-stats">💰 <span id="balance">5000</span>$ | 🎯 <span id="total-kills">0</span> | 🛡️ <span id="clan-tag">—</span></div>
+    <button id="play-btn">▶ ИГРАТЬ</button>
 </div>
 
-<div id="hud">
-<div id="crosshair"></div><div id="hit-marker"></div><div id="hit-flash"></div>
-<div id="reload-msg">ПЕРЕЗАРЯДКА...</div>
-<div class="panel" id="score-panel"><div id="score-label">УБИЙСТВА</div><div id="score">0</div><div id="map-name">SANDSTONE</div></div>
-<div class="panel" id="health-panel"><div id="health-label">ЗДОРОВЬЕ</div><div id="health-bar"><div id="health-fill"></div></div></div>
-<div class="panel" id="ammo-panel"><div id="weapon-name">P-9 PISTOL</div><div id="ammo">12<span class="reserve"> / 48</span></div></div>
-<div id="minimap"><canvas id="minimap-canvas" width="160" height="160"></canvas></div>
-<div id="killfeed"></div>
+<!-- ==== ВЫБОР КАРТЫ ==== -->
+<div id="map-select">
+    <h2>ВЫБЕРИ КАРТУ</h2>
+    <div id="map-select-list"></div>
+    <button class="back-btn" id="back-to-menu">← НАЗАД</button>
 </div>
-<div class="paused-msg" id="paused-msg">ПАУЗА — клик для продолжения</div>
-<div id="game-over"><h1>ВЫ ПОГИБЛИ</h1><div class="result-stats">Убийств: <span id="final-kills">0</span><br>Заработано: <span id="final-money">0</span> $</div><button class="btn btn-primary" onclick="returnToMenu()">В МЕНЮ</button></div>
+
+<!-- ==== HUD ==== -->
+<div id="hud">
+    <div id="crosshair"></div><div id="hit-marker"></div><div id="hit-flash"></div>
+    <div id="reload-msg">ПЕРЕЗАРЯДКА...</div>
+    <div id="score-top"><div class="lbl">УБИЙСТВА</div><div class="val" id="score">0</div><div class="map" id="map-name">SANDSTONE</div></div>
+    <div id="health-bar"><div id="health-fill"></div></div>
+    <div id="ammo-hud"><div class="wname" id="weapon-name">P-9 PISTOL</div><div class="ammo" id="ammo">12<span class="res">/48</span></div></div>
+    <div id="minimap"><canvas id="minimap-canvas" width="100" height="100"></canvas></div>
+    <div id="killfeed"></div>
+
+    <!-- Кнопки -->
+    <div class="ctrl-btn" id="btn-pause">⏸</div>
+    <div class="ctrl-btn" id="btn-fullscreen">⛶</div>
+    <div class="ctrl-btn big" id="btn-fire">🔥</div>
+    <div class="ctrl-btn medium" id="btn-aim">🎯</div>
+    <div class="ctrl-btn medium" id="btn-jump">⬆</div>
+    <div class="ctrl-btn medium" id="btn-crouch">⬇</div>
+    <div class="ctrl-btn small" id="btn-reload">🔄</div>
+    <div class="ctrl-btn small" id="btn-swap">🔫</div>
+    <div class="ctrl-btn medium" id="btn-sprint">🏃</div>
+
+    <!-- Джойстики -->
+    <div id="joy-move"><div id="joy-move-knob"></div></div>
+    <div id="joy-look"></div>
+
+    <div id="paused-msg">ПАУЗА<button id="btn-resume">ПРОДОЛЖИТЬ</button></div>
+</div>
+
+<div id="game-over">
+    <h1>ВЫ ПОГИБЛИ</h1>
+    <div class="result-stats">Убийств: <span id="final-kills">0</span><br>Заработано: <span id="final-money">0</span> $</div>
+    <button onclick="returnToMenu()">В МЕНЮ</button>
+</div>
+
+<div id="rotate-hint">
+    <div class="phone">📱</div>
+    <h2>ПОВЕРНИТЕ ТЕЛЕФОН</h2>
+    <p>Игра работает только в горизонтальной ориентации</p>
+</div>
 
 <script type="importmap">
 {"imports":{"three":"https://unpkg.com/three@0.132.2/build/three.module.js","three/addons/":"https://unpkg.com/three@0.132.2/examples/jsm/"}}
@@ -127,10 +221,11 @@ body{overflow:hidden;font-family:'Segoe UI',sans-serif;background:#0a0a0f;color:
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
+// ==== КОНСТАНТЫ ====
 const WEAPONS = {
-    pistol:{name:'P-9 PISTOL',damage:20,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,price:0,range:60,model:'pistol'},
-    akr:{name:'AKR-12',damage:28,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,price:2700,range:80,model:'rifle'},
-    awp:{name:'AWM SNIPER',damage:120,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,price:4750,range:150,model:'sniper'}
+    pistol:{name:'P-9 PISTOL',damage:25,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,price:0,range:60,model:'pistol'},
+    akr:{name:'AKR-12',damage:35,headshotMult:4,rpm:600,magSize:30,reserveMax:90,reloadTime:2000,auto:true,spread:.018,price:2700,range:80,model:'rifle'},
+    awp:{name:'AWM SNIPER',damage:150,headshotMult:2,rpm:40,magSize:5,reserveMax:15,reloadTime:3000,auto:false,spread:.001,price:4750,range:150,model:'sniper'}
 };
 const CLANS = [
     {id:'none',name:'БЕЗ КЛАНА',tag:'—',color:'#888',emblem:'🚫',bonus:'Нет бонусов',bonusType:null},
@@ -140,18 +235,27 @@ const CLANS = [
     {id:'shadows',name:'SHADOWS',tag:'[SHD]',color:'#a4f',emblem:'🌑',bonus:'+20% денег',bonusType:'money'}
 ];
 const MAPS = {
-    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость. Коридоры и открытые площадки.',emoji:'🏜️',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone},
-    templ:{name:'TEMPL',desc:'Древний храм в горах. Узкие проходы и статуи.',emoji:'🏛️',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:.5,sunColor:0xccddff,generate:buildTempl}
+    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость. Коридоры и площадки.',emoji:'🏜️',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone},
+    templ:{name:'TEMPL',desc:'Древний храм в горах. Узкие проходы.',emoji:'🏛️',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:.5,sunColor:0xccddff,generate:buildTempl}
 };
 const playerData = {money:5000,totalKills:0,ownedWeapons:['pistol'],equippedWeapon:'pistol',clanId:'none'};
-const state = {scene:null,camera:null,renderer:null,controls:null,raycaster:null,clock:null,mapKey:'sandstone',weaponKey:'pistol',magAmmo:0,reserveAmmo:0,health:100,maxHealth:100,score:0,sessionMoney:0,isReloading:false,isGameOver:false,lastShootTime:0,enemies:[],colliders:[],keys:{w:false,a:false,s:false,d:false,space:false,shift:false},velocity:new THREE.Vector3(),canJump:true,minimapCtx:null,weaponModel:null,muzzleFlash:null,bloodParticles:[],autoFire:false,spawnPoints:[]};
+const state = {scene:null,camera:null,renderer:null,controls:null,raycaster:null,clock:null,mapKey:'sandstone',magAmmo:0,reserveAmmo:0,health:100,maxHealth:100,score:0,sessionMoney:0,isReloading:false,isGameOver:false,lastShootTime:0,enemies:[],colliders:[],keys:{w:false,a:false,s:false,d:false,space:false,shift:false},velocity:new THREE.Vector3(),canJump:true,minimapCtx:null,weaponModel:null,muzzleFlash:null,bloodParticles:[],autoFire:false,spawnPoints:[],isCrouching:false,isAiming:false,isPaused:false};
 const PLAYER_HEIGHT=1.7, PLAYER_RADIUS=.6, WORLD_SIZE=90, HALF_WORLD=WORLD_SIZE/2-2, GRAVITY=22, JUMP_SPEED=7, MOVE_SPEED=6;
-  // ==== МЕНЮ ====
+
+// ==== МОБИЛЬНОЕ УПРАВЛЕНИЕ ====
+const mobile = {
+    moveX:0, moveY:0, lookX:0, lookY:0,
+    joyMoveActive:false, joyMoveStart:{x:0,y:0}, joyMoveCurrent:{x:0,y:0},
+    lookActive:false, lookStart:{x:0,y:0}, lastLook:{x:0,y:0},
+    prevTouchX:0, prevTouchY:0
+};
+           // ==== МЕНЮ ====
 const menu=document.getElementById('menu'), hud=document.getElementById('hud');
-document.querySelectorAll('.tab-btn').forEach(btn=>{
+const mapSelect=document.getElementById('map-select');
+document.querySelectorAll('.side-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
-        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.content-tab').forEach(c=>c.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
     });
@@ -162,23 +266,31 @@ function renderMaps(){
         const card=document.createElement('div');
         card.className='map-card'+(state.mapKey===key?' selected':'');
         card.innerHTML=`<div class="map-preview ${key}">${map.emoji}</div><div class="map-info"><h3>${map.name}</h3><p>${map.desc}</p></div>`;
-        card.addEventListener('click',()=>{state.mapKey=key;renderMaps();});
+        card.onclick=()=>{state.mapKey=key;renderMaps();};
         grid.appendChild(card);
+    });
+}
+function renderMapSelect(){
+    const list=document.getElementById('map-select-list'); list.innerHTML='';
+    Object.entries(MAPS).forEach(([key,map])=>{
+        const card=document.createElement('div');
+        card.className='map-card';
+        card.innerHTML=`<div class="map-preview ${key}">${map.emoji}</div><div class="map-info"><h3>${map.name}</h3><p>${map.desc}</p></div>`;
+        card.onclick=()=>{state.mapKey=key;mapSelect.style.display='none';startGame();};
+        list.appendChild(card);
     });
 }
 function renderShop(){
     const grid=document.getElementById('shop-grid'); grid.innerHTML='';
     Object.entries(WEAPONS).forEach(([key,wpn])=>{
-        const owned=playerData.ownedWeapons.includes(key);
-        const equipped=playerData.equippedWeapon===key;
+        const owned=playerData.ownedWeapons.includes(key), equipped=playerData.equippedWeapon===key;
         const card=document.createElement('div');
         card.className='weapon-card'+(owned?' owned':'')+(equipped?' equipped':'');
-        card.innerHTML=`<h3>${wpn.name}</h3><div class="weapon-stats">Урон: <span>${wpn.damage}</span><br>Скорость: <span>${wpn.rpm} RPM</span><br>Магазин: <span>${wpn.magSize} патр.</span><br>Перезарядка: <span>${(wpn.reloadTime/1000).toFixed(1)} с</span><br>Хедшот: <span>x${wpn.headshotMult}</span></div>${owned?`<div class="weapon-price owned-tag">${equipped?'✔ ЭКИПИРОВАНО':'✔ КУПЛЕНО'}</div>`:`<div class="weapon-price">${wpn.price} $</div>`}`;
-        card.addEventListener('click',()=>{
+        card.innerHTML=`<h3>${wpn.name}</h3><div class="weapon-stats">Урон: <span>${wpn.damage}</span><br>Скорость: <span>${wpn.rpm} RPM</span><br>Магазин: <span>${wpn.magSize}</span><br>Хедшот: <span>x${wpn.headshotMult}</span></div>${owned?`<div class="weapon-price owned-tag">${equipped?'✔ ЭКИП.':'✔ КУПЛЕНО'}</div>`:`<div class="weapon-price">${wpn.price} $</div>`}`;
+        card.onclick=()=>{
             if(owned){playerData.equippedWeapon=key;renderShop();}
             else if(playerData.money>=wpn.price){playerData.money-=wpn.price;playerData.ownedWeapons.push(key);playerData.equippedWeapon=key;updateStats();renderShop();}
-            else{card.style.borderColor='#f22';setTimeout(()=>card.style.borderColor='#333',400);}
-        });
+        };
         grid.appendChild(card);
     });
 }
@@ -188,10 +300,9 @@ function renderClans(){
         const sel=playerData.clanId===clan.id;
         const card=document.createElement('div');
         card.className='clan-card'+(sel?' selected':'');
-        card.style.color=clan.color;
-        card.style.borderColor=sel?clan.color:'#333';
+        card.style.color=clan.color; card.style.borderColor=sel?clan.color:'#333';
         card.innerHTML=`<div class="clan-emblem">${clan.emblem}</div><div class="clan-name" style="color:${clan.color}">${clan.name}</div><div class="clan-desc">${clan.bonus}</div>`;
-        card.addEventListener('click',()=>{playerData.clanId=clan.id;renderClans();updateStats();});
+        card.onclick=()=>{playerData.clanId=clan.id;renderClans();updateStats();};
         grid.appendChild(card);
     });
 }
@@ -202,7 +313,7 @@ function updateStats(){
     const ct=document.getElementById('clan-tag'); ct.textContent=clan.tag; ct.style.color=clan.color;
 }
 
-// ==== ХЕЛПЕРЫ КАРТ ====
+// ==== КАРТЫ ====
 function addCollider(x,y,z,w,h,d){state.colliders.push({min:new THREE.Vector3(x-w/2,y-h/2,z-d/2),max:new THREE.Vector3(x+w/2,y+h/2,z+d/2)});}
 function addBox(x,y,z,w,h,d,mat,collide=true){
     const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
@@ -210,47 +321,41 @@ function addBox(x,y,z,w,h,d,mat,collide=true){
     state.scene.add(m);
     if(collide) addCollider(x,y,z,w,h,d);
     return m;
-  }
-  // ==== КАРТА SANDSTONE ====
+}
 function buildSandstone(){
     const map=MAPS.sandstone, scene=state.scene;
-    const groundMat=new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.95});
-    const ground=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),groundMat);
-    ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+    const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.95}));
+    g.rotation.x=-Math.PI/2; g.receiveShadow=true; scene.add(g);
     const wallMat=new THREE.MeshStandardMaterial({color:map.wallColor,roughness:.9});
     const wallH=8, wallT=2;
     addBox(0,wallH/2,-HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
     addBox(0,wallH/2,HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
     addBox(-HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
     addBox(HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
-    const crates=[[-8,-8,4,2,4],[8,-8,4,2,4],[-8,8,4,2,4],[8,8,4,2,4],[0,0,5,3,5],[-20,0,3,1.5,10],[20,0,3,1.5,10],[0,-20,10,1.5,3],[0,20,10,1.5,3],[-30,-25,5,2,5],[30,-25,5,2,5],[-30,25,5,2,5],[30,25,5,2,5],[-35,0,3,4,3],[35,0,3,4,3],[0,-35,3,4,3],[0,35,3,4,3],[-15,-30,2,1.5,2],[15,30,2,1.5,2],[-25,15,2,1.5,2],[25,-15,2,1.5,2],[-12,18,2,1.5,2],[12,-18,2,1.5,2]];
-    const cMatA=new THREE.MeshStandardMaterial({color:0xa07850,roughness:.85});
-    const cMatB=new THREE.MeshStandardMaterial({color:0x7a5838,roughness:.85});
-    crates.forEach(([x,z,w,h,d],i)=>addBox(x,h/2,z,w,h,d,i%2?cMatA:cMatB));
+    const crates=[[-8,-8,4,2,4],[8,-8,4,2,4],[-8,8,4,2,4],[8,8,4,2,4],[0,0,5,3,5],[-20,0,3,1.5,10],[20,0,3,1.5,10],[0,-20,10,1.5,3],[0,20,10,1.5,3],[-30,-25,5,2,5],[30,-25,5,2,5],[-30,25,5,2,5],[30,25,5,2,5],[-35,0,3,4,3],[35,0,3,4,3],[0,-35,3,4,3],[0,35,3,4,3],[-15,-30,2,1.5,2],[15,30,2,1.5,2]];
+    const cA=new THREE.MeshStandardMaterial({color:0xa07850,roughness:.85});
+    const cB=new THREE.MeshStandardMaterial({color:0x7a5838,roughness:.85});
+    crates.forEach(([x,z,w,h,d],i)=>addBox(x,h/2,z,w,h,d,i%2?cA:cB));
     const trunkMat=new THREE.MeshStandardMaterial({color:0x6b5030,roughness:1});
-    [[-40,-40],[40,-40],[-40,40],[40,40],[-40,0],[40,0],[0,-40],[0,40]].forEach(([x,z])=>{
+    [[-40,-40],[40,-40],[-40,40],[40,40]].forEach(([x,z])=>{
         const t=new THREE.Mesh(new THREE.CylinderGeometry(.4,.6,7,8),trunkMat);
         t.position.set(x,3.5,z); t.castShadow=true; scene.add(t);
         addCollider(x,3.5,z,1,7,1);
     });
     state.spawnPoints=[[-35,-35],[35,-35],[-35,35],[35,35],[-30,0],[30,0],[0,-30],[0,30]];
 }
-
-// ==== КАРТА TEMPL ====
 function buildTempl(){
     const map=MAPS.templ, scene=state.scene;
-    const groundMat=new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.9});
-    const ground=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),groundMat);
-    ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+    const g=new THREE.Mesh(new THREE.PlaneGeometry(WORLD_SIZE,WORLD_SIZE),new THREE.MeshStandardMaterial({color:map.groundColor,roughness:.9}));
+    g.rotation.x=-Math.PI/2; g.receiveShadow=true; scene.add(g);
     const wallMat=new THREE.MeshStandardMaterial({color:map.wallColor,roughness:.7,metalness:.1});
     const wallH=12, wallT=2;
     addBox(0,wallH/2,-HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
     addBox(0,wallH/2,HALF_WORLD,WORLD_SIZE,wallH,wallT,wallMat);
     addBox(-HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
     addBox(HALF_WORLD,wallH/2,0,wallT,wallH,WORLD_SIZE,wallMat);
-    const templeMat=new THREE.MeshStandardMaterial({color:0x6a7a90,roughness:.6});
-    addBox(0,3,0,14,6,14,templeMat);
-    addBox(0,1,0,18,2,18,templeMat);
+    const tMat=new THREE.MeshStandardMaterial({color:0x6a7a90,roughness:.6});
+    addBox(0,3,0,14,6,14,tMat); addBox(0,1,0,18,2,18,tMat);
     const roof=new THREE.Mesh(new THREE.ConeGeometry(12,5,4),new THREE.MeshStandardMaterial({color:0x5a6a80,metalness:.3,roughness:.5}));
     roof.position.set(0,8.5,0); roof.rotation.y=Math.PI/4; roof.castShadow=true; scene.add(roof);
     const colMat=new THREE.MeshStandardMaterial({color:0x8a9ab0,roughness:.5});
@@ -262,35 +367,28 @@ function buildTempl(){
         addCollider(x,4,z,1.6,8,1.6);
     }
     const corMat=new THREE.MeshStandardMaterial({color:0x4a5a70,roughness:.75});
-    [[-25,-25,3,5,20],[25,-25,3,5,20],[-25,25,3,5,20],[25,25,3,5,20],[-25,-25,20,5,3],[25,-25,20,5,3],[-25,25,20,5,3],[25,25,20,5,3],[-15,0,3,5,8],[15,0,3,5,8],[0,-15,8,5,3],[0,15,8,5,3]].forEach(([x,z,w,h,d])=>addBox(x,h/2,z,w,h,d,corMat));
+    [[-25,-25,3,5,20],[25,-25,3,5,20],[-25,25,3,5,20],[25,25,3,5,20],[-25,-25,20,5,3],[25,-25,20,5,3],[-25,25,20,5,3],[25,25,20,5,3]].forEach(([x,z,w,h,d])=>addBox(x,h/2,z,w,h,d,corMat));
     const stMat=new THREE.MeshStandardMaterial({color:0x9aaabb,roughness:.6});
     [[-35,-35],[35,-35],[-35,35],[35,35]].forEach(([x,z])=>{
-        const base=new THREE.Mesh(new THREE.BoxGeometry(2,1,2),stMat);
-        base.position.set(x,.5,z); base.castShadow=true; scene.add(base);
-        const body=new THREE.Mesh(new THREE.CylinderGeometry(.7,.9,4,8),stMat);
-        body.position.set(x,3,z); body.castShadow=true; scene.add(body);
-        const head=new THREE.Mesh(new THREE.SphereGeometry(.7,10,10),stMat);
-        head.position.set(x,5.4,z); head.castShadow=true; scene.add(head);
+        const base=new THREE.Mesh(new THREE.BoxGeometry(2,1,2),stMat); base.position.set(x,.5,z); base.castShadow=true; scene.add(base);
+        const body=new THREE.Mesh(new THREE.CylinderGeometry(.7,.9,4,8),stMat); body.position.set(x,3,z); body.castShadow=true; scene.add(body);
+        const head=new THREE.Mesh(new THREE.SphereGeometry(.7,10,10),stMat); head.position.set(x,5.4,z); head.castShadow=true; scene.add(head);
         addCollider(x,2.5,z,2,5,2);
     });
-    const fireMat=new THREE.MeshBasicMaterial({color:0x00ccff});
-    [[-20,-20],[20,-20],[-20,20],[20,20]].forEach(([x,z])=>{
-        const f=new THREE.Mesh(new THREE.SphereGeometry(.5,8,8),fireMat);
-        f.position.set(x,3,z); scene.add(f);
-        const l=new THREE.PointLight(0x00ccff,1.2,15); l.position.set(x,3,z); scene.add(l);
-    });
     state.spawnPoints=[[-38,-38],[38,-38],[-38,38],[38,38],[-30,0],[30,0],[0,-30],[0,30]];
-      }
-  // ==== СОЗДАНИЕ СЦЕНЫ ====
+}
+
+// ==== СЦЕНА ====
 function createScene(){
     const map=MAPS[state.mapKey];
     state.scene=new THREE.Scene();
     state.scene.background=new THREE.Color(map.skyColor);
     state.scene.fog=new THREE.Fog(map.fogColor,5,map.fogFar);
-    state.camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,500);
+    state.camera=new THREE.PerspectiveCamera(80,innerWidth/innerHeight,.1,500);
     state.camera.position.set(0,PLAYER_HEIGHT,0);
-    state.renderer=new THREE.WebGLRenderer({antialias:true});
+    state.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
     state.renderer.setSize(innerWidth,innerHeight);
+    state.renderer.setPixelRatio(Math.min(devicePixelRatio,2));
     state.renderer.shadowMap.enabled=true;
     state.renderer.shadowMap.type=THREE.PCFSoftShadowMap;
     state.renderer.domElement.style.display='none';
@@ -299,55 +397,47 @@ function createScene(){
     state.scene.add(state.controls.getObject());
     state.raycaster=new THREE.Raycaster();
     state.clock=new THREE.Clock();
-    const amb=new THREE.AmbientLight(map.ambient,map.ambientIntensity);
-    state.scene.add(amb);
+    state.scene.add(new THREE.AmbientLight(map.ambient,map.ambientIntensity));
     const sun=new THREE.DirectionalLight(map.sunColor,1.1);
     sun.position.set(30,40,20); sun.castShadow=true;
-    sun.shadow.mapSize.set(2048,2048);
+    sun.shadow.mapSize.set(1024,1024);
     const d=60;
     sun.shadow.camera.left=-d; sun.shadow.camera.right=d;
     sun.shadow.camera.top=d; sun.shadow.camera.bottom=-d;
-    sun.shadow.camera.near=1; sun.shadow.camera.far=120;
     state.scene.add(sun);
     state.scene.add(new THREE.HemisphereLight(map.skyColor,map.groundColor,.4));
-    state.colliders=[];
-    state.spawnPoints=[];
+    state.colliders=[]; state.spawnPoints=[];
     map.generate();
     spawnEnemies(8);
     createWeaponModel();
     state.minimapCtx=document.getElementById('minimap-canvas').getContext('2d');
 }
 
-// ==== МОДЕЛЬ ОРУЖИЯ В РУКАХ ====
+// ==== ОРУЖИЕ В РУКАХ ====
 function createWeaponModel(){
     if(state.weaponModel) state.scene.remove(state.weaponModel);
     const g=new THREE.Group();
-    const wKey=playerData.equippedWeapon, wData=WEAPONS[wKey];
+    const wData=WEAPONS[playerData.equippedWeapon];
     const dark=new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:.6,metalness:.7});
     const grip=new THREE.MeshStandardMaterial({color:0x222,roughness:.9});
     const accent=new THREE.MeshStandardMaterial({color:0x2a2a2a,roughness:.5,metalness:.8});
     const wood=new THREE.MeshStandardMaterial({color:0x5a3a1a,roughness:.8});
     if(wData.model==='pistol'){
-        const slide=new THREE.Mesh(new THREE.BoxGeometry(.08,.09,.34),dark); slide.position.set(0,0,-.15); g.add(slide);
-        const barrel=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.12,8),accent); barrel.rotation.x=Math.PI/2; barrel.position.set(0,.01,-.34); g.add(barrel);
+        const s=new THREE.Mesh(new THREE.BoxGeometry(.08,.09,.34),dark); s.position.set(0,0,-.15); g.add(s);
+        const b=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.12,8),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.34); g.add(b);
         const gr=new THREE.Mesh(new THREE.BoxGeometry(.08,.18,.1),grip); gr.position.set(0,-.13,.02); gr.rotation.x=.2; g.add(gr);
-        const tg=new THREE.Mesh(new THREE.TorusGeometry(.04,.008,4,8,Math.PI),accent); tg.position.set(0,-.05,-.02); tg.rotation.y=Math.PI/2; g.add(tg);
     }else if(wData.model==='rifle'){
         const body=new THREE.Mesh(new THREE.BoxGeometry(.09,.1,.55),dark); body.position.set(0,0,-.2); g.add(body);
-        const barrel=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.35,8),accent); barrel.rotation.x=Math.PI/2; barrel.position.set(0,.01,-.65); g.add(barrel);
+        const b=new THREE.Mesh(new THREE.CylinderGeometry(.018,.018,.35,8),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.65); g.add(b);
         const hg=new THREE.Mesh(new THREE.BoxGeometry(.1,.09,.22),wood); hg.position.set(0,-.03,-.5); g.add(hg);
         const mag=new THREE.Mesh(new THREE.BoxGeometry(.05,.22,.1),grip); mag.position.set(0,-.15,-.1); mag.rotation.x=-.3; g.add(mag);
         const gr=new THREE.Mesh(new THREE.BoxGeometry(.07,.16,.1),grip); gr.position.set(0,-.12,.1); gr.rotation.x=.3; g.add(gr);
         const st=new THREE.Mesh(new THREE.BoxGeometry(.07,.13,.25),wood); st.position.set(0,-.01,.25); g.add(st);
-        const si=new THREE.Mesh(new THREE.BoxGeometry(.02,.05,.04),accent); si.position.set(0,.08,-.05); g.add(si);
-    }else if(wData.model==='sniper'){
+    }else{
         const body=new THREE.Mesh(new THREE.BoxGeometry(.09,.11,.7),dark); body.position.set(0,0,-.25); g.add(body);
-        const barrel=new THREE.Mesh(new THREE.CylinderGeometry(.022,.022,.5,10),accent); barrel.rotation.x=Math.PI/2; barrel.position.set(0,.01,-.85); g.add(barrel);
+        const b=new THREE.Mesh(new THREE.CylinderGeometry(.022,.022,.5,10),accent); b.rotation.x=Math.PI/2; b.position.set(0,.01,-.85); g.add(b);
         const sc=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.28,12),accent); sc.rotation.x=Math.PI/2; sc.position.set(0,.13,-.15); g.add(sc);
-        const lens=new THREE.Mesh(new THREE.CircleGeometry(.045,12),new THREE.MeshBasicMaterial({color:0x0088ff})); lens.position.set(0,.13,-.3); lens.rotation.y=Math.PI; g.add(lens);
-        const mag=new THREE.Mesh(new THREE.BoxGeometry(.05,.16,.1),grip); mag.position.set(0,-.14,-.05); mag.rotation.x=-.3; g.add(mag);
         const gr=new THREE.Mesh(new THREE.BoxGeometry(.07,.18,.1),grip); gr.position.set(0,-.14,.15); gr.rotation.x=.3; g.add(gr);
-        const st=new THREE.Mesh(new THREE.BoxGeometry(.08,.15,.3),dark); st.position.set(0,-.01,.3); g.add(st);
     }
     state.muzzleFlash=new THREE.PointLight(0xffaa00,0,3);
     state.muzzleFlash.position.set(0,.02,-.7); g.add(state.muzzleFlash);
@@ -369,16 +459,13 @@ function spawnEnemy(){
     body.position.y=.9; body.castShadow=true; e.add(body);
     const head=new THREE.Mesh(new THREE.SphereGeometry(.28,10,10),new THREE.MeshStandardMaterial({color:0xffcc66,roughness:.6}));
     head.position.y=1.75; head.castShadow=true; e.add(head);
-    const gun=new THREE.Mesh(new THREE.BoxGeometry(.08,.1,.4),new THREE.MeshStandardMaterial({color:0x111}));
-    gun.position.set(.25,1.2,-.15); e.add(gun);
     e.position.set(bx,0,bz);
-    e.userData={hp:30,maxHp:30,head,body,lastAttack:0,attackCooldown:800,speed:2.2+Math.random()*.6};
+    e.userData={hp:30,maxHp:30,head,body,lastAttack:0,attackCooldown:600,speed:2.5+Math.random()*.6,damage:15};
     state.scene.add(e); state.enemies.push(e);
-}
-
-// ==== СТРЕЛЬБА ====
+    }
+    // ==== СТРЕЛЬБА ====
 function shoot(){
-    if(state.isReloading||state.isGameOver) return;
+    if(state.isReloading||state.isGameOver||state.isPaused) return;
     const w=WEAPONS[playerData.equippedWeapon];
     const now=performance.now(), cd=60000/w.rpm;
     if(now-state.lastShootTime<cd) return;
@@ -387,10 +474,10 @@ function shoot(){
     state.magAmmo--; updateAmmoUI();
     state.muzzleFlash.intensity=3;
     setTimeout(()=>{if(state.muzzleFlash)state.muzzleFlash.intensity=0;},50);
-    state.camera.rotation.x+=.015;
-    const dir=new THREE.Vector3(0,0,-1);
-    dir.applyQuaternion(state.camera.quaternion);
-    dir.x+=(Math.random()-.5)*w.spread; dir.y+=(Math.random()-.5)*w.spread; dir.z+=(Math.random()-.5)*w.spread;
+    state.camera.rotation.x+=.02;
+    const dir=new THREE.Vector3(0,0,-1).applyQuaternion(state.camera.quaternion);
+    const sp=state.isAiming?w.spread*.3:w.spread;
+    dir.x+=(Math.random()-.5)*sp; dir.y+=(Math.random()-.5)*sp; dir.z+=(Math.random()-.5)*sp;
     dir.normalize();
     state.raycaster.set(state.camera.getWorldPosition(new THREE.Vector3()),dir);
     state.raycaster.far=w.range;
@@ -405,7 +492,9 @@ function shoot(){
             if(hit.object===e.userData.head){enemy=e;isHead=true;}
         });
         if(enemy){
-            const dmg=w.damage*(isHead?w.headshotMult:1);
+            const clan=CLANS.find(c=>c.id===playerData.clanId);
+            const dmgMult=clan.bonusType==='damage'?1.1:1;
+            const dmg=w.damage*(isHead?w.headshotMult:1)*dmgMult;
             enemy.userData.hp-=dmg;
             document.getElementById('hit-marker').style.opacity='1';
             document.getElementById('crosshair').classList.add('hit');
@@ -459,8 +548,7 @@ function addKillfeed(text,reward){
 function reload(){
     if(state.isReloading) return;
     const w=WEAPONS[playerData.equippedWeapon];
-    if(state.reserveAmmo<=0) return;
-    if(state.magAmmo===w.magSize) return;
+    if(state.reserveAmmo<=0||state.magAmmo===w.magSize) return;
     state.isReloading=true;
     document.getElementById('reload-msg').style.display='block';
     setTimeout(()=>{
@@ -474,9 +562,20 @@ function reload(){
 function updateAmmoUI(){
     const w=WEAPONS[playerData.equippedWeapon];
     document.getElementById('weapon-name').textContent=w.name;
-    document.getElementById('ammo').innerHTML=`${state.magAmmo}<span class="reserve"> / ${state.reserveAmmo}</span>`;
-  }
-  // ==== КОЛЛИЗИИ ====
+    document.getElementById('ammo').innerHTML=`${state.magAmmo}<span class="res">/${state.reserveAmmo}</span>`;
+}
+function switchWeapon(){
+    const list=playerData.ownedWeapons;
+    const idx=list.indexOf(playerData.equippedWeapon);
+    const next=list[(idx+1)%list.length];
+    playerData.equippedWeapon=next;
+    createWeaponModel();
+    const w=WEAPONS[next];
+    state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
+    updateAmmoUI();
+}
+
+// ==== КОЛЛИЗИИ И ДВИЖЕНИЕ ====
 function checkCollision(np){
     if(np.x<-HALF_WORLD+PLAYER_RADIUS||np.x>HALF_WORLD-PLAYER_RADIUS) return true;
     if(np.z<-HALF_WORLD+PLAYER_RADIUS||np.z>HALF_WORLD-PLAYER_RADIUS) return true;
@@ -490,28 +589,38 @@ function checkCollision(np){
     return false;
 }
 function updateMovement(dt){
-    if(!state.controls.isLocked||state.isGameOver) return;
+    if(state.isGameOver||state.isPaused) return;
     const v=state.velocity;
-    const spMult=CLANS.find(c=>c.id===playerData.clanId).bonusType==='speed'?1.1:1;
-    const speed=MOVE_SPEED*spMult*(state.keys.shift?1.4:1);
+    const clan=CLANS.find(c=>c.id===playerData.clanId);
+    const spMult=clan.bonusType==='speed'?1.1:1;
+    const baseSpeed=state.isCrouching?MOVE_SPEED*.5:MOVE_SPEED;
+    const sprintMult=state.keys.shift?1.4:1;
+    const speed=baseSpeed*spMult*sprintMult;
     const fwd=new THREE.Vector3(); state.camera.getWorldDirection(fwd); fwd.y=0; fwd.normalize();
     const right=new THREE.Vector3().crossVectors(fwd,new THREE.Vector3(0,1,0)).normalize();
     const mv=new THREE.Vector3();
-    if(state.keys.w) mv.add(fwd);
-    if(state.keys.s) mv.sub(fwd);
-    if(state.keys.d) mv.add(right);
-    if(state.keys.a) mv.sub(right);
-    if(mv.lengthSq()>0) mv.normalize();
+    let ix=0, iz=0;
+    if(state.keys.w) iz+=1;
+    if(state.keys.s) iz-=1;
+    if(state.keys.d) ix+=1;
+    if(state.keys.a) ix-=1;
+    if(mobile.joyMoveActive){ix+=mobile.moveX; iz-=mobile.moveY;}
+    if(ix!==0||iz!==0){
+        mv.addScaledVector(right,ix);
+        mv.addScaledVector(fwd,iz);
+        if(mv.lengthSq()>0) mv.normalize();
+    }
     v.x=THREE.MathUtils.lerp(v.x,mv.x*speed,12*dt);
     v.z=THREE.MathUtils.lerp(v.z,mv.z*speed,12*dt);
     v.y-=GRAVITY*dt;
-    if(state.keys.space&&state.canJump){v.y=JUMP_SPEED;state.canJump=false;}
+    if((state.keys.space)&&state.canJump){v.y=JUMP_SPEED;state.canJump=false;}
     const pos=state.controls.getObject().position;
     const nx=pos.x+v.x*dt, nz=pos.z+v.z*dt;
     if(!checkCollision({x:nx,y:pos.y,z:pos.z})) pos.x=nx; else v.x=0;
     if(!checkCollision({x:pos.x,y:pos.y,z:nz})) pos.z=nz; else v.z=0;
     pos.y+=v.y*dt;
-    if(pos.y<PLAYER_HEIGHT){pos.y=PLAYER_HEIGHT;v.y=0;state.canJump=true;}
+    const targetH=state.isCrouching?PLAYER_HEIGHT*.65:PLAYER_HEIGHT;
+    if(pos.y<targetH){pos.y=targetH;v.y=0;state.canJump=true;}
     if(pos.y>20) pos.y=20;
 }
 
@@ -536,34 +645,29 @@ function updateEnemies(dt){
             const now=performance.now();
             if(now-e.userData.lastAttack>e.userData.attackCooldown){
                 e.userData.lastAttack=now;
-                damagePlayer(12);
+                damagePlayer(e.userData.damage);
             }
         }
     });
 }
 function damagePlayer(amt){
-    if(state.isGameOver) return;
+    if(state.isGameOver||state.isPaused) return;
     state.health-=amt;
     if(state.health<0) state.health=0;
     document.getElementById('health-fill').style.width=state.health+'%';
     const flash=document.getElementById('hit-flash');
     flash.style.opacity='1';
     setTimeout(()=>flash.style.opacity='0',100);
+    if(navigator.vibrate) navigator.vibrate(50);
     if(state.health<=0) endGame();
 }
 
 // ==== МИНИКАРТА ====
 function drawMinimap(){
-    const ctx=state.minimapCtx, size=160, scale=size/WORLD_SIZE;
+    const ctx=state.minimapCtx, size=100, scale=size/WORLD_SIZE;
     ctx.clearRect(0,0,size,size);
     ctx.fillStyle=state.mapKey==='sandstone'?'#3a2a15':'#1a2a40';
     ctx.fillRect(0,0,size,size);
-    ctx.strokeStyle='rgba(255,170,0,.15)'; ctx.lineWidth=1;
-    for(let i=0;i<=6;i++){
-        const p=(i/6)*size;
-        ctx.beginPath();ctx.moveTo(p,0);ctx.lineTo(p,size);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(0,p);ctx.lineTo(size,p);ctx.stroke();
-    }
     const toMap=(x,z)=>[(x+WORLD_SIZE/2)*scale,(z+WORLD_SIZE/2)*scale];
     ctx.fillStyle=state.mapKey==='sandstone'?'#6b5030':'#3a4a60';
     state.colliders.forEach(c=>{
@@ -574,7 +678,7 @@ function drawMinimap(){
     ctx.fillStyle='#f22';
     state.enemies.forEach(e=>{
         const [x,y]=toMap(e.position.x,e.position.z);
-        ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();
     });
     const [mx,my]=toMap(state.camera.position.x,state.camera.position.z);
     ctx.save();
@@ -582,95 +686,154 @@ function drawMinimap(){
     ctx.rotate(-state.camera.rotation.y);
     ctx.fillStyle='#fa0';
     ctx.beginPath();
-    ctx.moveTo(0,-6);ctx.lineTo(-4,4);ctx.lineTo(0,2);ctx.lineTo(4,4);
+    ctx.moveTo(0,-5);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3);
     ctx.closePath();ctx.fill();
     ctx.restore();
 }
 
-// ==== УПРАВЛЕНИЕ ====
-function onKeyDown(e){
-    if(state.isGameOver) return;
-    switch(e.code){
-        case 'KeyW':case 'ArrowUp':state.keys.w=true;break;
-        case 'KeyS':case 'ArrowDown':state.keys.s=true;break;
-        case 'KeyA':case 'ArrowLeft':state.keys.a=true;break;
-        case 'KeyD':case 'ArrowRight':state.keys.d=true;break;
-        case 'Space':state.keys.space=true;e.preventDefault();break;
-        case 'ShiftLeft':state.keys.shift=true;break;
-        case 'KeyR':reload();break;
-        case 'Digit1':if(playerData.ownedWeapons.includes('pistol'))switchWeapon('pistol');break;
-        case 'Digit2':if(playerData.ownedWeapons.includes('akr'))switchWeapon('akr');break;
-        case 'Digit3':if(playerData.ownedWeapons.includes('awp'))switchWeapon('awp');break;
-        case 'Escape':state.controls.unlock();break;
-    }
+// ==== ДЖОЙСТИКИ ====
+function setupJoysticks(){
+    const joyMove=document.getElementById('joy-move');
+    const knob=document.getElementById('joy-move-knob');
+    const lookArea=document.getElementById('joy-look');
+    const R=60;
+    const handleMoveStart=(e)=>{
+        e.preventDefault();
+        const t=e.touches?e.touches[0]:e;
+        const rect=joyMove.getBoundingClientRect();
+        mobile.joyMoveActive=true;
+        mobile.joyMoveStart={x:rect.left+rect.width/2,y:rect.top+rect.height/2};
+        handleMoveMove(e);
+    };
+    const handleMoveMove=(e)=>{
+        if(!mobile.joyMoveActive) return;
+        e.preventDefault();
+        const t=e.touches?e.touches[0]:e;
+        let dx=t.clientX-mobile.joyMoveStart.x;
+        let dy=t.clientY-mobile.joyMoveStart.y;
+        const dist=Math.hypot(dx,dy);
+        if(dist>R){dx=dx/dist*R;dy=dy/dist*R;}
+        knob.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        mobile.moveX=dx/R;
+        mobile.moveY=dy/R;
+    };
+    const handleMoveEnd=(e)=>{
+        mobile.joyMoveActive=false;
+        mobile.moveX=0; mobile.moveY=0;
+        knob.style.transform='translate(-50%,-50%)';
+    };
+    joyMove.addEventListener('touchstart',handleMoveStart,{passive:false});
+    joyMove.addEventListener('touchmove',handleMoveMove,{passive:false});
+    joyMove.addEventListener('touchend',handleMoveEnd);
+    joyMove.addEventListener('touchcancel',handleMoveEnd);
+    joyMove.addEventListener('mousedown',handleMoveStart);
+    document.addEventListener('mousemove',e=>{if(mobile.joyMoveActive)handleMoveMove(e);});
+    document.addEventListener('mouseup',handleMoveEnd);
+    let lookTouchId=null;
+    const handleLookStart=(e)=>{
+        e.preventDefault();
+        const t=e.changedTouches?e.changedTouches[0]:e;
+        lookTouchId=t.identifier!==undefined?t.identifier:'mouse';
+        mobile.lookActive=true;
+        mobile.lastLook={x:t.clientX,y:t.clientY};
+    };
+    const handleLookMove=(e)=>{
+        if(!mobile.lookActive) return;
+        e.preventDefault();
+        let t=null;
+        if(e.changedTouches){
+            for(const tt of e.changedTouches){
+                if(tt.identifier===lookTouchId){t=tt;break;}
+            }
+        } else t=e;
+        if(!t) return;
+        const dx=t.clientX-mobile.lastLook.x;
+        const dy=t.clientY-mobile.lastLook.y;
+        mobile.lastLook={x:t.clientX,y:t.clientY};
+        state.camera.rotation.y-=dx*0.004;
+        state.camera.rotation.x-=dy*0.004;
+        state.camera.rotation.x=Math.max(-Math.PI/2,Math.min(Math.PI/2,state.camera.rotation.x));
+    };
+    const handleLookEnd=(e)=>{mobile.lookActive=false;};
+    lookArea.addEventListener('touchstart',handleLookStart,{passive:false});
+    lookArea.addEventListener('touchmove',handleLookMove,{passive:false});
+    lookArea.addEventListener('touchend',handleLookEnd);
+    lookArea.addEventListener('touchcancel',handleLookEnd);
+    lookArea.addEventListener('mousedown',handleLookStart);
+    document.addEventListener('mousemove',e=>{if(mobile.lookActive)handleLookMove(e);});
+    document.addEventListener('mouseup',handleLookEnd);
 }
-function onKeyUp(e){
-    switch(e.code){
-        case 'KeyW':case 'ArrowUp':state.keys.w=false;break;
-        case 'KeyS':case 'ArrowDown':state.keys.s=false;break;
-        case 'KeyA':case 'ArrowLeft':state.keys.a=false;break;
-        case 'KeyD':case 'ArrowRight':state.keys.d=false;break;
-        case 'Space':state.keys.space=false;break;
-        case 'ShiftLeft':state.keys.shift=false;break;
-    }
+
+// ==== КНОПКИ ====
+function setupButtons(){
+    const hold=(id,onDown,onUp)=>{
+        const el=document.getElementById(id);
+        let active=false;
+        const start=(e)=>{e.preventDefault();if(active)return;active=true;onDown();};
+        const end=(e)=>{if(!active)return;active=false;if(onUp)onUp();};
+        el.addEventListener('touchstart',start,{passive:false});
+        el.addEventListener('touchend',end);
+        el.addEventListener('touchcancel',end);
+        el.addEventListener('mousedown',start);
+        el.addEventListener('mouseup',end);
+        el.addEventListener('mouseleave',end);
+    };
+    hold('btn-fire',()=>{state.autoFire=true; if(!WEAPONS[playerData.equippedWeapon].auto) shoot();},()=>{state.autoFire=false;});
+    hold('btn-aim',()=>{state.isAiming=true; state.camera.fov=55; state.camera.updateProjectionMatrix();},()=>{state.isAiming=false; state.camera.fov=80; state.camera.updateProjectionMatrix();});
+    hold('btn-jump',()=>{if(state.canJump){state.velocity.y=JUMP_SPEED;state.canJump=false;}});
+    hold('btn-crouch',()=>{state.isCrouching=true;},()=>{state.isCrouching=false;});
+    hold('btn-sprint',()=>{state.keys.shift=true;},()=>{state.keys.shift=false;});
+    document.getElementById('btn-reload').addEventListener('click',reload);
+    document.getElementById('btn-swap').addEventListener('click',switchWeapon);
+    document.getElementById('btn-pause').addEventListener('click',pauseGame);
+    document.getElementById('btn-resume').addEventListener('click',resumeGame);
+    document.getElementById('btn-fullscreen').addEventListener('click',()=>{
+        if(!document.fullscreenElement){
+            document.documentElement.requestFullscreen?.();
+        } else document.exitFullscreen?.();
+    });
 }
-function switchWeapon(key){
-    if(playerData.equippedWeapon===key) return;
-    playerData.equippedWeapon=key;
-    createWeaponModel();
-    const w=WEAPONS[key];
-    state.magAmmo=w.magSize;
-    state.reserveAmmo=w.reserveMax;
-    updateAmmoUI();
+function pauseGame(){
+    state.isPaused=true;
+    document.getElementById('paused-msg').style.display='block';
 }
-function onMouseDown(e){
-    if(state.isGameOver) return;
-    if(!state.controls.isLocked){state.controls.lock();return;}
-    if(e.button===0){
-        if(WEAPONS[playerData.equippedWeapon].auto) state.autoFire=true;
-        else shoot();
-    }
-}
-function onMouseUp(e){if(e.button===0)state.autoFire=false;}
-function onResize(){
-    if(!state.camera) return;
-    state.camera.aspect=innerWidth/innerHeight;
-    state.camera.updateProjectionMatrix();
-    state.renderer.setSize(innerWidth,innerHeight);
+function resumeGame(){
+    state.isPaused=false;
+    document.getElementById('paused-msg').style.display='none';
 }
 
 // ==== СТАРТ / КОНЕЦ ====
 function startGame(){
     menu.style.display='none';
+    mapSelect.style.display='none';
     hud.style.display='block';
     if(state.scene) destroyGame();
     createScene();
     const w=WEAPONS[playerData.equippedWeapon];
-    state.magAmmo=w.magSize;
-    state.reserveAmmo=w.reserveMax;
+    state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax;
     updateAmmoUI();
     const clan=CLANS.find(c=>c.id===playerData.clanId);
     state.maxHealth=clan.bonusType==='health'?115:100;
     state.health=state.maxHealth;
     document.getElementById('health-fill').style.width='100%';
     state.score=0; state.sessionMoney=0;
-    state.isGameOver=false; state.isReloading=false;
+    state.isGameOver=false; state.isReloading=false; state.isPaused=false;
     state.velocity.set(0,0,0);
     document.getElementById('score').textContent='0';
     document.getElementById('map-name').textContent=MAPS[state.mapKey].name;
     document.getElementById('game-over').style.display='none';
+    document.getElementById('paused-msg').style.display='none';
     state.renderer.domElement.style.display='block';
-    state.controls.lock();
     state.clock.getDelta();
     animate();
 }
 function endGame(){
     state.isGameOver=true;
-    state.controls.unlock();
     document.getElementById('final-kills').textContent=state.score;
     document.getElementById('final-money').textContent=state.sessionMoney;
     document.getElementById('game-over').style.display='flex';
     playerData.money+=state.sessionMoney;
+    if(navigator.vibrate) navigator.vibrate([100,50,100]);
 }
 function destroyGame(){
     if(state.renderer){
@@ -685,41 +848,53 @@ window.returnToMenu=function(){
     destroyGame();
     hud.style.display='none';
     menu.style.display='flex';
-    updateStats();
-    renderShop();
+    updateStats(); renderShop();
 };
 
-// ==== АНИМАЦИОННЫЙ ЦИКЛ ====
+// ==== ЦИКЛ ====
 function animate(){
     requestAnimationFrame(animate);
     if(!state.renderer||!state.scene) return;
     const dt=Math.min(state.clock.getDelta(),.05);
-    if(!state.isGameOver&&state.controls&&state.controls.isLocked){
+    if(!state.isGameOver&&!state.isPaused){
         if(state.autoFire&&WEAPONS[playerData.equippedWeapon].auto) shoot();
         updateMovement(dt);
         updateEnemies(dt);
         updateParticles(dt);
         drawMinimap();
-        document.getElementById('paused-msg').style.display='none';
-    } else if(!state.isGameOver){
-        document.getElementById('paused-msg').style.display='block';
     }
-    if(state.isGameOver) document.getElementById('paused-msg').style.display='none';
     state.renderer.render(state.scene,state.camera);
 }
 
-// ==== ИНИЦИАЛИЗАЦИЯ ====
-renderMaps(); renderShop(); renderClans(); updateStats();
-document.getElementById('play-btn').addEventListener('click',startGame);
-window.addEventListener('resize',onResize);
-document.addEventListener('keydown',onKeyDown);
-document.addEventListener('keyup',onKeyUp);
-document.addEventListener('mousedown',onMouseDown);
-document.addEventListener('mouseup',onMouseUp);
-document.addEventListener('click',()=>{
-    if(state.scene&&!state.isGameOver&&state.controls&&!state.controls.isLocked) state.controls.lock();
+// ==== ОРИЕНТАЦИЯ ====
+function checkOrientation(){
+    const isPortrait=innerHeight>innerWidth;
+    const rotateHint=document.getElementById('rotate-hint');
+    if(isPortrait&&hud.style.display==='block'){
+        rotateHint.style.display='flex';
+    } else rotateHint.style.display='none';
+}
+window.addEventListener('resize',()=>{
+    if(state.camera){
+        state.camera.aspect=innerWidth/innerHeight;
+        state.camera.updateProjectionMatrix();
+        state.renderer.setSize(innerWidth,innerHeight);
+    }
+    checkOrientation();
 });
-console.log('🎮 Standoff Mini 3D Deluxe загружен!');
+window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,200));
+
+// ==== INIT ====
+renderMaps(); renderShop(); renderClans(); updateStats();
+setupJoysticks(); setupButtons();
+document.getElementById('play-btn').addEventListener('click',()=>{
+    renderMapSelect();
+    mapSelect.style.display='flex';
+});
+document.getElementById('back-to-menu').addEventListener('click',()=>{mapSelect.style.display='none';});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('contextmenu',e=>e.preventDefault());
+console.log('🎮 Standoff Mini 3D Mobile загружен!');
 </script>
 </body>
 </html>

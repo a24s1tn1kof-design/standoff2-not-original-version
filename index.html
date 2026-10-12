@@ -105,18 +105,13 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
 @keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
 #reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:12px;font-weight:bold;background:rgba(0,0,0,.7);padding:5px 14px;border-radius:16px;border:2px solid #fa0;display:none;letter-spacing:2px}
-#fire-zone{position:absolute;top:10px;left:10px;width:80px;height:80px;background:rgba(15,15,25,.5);border:2px solid rgba(255,170,0,.6);border-radius:50%;pointer-events:auto;touch-action:none;z-index:99;display:flex;align-items:center;justify-content:center;cursor:pointer}
-#fire-zone.active{background:rgba(255,50,50,.6);border-color:#f44}
-#fire-zone svg{width:40%;height:40%;color:#fa0;pointer-events:none}
-#fire-zone.active svg{color:#fff}
+#fire-zone{position:absolute;top:10px;left:10px;width:100px;height:100px;background:transparent;border:none;border-radius:50%;pointer-events:auto;touch-action:none;z-index:99;cursor:pointer}
+#fire-zone.active{background:rgba(255,50,50,.12)}
 #round-info{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);border:2px solid #fa0;border-radius:8px;padding:4px 16px;text-align:center;display:none;z-index:100}
 #round-info.show{display:block}
 #round-info .ri-title{font-size:14px;color:#fa0;letter-spacing:3px;font-weight:bold}
 #round-info .ri-sub{font-size:9px;color:#888;letter-spacing:1px;margin-top:2px}
-</style>
-</head>
-<body>
-  <style>
+#debug-hud{position:absolute;top:60px;left:8px;background:rgba(0,0,0,.85);color:#0f0;padding:6px 10px;font-size:11px;border-radius:6px;font-family:monospace;pointer-events:none;z-index:9999;white-space:pre}
 #joy-move{position:absolute;bottom:14px;left:14px;width:110px;height:110px;background:rgba(0,0,0,.25);border:2px solid rgba(255,170,0,.5);border-radius:50%;pointer-events:auto;touch-action:none;z-index:30}
 #joy-move-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;background:rgba(255,170,0,.7);border:2px solid #fa0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
 #hud .ctrl-btn{position:absolute;background:rgba(15,15,25,.72);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;padding:8px;transition:all .1s;touch-action:none;z-index:200}
@@ -226,7 +221,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 #awp-scope .awp-close{position:absolute;top:14px;right:14px;width:44px;height:44px;background:rgba(0,0,0,.85);border:2px solid #fa0;border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;padding:10px;z-index:10}
 #awp-scope .awp-close:active{background:#fa0;color:#111}
 #awp-scope .awp-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);color:#fa0;font-size:11px;letter-spacing:2px;background:rgba(0,0,0,.7);padding:6px 14px;border-radius:20px;border:1px solid #fa0;pointer-events:none}
-#button-editor{position:fixed;inset:0;z-index:3001;display:none;background:rgba(5,5,15,.9)}
+#button-editor{position:fixed;inset:0;z-index:3001;display:none;background:#000}
 #button-editor.active{display:block}
 .editor-btn{position:absolute;background:rgba(255,170,0,.35);border:3px dashed #fa0;border-radius:50%;cursor:move;touch-action:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;padding:2px;text-align:center;font-weight:bold;pointer-events:auto}
 .editor-btn.selected{border-color:#4f4;border-style:solid;background:rgba(68,255,68,.25)}
@@ -353,8 +348,8 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="ammo-hud"><div class="wname" id="weapon-name">AKR-12</div><div class="ammo" id="ammo">30<span class="res">/90</span></div></div>
 <div id="minimap"><canvas id="minimap-canvas" width="88" height="88"></canvas></div>
 <div id="killfeed"></div>
-<div id="debug-hud" style="display:none;position:absolute;top:60px;left:8px;background:rgba(0,0,0,.85);color:#0f0;padding:6px 10px;font-size:11px;border-radius:6px;font-family:monospace;pointer-events:none;z-index:9999;white-space:pre">JOY: --</div>
-<div id="fire-zone"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg></div>
+<div id="debug-hud" style="display:none">JOY: --</div>
+<div id="fire-zone"></div>
 <div id="joy-move"><div id="joy-move-knob"></div></div>
 <div class="ctrl-btn small" id="btn-pause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></div>
 <div class="ctrl-btn small" id="btn-fullscreen"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
@@ -531,7 +526,9 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 </script>
 <script type="module">
 import * as THREE from 'three';
-  const modalQueue = [];
+
+// ==== МОДАЛЬНЫЕ ОКНА ====
+const modalQueue = [];
 let modalActive = false;
 function showModal(config){
     modalQueue.push(config);
@@ -546,12 +543,7 @@ function processModalQueue(){
         document.getElementById('modal-alert-title').textContent = cfg.title || 'УВЕДОМЛЕНИЕ';
         document.getElementById('modal-alert-text').textContent = cfg.text || '';
         m.classList.add('show');
-        const handler = ()=>{
-            document.getElementById('modal-alert-ok').removeEventListener('click', handler);
-            m.classList.remove('show');
-            setTimeout(processModalQueue, 80);
-            if(cfg.onOk) cfg.onOk();
-        };
+        const handler = ()=>{ document.getElementById('modal-alert-ok').removeEventListener('click', handler); m.classList.remove('show'); setTimeout(processModalQueue, 80); if(cfg.onOk) cfg.onOk(); };
         document.getElementById('modal-alert-ok').addEventListener('click', handler);
     } else if(cfg.type === 'confirm'){
         const m = document.getElementById('modal-confirm');
@@ -560,10 +552,7 @@ function processModalQueue(){
         m.classList.add('show');
         const okH = ()=>{ cleanup(); m.classList.remove('show'); setTimeout(processModalQueue, 80); if(cfg.onOk) cfg.onOk(); };
         const cancelH = ()=>{ cleanup(); m.classList.remove('show'); setTimeout(processModalQueue, 80); if(cfg.onCancel) cfg.onCancel(); };
-        const cleanup = ()=>{
-            document.getElementById('modal-confirm-ok').removeEventListener('click', okH);
-            document.getElementById('modal-confirm-cancel').removeEventListener('click', cancelH);
-        };
+        const cleanup = ()=>{ document.getElementById('modal-confirm-ok').removeEventListener('click', okH); document.getElementById('modal-confirm-cancel').removeEventListener('click', cancelH); };
         document.getElementById('modal-confirm-ok').addEventListener('click', okH);
         document.getElementById('modal-confirm-cancel').addEventListener('click', cancelH);
     } else if(cfg.type === 'prompt'){
@@ -577,28 +566,18 @@ function processModalQueue(){
         setTimeout(()=>inp.focus(), 100);
         const okH = ()=>{ const val = inp.value.trim(); cleanup(); m.classList.remove('show'); setTimeout(processModalQueue, 80); if(cfg.onOk) cfg.onOk(val); };
         const cancelH = ()=>{ cleanup(); m.classList.remove('show'); setTimeout(processModalQueue, 80); if(cfg.onCancel) cfg.onCancel(); };
-        const cleanup = ()=>{
-            document.getElementById('modal-prompt-ok').removeEventListener('click', okH);
-            document.getElementById('modal-prompt-cancel').removeEventListener('click', cancelH);
-            inp.removeEventListener('keydown', enterH);
-        };
+        const cleanup = ()=>{ document.getElementById('modal-prompt-ok').removeEventListener('click', okH); document.getElementById('modal-prompt-cancel').removeEventListener('click', cancelH); inp.removeEventListener('keydown', enterH); };
         const enterH = (e)=>{ if(e.key === 'Enter') okH(); };
         document.getElementById('modal-prompt-ok').addEventListener('click', okH);
         document.getElementById('modal-prompt-cancel').addEventListener('click', cancelH);
         inp.addEventListener('keydown', enterH);
     }
 }
-function myAlert(text, title = 'УВЕДОМЛЕНИЕ'){
-    return new Promise(resolve => showModal({type:'alert', title, text, onOk: resolve}));
-}
-function myConfirm(text, title = 'ПОДТВЕРЖДЕНИЕ'){
-    return new Promise(resolve => showModal({type:'confirm', title, text, onOk: ()=>resolve(true), onCancel: ()=>resolve(false)}));
-}
-function myPrompt(text, value = '', title = 'ВВОД', maxLength = 30){
-    return new Promise(resolve => showModal({type:'prompt', title, text, value, maxLength, onOk: (v)=>resolve(v), onCancel: ()=>resolve(null)}));
-}
+function myAlert(text, title = 'УВЕДОМЛЕНИЕ'){ return new Promise(resolve => showModal({type:'alert', title, text, onOk: resolve})); }
+function myConfirm(text, title = 'ПОДТВЕРЖДЕНИЕ'){ return new Promise(resolve => showModal({type:'confirm', title, text, onOk: ()=>resolve(true), onCancel: ()=>resolve(false)})); }
+function myPrompt(text, value = '', title = 'ВВОД', maxLength = 30){ return new Promise(resolve => showModal({type:'prompt', title, text, value, maxLength, onOk: (v)=>resolve(v), onCancel: ()=>resolve(null)})); }
 
-// ==== ОРУЖИЕ (нож первый) ====
+// ==== ОРУЖИЕ ====
 const WEAPONS = {
     knife:{name:'НОЖ',damage:55,headshotMult:3,rpm:120,magSize:999,reserveMax:999,reloadTime:0,auto:false,spread:0,range:2.5,model:'knife',isMelee:true},
     pistol:{name:'P-9 PISTOL',damage:25,headshotMult:3,rpm:300,magSize:12,reserveMax:48,reloadTime:1400,auto:false,spread:.008,range:60,model:'pistol'},
@@ -607,8 +586,8 @@ const WEAPONS = {
 };
 
 const MAPS = {
-    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:.7,sunColor:0xffdd88,generate:buildSandstone,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>',spawn:[15,15]},
-    templ:{name:'TEMPL',desc:'Древний храм в горах.',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:.5,sunColor:0xccddff,generate:buildTempl,icon:'<svg viewBox="0 0 24 24"><path d="M12 2L2 8h20zM4 10v10h2V10zm4 0v10h2V10zm4 0v10h2V10zm4 0v10h2V10zM2 22h20v-2H2z"/></svg>',spawn:[20,0]}
+    sandstone:{name:'SANDSTONE',desc:'Пустынная крепость.',groundColor:0xc9a06a,wallColor:0x8b6f47,skyColor:0xeedd99,fogColor:0xeedd99,fogFar:80,ambient:0xffeecc,ambientIntensity:1.2,sunColor:0xffdd88,generate:null,icon:'<svg viewBox="0 0 24 24"><path d="M3 20h18L21 8l-3-2-4 4-2-6-2 6-4-4-3 2z"/></svg>',spawn:[15,15]},
+    templ:{name:'TEMPL',desc:'Древний храм в горах.',groundColor:0x5a6a80,wallColor:0x3a4a60,skyColor:0x1a2a40,fogColor:0x2a3a55,fogFar:70,ambient:0x8899bb,ambientIntensity:1.2,sunColor:0xccddff,generate:null,icon:'<svg viewBox="0 0 24 24"><path d="M12 2L2 8h20zM4 10v10h2V10zm4 0v10h2V10zm4 0v10h2V10zm4 0v10h2V10zM2 22h20v-2H2z"/></svg>',spawn:[20,0]}
 };
 
 const SKINS = {
@@ -665,7 +644,7 @@ const PLAYER_HEIGHT=1.7,PLAYER_RADIUS=.6,WORLD_SIZE=90,HALF_WORLD=WORLD_SIZE/2-2
       GRAVITY=22,JUMP_SPEED=7,MOVE_SPEED=6,BASE_LOOK=0.004;
 const mobile = {moveX:0,moveY:0,joyMoveActive:false,joyMoveStart:{x:0,y:0},lookActive:false,lookId:null,lookLast:{x:0,y:0}};
 
-const SAVE_KEY = 'standoff_save_v13';
+const SAVE_KEY = 'standoff_save_v15';
 function saveProfile(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){} }
 function loadProfile(){
     try { const s = localStorage.getItem(SAVE_KEY); if(s){ const p = JSON.parse(s); Object.keys(p).forEach(k=>{ if(k in playerData) playerData[k]=p[k]; }); } } catch(e){}
@@ -673,7 +652,7 @@ function loadProfile(){
     updateProfileUI();
     applyCrosshair();
 }
-function updateProfileUI(){
+  function updateProfileUI(){
     document.getElementById('p-id-val').textContent = playerData.playerId;
     document.getElementById('p-name').textContent = playerData.playerName;
     const av = document.getElementById('avatar');
@@ -744,7 +723,9 @@ document.querySelectorAll('.overlay-close').forEach(btn=>{
     btn.addEventListener('click', handler, true);
 });
 document.getElementById('get-reward-btn').addEventListener('click', claimDailyReward);
-  function renderCases(){
+
+// ==== КЕЙСЫ ====
+function renderCases(){
     const grid = document.getElementById('cases-grid'); if(!grid) return;
     grid.innerHTML = '';
     document.getElementById('cases-balance').textContent = playerData.money;
@@ -823,6 +804,7 @@ function renderRoulette(items, winner, caseInfo){
 function closeRoulette(){ document.getElementById('case-roulette').style.display = 'none'; renderCases(); }
 document.getElementById('btn-close-roulette').addEventListener('click', closeRoulette);
 
+// ==== ИНВЕНТАРЬ ====
 let invFilter = 'all';
 function renderInventory(){
     const grid = document.getElementById('inventory-grid'); if(!grid) return;
@@ -891,6 +873,7 @@ document.querySelectorAll('.inv-tab').forEach(tab=>{
     });
 });
 
+// ==== КЛАНЫ ====
 function renderClans(){
     const grid = document.getElementById('clans-grid'); if(!grid) return;
     grid.innerHTML = '';
@@ -940,6 +923,7 @@ async function createClan(){
 }
 document.getElementById('btn-create-clan').addEventListener('click', createClan);
 
+// ==== НАСТРОЙКИ ====
 function initSettings(){
     document.getElementById('set-sens').value = playerData.sensitivity;
     document.getElementById('set-sens-val').textContent = playerData.sensitivity;
@@ -1011,8 +995,10 @@ function applyButtonSettings(){
             }
         });
     }
-  }
-  let editorState = { active:false, selected:null, dragging:null, layout:{} };
+}
+
+// ==== РЕДАКТОР КНОПОК ====
+let editorState = { active:false, selected:null, dragging:null, layout:{} };
 const EDITOR_BTNS = ['minimap','fire-zone','joy-move','btn-fire','btn-aim','btn-jump','btn-crouch','btn-reload','btn-swap','btn-sprint','btn-pause','btn-fullscreen'];
 const BTN_LABELS = {'minimap':'МИНИКАРТА','fire-zone':'ЗОНА СТРЕЛЬБЫ','joy-move':'ДЖОЙСТИК','btn-fire':'ОГОНЬ','btn-aim':'ПРИЦЕЛ','btn-jump':'ПРЫЖОК','btn-crouch':'ПРИСЕД','btn-reload':'ПЕРЕЗАР','btn-swap':'СМЕНА','btn-sprint':'БЕГ','btn-pause':'ПАУЗА','btn-fullscreen':'ФУЛЛСКРИН'};
 function openButtonEditor(){
@@ -1138,6 +1124,7 @@ document.getElementById('btn-open-editor').addEventListener('click', openButtonE
 document.getElementById('btn-reset-layout').addEventListener('click', resetButtonLayout);
 document.getElementById('btn-reset-data').addEventListener('click', resetAllData);
 
+// ==== КАРТЫ (КАК БЫЛИ) ====
 function addCollider(x,y,z,w,h,d){state.colliders.push({min:new THREE.Vector3(x-w/2,y-h/2,z-d/2),max:new THREE.Vector3(x+w/2,y+h/2,z+d/2)});}
 function addBox(x,y,z,w,h,d,mat,collide=true){
     const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
@@ -1193,8 +1180,14 @@ function buildTempl(){
     const corMat=new THREE.MeshStandardMaterial({color:0x4a5a70,roughness:.75});
     [[-25,-25,3,5,20],[25,-25,3,5,20],[-25,25,3,5,20],[25,25,3,5,20]].forEach(([x,z,w,h,d])=>addBox(x,h/2,z,w,h,d,corMat));
     state.spawnPoints=[[-38,-38],[38,-38],[-38,38],[38,38],[-30,0],[30,0],[0,-30],[0,30]];
-  }
-  function createScene(){
+}
+
+// ВАЖНО: привязываем функции generate ПОСЛЕ их объявления
+MAPS.sandstone.generate = buildSandstone;
+MAPS.templ.generate = buildTempl;
+  // ==== СЦЕНА ====
+function createScene(){
+    console.log('createScene START');
     const map=MAPS[state.mapKey];
     state.scene=new THREE.Scene();
     state.scene.background=new THREE.Color(map.skyColor);
@@ -1203,13 +1196,19 @@ function buildTempl(){
     const sp = map.spawn || [15,15];
     state.camera.position.set(sp[0],PLAYER_HEIGHT,sp[1]);
     state.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+    console.log('WebGLRenderer OK');
     state.renderer.setSize(innerWidth,innerHeight);
     const pr = devicePixelRatio > 1.5 ? 1.5 : devicePixelRatio;
     state.renderer.setPixelRatio(pr);
     state.renderer.shadowMap.enabled=true;
     state.renderer.shadowMap.type=THREE.PCFShadowMap;
-    state.renderer.domElement.style.display='none';
+    state.renderer.domElement.style.display='block';
+    state.renderer.domElement.style.position='fixed';
+    state.renderer.domElement.style.top='0';
+    state.renderer.domElement.style.left='0';
+    state.renderer.domElement.style.zIndex='1';
     document.body.appendChild(state.renderer.domElement);
+    console.log('Canvas appended');
     state.scene.add(state.camera);
     state.raycaster=new THREE.Raycaster();
     state.clock=new THREE.Clock();
@@ -1217,14 +1216,22 @@ function buildTempl(){
     state.muzzleFlashTimer=0; state.hitMarkerTimer=0; state.hitFlashTimer=0;
     state.recoilPitch=0; state.recoilYaw=0;
     state.scene.add(new THREE.AmbientLight(map.ambient,map.ambientIntensity));
-    const sun=new THREE.DirectionalLight(map.sunColor,1.1);
+    const sun=new THREE.DirectionalLight(map.sunColor,1.2);
     sun.position.set(30,40,20); sun.castShadow=false;
     state.scene.add(sun);
+    state.scene.add(new THREE.HemisphereLight(map.skyColor, map.groundColor, 0.6));
     state.colliders=[]; state.spawnPoints=[];
-    map.generate();
+    console.log('Before map.generate');
+    try {
+        map.generate();
+        console.log('Map generated, objects:', state.scene.children.length, 'colliders:', state.colliders.length);
+    } catch(err){
+        console.error('MAP GENERATE ERROR:', err);
+    }
     createWeaponModel();
     state.minimapCtx=document.getElementById('minimap-canvas').getContext('2d');
     updateCameraFromYawPitch();
+    console.log('createScene DONE');
 }
 function updateCameraFromYawPitch(){
     const e = new THREE.Euler(state.pitch + state.recoilPitch, state.yaw + state.recoilYaw, 0, 'YXZ');
@@ -1282,6 +1289,7 @@ function spawnEnemy(){
     e.userData={hp:30,maxHp:30,head,body,lastAttack:0,attackCooldown:600,speed:2.5+Math.random()*.6,damage:15};
     state.scene.add(e); state.enemies.push(e);
 }
+// ==== СТРЕЛЬБА ====
 function shoot(){
     if(state.isReloading||state.isGameOver||state.isPaused) return;
     const w=WEAPONS[playerData.equippedWeapon];
@@ -1538,8 +1546,9 @@ function drawMinimap(){
     ctx.fillStyle='#fa0';
     ctx.beginPath(); ctx.moveTo(0,-4);ctx.lineTo(-3,3);ctx.lineTo(0,1.5);ctx.lineTo(3,3); ctx.closePath(); ctx.fill();
     ctx.restore();
-  }
-  function setupJoysticks(){
+}
+// ==== ДЖОЙСТИКИ ====
+function setupJoysticks(){
     const joyMove=document.getElementById('joy-move');
     const knob=document.getElementById('joy-move-knob');
     const R=55;
@@ -1707,6 +1716,7 @@ function toggleAim(){
         state.camera.updateProjectionMatrix();
     }
 }
+// ==== КНОПКИ ====
 function setupButtons(){
     const hold=(id,onDown,onUp)=>{
         const el=document.getElementById(id); if(!el) return;
@@ -1813,7 +1823,8 @@ function toggleFullscreen(){
 function pauseGame(){ state.isPaused=true; document.getElementById('paused-msg').style.display='block'; }
 function resumeGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; }
 function leaveGame(){ state.isPaused=false; document.getElementById('paused-msg').style.display='none'; returnToMenu(); }
-  const menu=document.getElementById('menu'), hud=document.getElementById('hud');
+// ==== МЕНЮ ====
+const menu=document.getElementById('menu'), hud=document.getElementById('hud');
 const mapSelect=document.getElementById('map-select');
 document.querySelectorAll('.side-icon').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -1855,6 +1866,7 @@ function startNextWave(){
     state.currentWaveEnemies = 10;
 }
 function startGame(){
+    console.log('startGame called');
     menu.style.display='none'; mapSelect.style.display='none'; hud.style.display='block';
     if(state.scene) destroyGame();
     state.keys={w:false,a:false,s:false,d:false,space:false,shift:false};
@@ -1869,6 +1881,7 @@ function startGame(){
     state.currentWaveEnemies = 0;
     state.totalKillsNeeded = 30;
     createScene();
+    console.log('createScene returned');
     const w=WEAPONS[playerData.equippedWeapon];
     if(w.isMelee){ state.magAmmo=0; state.reserveAmmo=0; }
     else { state.magAmmo=w.magSize; state.reserveAmmo=w.reserveMax; }
@@ -1886,7 +1899,6 @@ function startGame(){
     document.getElementById('crosshair').style.opacity = '0.95';
     document.getElementById('btn-aim').classList.remove('active');
     document.getElementById('round-info').classList.add('show');
-    state.renderer.domElement.style.display='block';
     applyButtonSettings(); applyButtonLayout();
     updateDebugVisibility();
     document.getElementById('crouch-icon-down').style.display = 'block';
@@ -1896,6 +1908,7 @@ function startGame(){
     state.clock.getDelta();
     checkOrientation();
     animate();
+    console.log('animate started');
 }
 function endMatch(win){
     state.isGameOver=true;
@@ -1929,52 +1942,61 @@ function returnToMenu(){
     document.getElementById('match-end').classList.remove('show');
     document.getElementById('awp-scope').classList.remove('active');
     document.getElementById('round-info').classList.remove('show');
+    document.querySelectorAll('.overlay').forEach(o=>o.style.display='none');
+    document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));
+    document.getElementById('button-editor').classList.remove('active');
     menu.style.display='flex';
+    menu.style.visibility='visible';
+    menu.style.opacity='1';
     updateProfileUI();
 }
 window.returnToMenu = returnToMenu;
 function animate(){
     requestAnimationFrame(animate);
     if(!state.renderer||!state.scene) return;
-    const dt=Math.min(state.clock.getDelta(),.05);
-    if(state.muzzleFlashTimer>0){
-        state.muzzleFlashTimer-=dt;
-        if(state.muzzleFlashTimer<=0) state.muzzleFlash.intensity=0;
-    }
-    if(state.hitMarkerTimer>0){
-        state.hitMarkerTimer-=dt;
-        if(state.hitMarkerTimer<=0){
-            document.getElementById('hit-marker').style.opacity='0';
-            document.getElementById('crosshair').classList.remove('hit');
+    try {
+        const dt=Math.min(state.clock.getDelta(),.05);
+        if(state.muzzleFlashTimer>0){
+            state.muzzleFlashTimer-=dt;
+            if(state.muzzleFlashTimer<=0) state.muzzleFlash.intensity=0;
         }
-    }
-    if(state.hitFlashTimer>0){
-        state.hitFlashTimer-=dt;
-        if(state.hitFlashTimer<=0) document.getElementById('hit-flash').style.opacity='0';
-    }
-    if(state.recoilPitch > 0){
-        state.recoilPitch = Math.max(0, state.recoilPitch - dt * 0.3);
-        updateCameraFromYawPitch();
-    }
-    if(Math.abs(state.recoilYaw) > 0){
-        state.recoilYaw *= (1 - dt * 5);
-        if(Math.abs(state.recoilYaw) < 0.001) state.recoilYaw = 0;
-        updateCameraFromYawPitch();
-    }
-    if(!state.isGameOver&&!state.isPaused){
-        if(state.autoFire && WEAPONS[playerData.equippedWeapon].auto && !WEAPONS[playerData.equippedWeapon].isMelee) shoot();
-        if(state.matchState === 'playing' && state.wave < 3){
-            state.waveTimer += dt;
-            if(state.waveTimer >= 20 && state.currentWaveEnemies <= 0){
-                startNextWave();
+        if(state.hitMarkerTimer>0){
+            state.hitMarkerTimer-=dt;
+            if(state.hitMarkerTimer<=0){
+                document.getElementById('hit-marker').style.opacity='0';
+                document.getElementById('crosshair').classList.remove('hit');
             }
         }
-        updateMovement(dt);
-        updateEnemies(dt);
-        updateParticles(dt);
-        drawMinimap();
+        if(state.hitFlashTimer>0){
+            state.hitFlashTimer-=dt;
+            if(state.hitFlashTimer<=0) document.getElementById('hit-flash').style.opacity='0';
+        }
+        if(state.recoilPitch > 0){
+            state.recoilPitch = Math.max(0, state.recoilPitch - dt * 0.3);
+            updateCameraFromYawPitch();
+        }
+        if(Math.abs(state.recoilYaw) > 0){
+            state.recoilYaw *= (1 - dt * 5);
+            if(Math.abs(state.recoilYaw) < 0.001) state.recoilYaw = 0;
+            updateCameraFromYawPitch();
+        }
+        if(!state.isGameOver&&!state.isPaused){
+            if(state.autoFire && WEAPONS[playerData.equippedWeapon].auto && !WEAPONS[playerData.equippedWeapon].isMelee) shoot();
+            if(state.matchState === 'playing' && state.wave < 3){
+                state.waveTimer += dt;
+                if(state.waveTimer >= 20 && state.currentWaveEnemies <= 0){
+                    startNextWave();
+                }
+            }
+            updateMovement(dt);
+            updateEnemies(dt);
+            updateParticles(dt);
+            drawMinimap();
+        }
+        state.renderer.render(state.scene,state.camera);
+    } catch(err){
+        console.error('ANIMATE ERROR:', err);
     }
-    state.renderer.render(state.scene,state.camera);
 }
 function checkOrientation(){
     const isPortrait=innerHeight>innerWidth;
@@ -1999,7 +2021,8 @@ window.addEventListener('resize',()=>{
     checkOrientation();
 });
 window.addEventListener('orientationchange',()=>setTimeout(checkOrientation,200));
-  loadProfile();
+// ==== INIT ====
+loadProfile();
 setupJoysticks();
 setupButtons();
 checkOrientation();
@@ -2050,7 +2073,6 @@ document.addEventListener('keyup',e=>{
         case 'ShiftLeft':state.keys.shift=false;break;
     }
 });
-// ПК: ЛКМ по canvas = стрельба
 document.addEventListener('mousedown', (e)=>{
     if(e.button !== 0) return;
     if(!state.scene || state.isGameOver || state.isPaused) return;
@@ -2063,6 +2085,6 @@ document.addEventListener('mouseup', (e)=>{
     if(e.button === 0) state.autoFire = false;
 });
 console.log('🎮 Standoff Mini 3D загружен!');
-  </script>
+</script>
 </body>
 </html>

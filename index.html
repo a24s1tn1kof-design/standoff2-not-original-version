@@ -113,11 +113,11 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 .kill-msg{background:rgba(0,0,0,.8);border-left:2px solid #fa0;padding:2px 6px;font-size:9px;border-radius:3px;animation:fo 3s forwards}
 @keyframes fo{0%,70%{opacity:1}100%{opacity:0}}
 #reload-msg{position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);color:#fa0;font-size:12px;font-weight:bold;background:rgba(0,0,0,.7);padding:5px 14px;border-radius:16px;border:2px solid #fa0;display:none;letter-spacing:2px}
+#debug-hud{position:absolute;top:60px;left:8px;background:rgba(0,0,0,.85);color:#0f0;padding:6px 10px;font-size:11px;border-radius:6px;font-family:monospace;pointer-events:none;z-index:9999;white-space:pre}
 </style>
 </head>
 <body>
-   <style>
-#look-right{position:absolute;top:0;right:0;width:55%;height:100%;pointer-events:auto;touch-action:none;z-index:40;background:transparent}
+  <style>
 #joy-move{position:absolute;bottom:14px;left:14px;width:110px;height:110px;background:rgba(0,0,0,.25);border:2px solid rgba(255,170,0,.5);border-radius:50%;pointer-events:auto;touch-action:none;z-index:30}
 #joy-move-knob{position:absolute;top:50%;left:50%;width:48px;height:48px;background:rgba(255,170,0,.7);border:2px solid #fa0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
 #hud .ctrl-btn{position:absolute;background:rgba(15,15,25,.72);border:2px solid rgba(255,170,0,.7);border-radius:50%;color:#fa0;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;padding:8px;transition:all .1s;touch-action:none;z-index:100}
@@ -334,7 +334,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 <div id="ammo-hud"><div class="wname" id="weapon-name">AKR-12</div><div class="ammo" id="ammo">30<span class="res">/90</span></div></div>
 <div id="minimap"><canvas id="minimap-canvas" width="88" height="88"></canvas></div>
 <div id="killfeed"></div>
-<div id="look-right"></div>
+<div id="debug-hud">JOY: --</div>
 <div id="joy-move"><div id="joy-move-knob"></div></div>
 <div class="ctrl-btn small" id="btn-pause"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></div>
 <div class="ctrl-btn small" id="btn-fullscreen"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></div>
@@ -462,7 +462,7 @@ svg{width:100%;height:100%;display:block;fill:currentColor}
 </script>
 <script type="module">
 import * as THREE from 'three';
-    const modalQueue = [];
+   const modalQueue = [];
 let modalActive = false;
 function showModal(config){
     modalQueue.push(config);
@@ -582,7 +582,7 @@ const state = {
 const PLAYER_HEIGHT=1.7,PLAYER_RADIUS=.6,WORLD_SIZE=90,HALF_WORLD=WORLD_SIZE/2-2,
       GRAVITY=22,JUMP_SPEED=7,MOVE_SPEED=6,BASE_LOOK=0.004;
 const mobile = {moveX:0,moveY:0,joyMoveActive:false,joyMoveStart:{x:0,y:0},lookActive:false,lookId:null,lookLast:{x:0,y:0}};
-const SAVE_KEY = 'standoff_save_v8';
+const SAVE_KEY = 'standoff_save_v10';
 function saveProfile(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(playerData)); } catch(e){} }
 function loadProfile(){
     try { const s = localStorage.getItem(SAVE_KEY); if(s){ const p = JSON.parse(s); Object.keys(p).forEach(k=>{ if(k in playerData) playerData[k]=p[k]; }); } } catch(e){}
@@ -1277,8 +1277,10 @@ function updateMovement(dt){
     let ix=0, iz=0;
     if(state.keys.w) iz+=1; if(state.keys.s) iz-=1;
     if(state.keys.d) ix+=1; if(state.keys.a) ix-=1;
-    // ДЖОЙСТИК: палец вверх → вперёд (относительно камеры)
     if(mobile.joyMoveActive){ ix+=mobile.moveX; iz-=mobile.moveY; }
+    // Debug HUD
+    const dbg = document.getElementById('debug-hud');
+    if(dbg) dbg.textContent = `JOY:${mobile.joyMoveActive?'ON':'off'} X:${mobile.moveX.toFixed(2)} Y:${mobile.moveY.toFixed(2)}\nix:${ix.toFixed(2)} iz:${iz.toFixed(2)}\npos:${state.camera.position.x.toFixed(1)},${state.camera.position.z.toFixed(1)}`;
     if(ix!==0||iz!==0){
         mv.addScaledVector(right,ix); mv.addScaledVector(fwd,iz);
         if(mv.lengthSq()>0) mv.normalize();
@@ -1355,76 +1357,153 @@ function drawMinimap(){
    function setupJoysticks(){
     const joyMove=document.getElementById('joy-move');
     const knob=document.getElementById('joy-move-knob');
-    const lookRight=document.getElementById('look-right');
     const R=55;
-    // ДЖОЙСТИК - палец тянет в направлении движения относительно камеры
-    const startMove=(e)=>{
+    
+    function updateJoystick(x, y){
+        let dx = x - mobile.joyMoveStart.x;
+        let dy = y - mobile.joyMoveStart.y;
+        const dist = Math.hypot(dx, dy);
+        if(dist > R){ dx = dx/dist*R; dy = dy/dist*R; }
+        knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+        mobile.moveX = dx/R;
+        mobile.moveY = dy/R;
+    }
+    function getCenter(){
+        const rect = joyMove.getBoundingClientRect();
+        return {x: rect.left + rect.width/2, y: rect.top + rect.height/2};
+    }
+    
+    // ===== TOUCH =====
+    let activeTouchId = null;
+    joyMove.addEventListener('touchstart', (e)=>{
         e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-        const t=e.touches?e.touches[0]:e;
-        const rect=joyMove.getBoundingClientRect();
-        mobile.joyMoveActive=true;
-        mobile.joyMoveStart={x:rect.left+rect.width/2,y:rect.top+rect.height/2};
-        moveUpdate(e);
-    };
-    const moveUpdate=(e)=>{
-        if(!mobile.joyMoveActive) return;
+        if(activeTouchId !== null) return;
+        const t = e.changedTouches[0];
+        activeTouchId = t.identifier;
+        mobile.joyMoveActive = true;
+        mobile.joyMoveStart = getCenter();
+        updateJoystick(t.clientX, t.clientY);
+    }, {passive:false});
+    joyMove.addEventListener('touchmove', (e)=>{
+        if(activeTouchId === null) return;
         e.preventDefault(); e.stopPropagation();
-        const t=e.touches?e.touches[0]:e;
-        let dx=t.clientX-mobile.joyMoveStart.x;
-        let dy=t.clientY-mobile.joyMoveStart.y;
-        const dist=Math.hypot(dx,dy);
-        if(dist>R){dx=dx/dist*R;dy=dy/dist*R;}
-        knob.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-        // Нормализуем: палец вверх = moveY отрицательный, палец вправо = moveX положительный
-        mobile.moveX=dx/R;
-        mobile.moveY=dy/R;
-    };
-    const endMove=()=>{ mobile.joyMoveActive=false; mobile.moveX=0; mobile.moveY=0; knob.style.transform='translate(-50%,-50%)'; };
-    joyMove.addEventListener('touchstart',startMove,{passive:false});
-    joyMove.addEventListener('touchmove',moveUpdate,{passive:false});
-    joyMove.addEventListener('touchend',endMove);
-    joyMove.addEventListener('touchcancel',endMove);
-    joyMove.addEventListener('mousedown',startMove);
-    document.addEventListener('mousemove',e=>{if(mobile.joyMoveActive)moveUpdate(e);});
-    document.addEventListener('mouseup',endMove);
-    // LOOK - только правая зона
-    let lookId=null;
-    const startLook=(e)=>{
-        if(e.target && e.target.closest){
-            if(e.target.closest('.ctrl-btn')) return;
-            if(e.target.closest('#paused-msg')) return;
-            if(e.target.closest('.overlay')) return;
-            if(e.target.closest('#button-editor')) return;
-            if(e.target.closest('.modal')) return;
+        for(const t of e.changedTouches){
+            if(t.identifier === activeTouchId){
+                updateJoystick(t.clientX, t.clientY);
+                break;
+            }
         }
-        e.preventDefault();
-        const t=e.changedTouches?e.changedTouches[0]:e;
-        lookId=t.identifier!==undefined?t.identifier:'mouse';
-        mobile.lookActive=true;
-        mobile.lookLast={x:t.clientX,y:t.clientY};
+    }, {passive:false});
+    const endTouch = (e)=>{
+        for(const t of e.changedTouches){
+            if(t.identifier === activeTouchId){
+                activeTouchId = null;
+                mobile.joyMoveActive = false;
+                mobile.moveX = 0; mobile.moveY = 0;
+                knob.style.transform = 'translate(-50%,-50%)';
+                break;
+            }
+        }
     };
-    const updateLook=(e)=>{
-        if(!mobile.lookActive) return;
-        let t=null;
-        if(e.changedTouches){ for(const tt of e.changedTouches){ if(tt.identifier===lookId){t=tt;break;} } } else t=e;
-        if(!t) return;
-        const dx=t.clientX-mobile.lookLast.x;
-        const dy=t.clientY-mobile.lookLast.y;
-        mobile.lookLast={x:t.clientX,y:t.clientY};
-        const sens = BASE_LOOK * (playerData.sensitivity/8);
-        state.yaw -= dx * sens;
-        state.pitch -= dy * sens;
-        state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
-        updateCameraFromYawPitch();
+    joyMove.addEventListener('touchend', endTouch);
+    joyMove.addEventListener('touchcancel', endTouch);
+    
+    // ===== МЫШЬ (ПК) =====
+    let mouseActive = false;
+    joyMove.addEventListener('mousedown', (e)=>{
+        e.preventDefault(); e.stopPropagation();
+        mouseActive = true;
+        mobile.joyMoveActive = true;
+        mobile.joyMoveStart = getCenter();
+        updateJoystick(e.clientX, e.clientY);
+    });
+    document.addEventListener('mousemove', (e)=>{
+        if(mouseActive) updateJoystick(e.clientX, e.clientY);
+    });
+    document.addEventListener('mouseup', ()=>{
+        if(mouseActive){
+            mouseActive = false;
+            mobile.joyMoveActive = false;
+            mobile.moveX = 0; mobile.moveY = 0;
+            knob.style.transform = 'translate(-50%,-50%)';
+        }
+    });
+    
+    // ===== LOOK (touch справа) =====
+    let lookTouchId = null;
+    document.addEventListener('touchstart', (e)=>{
+        if(e.target && e.target.closest){
+            if(e.target.closest('#joy-move')) return;
+            if(e.target.closest('.ctrl-btn')) return;
+            if(e.target.closest('.overlay')) return;
+            if(e.target.closest('.modal')) return;
+            if(e.target.closest('#button-editor')) return;
+            if(e.target.closest('#paused-msg')) return;
+        }
+        for(const t of e.changedTouches){
+            if(lookTouchId === null && t.clientX > window.innerWidth * 0.3){
+                lookTouchId = t.identifier;
+                mobile.lookActive = true;
+                mobile.lookLast = {x: t.clientX, y: t.clientY};
+                break;
+            }
+        }
+    }, {passive:true});
+    document.addEventListener('touchmove', (e)=>{
+        if(lookTouchId === null) return;
+        for(const t of e.changedTouches){
+            if(t.identifier === lookTouchId){
+                const dx = t.clientX - mobile.lookLast.x;
+                const dy = t.clientY - mobile.lookLast.y;
+                mobile.lookLast = {x: t.clientX, y: t.clientY};
+                const sens = BASE_LOOK * (playerData.sensitivity/8);
+                state.yaw -= dx * sens;
+                state.pitch -= dy * sens;
+                state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
+                updateCameraFromYawPitch();
+                break;
+            }
+        }
+    }, {passive:true});
+    const endLook = (e)=>{
+        for(const t of e.changedTouches){
+            if(t.identifier === lookTouchId){
+                lookTouchId = null;
+                mobile.lookActive = false;
+                break;
+            }
+        }
     };
-    const endLook=()=>{mobile.lookActive=false;};
-    lookRight.addEventListener('touchstart',startLook,{passive:true});
-    lookRight.addEventListener('touchmove',updateLook,{passive:true});
-    lookRight.addEventListener('touchend',endLook);
-    lookRight.addEventListener('touchcancel',endLook);
-    lookRight.addEventListener('mousedown',startLook);
-    document.addEventListener('mousemove',e=>{if(mobile.lookActive)updateLook(e);});
-    document.addEventListener('mouseup',endLook);
+    document.addEventListener('touchend', endLook);
+    document.addEventListener('touchcancel', endLook);
+    
+    // ===== LOOK (ПКМ мышь) =====
+    let mouseLookActive = false;
+    document.addEventListener('mousedown', (e)=>{
+        if(e.button === 2){
+            if(e.target && e.target.closest && (e.target.closest('#joy-move') || e.target.closest('.ctrl-btn'))) return;
+            mouseLookActive = true;
+            mobile.lookLast = {x: e.clientX, y: e.clientY};
+        }
+    });
+    document.addEventListener('mousemove', (e)=>{
+        if(mouseLookActive){
+            const dx = e.clientX - mobile.lookLast.x;
+            const dy = e.clientY - mobile.lookLast.y;
+            mobile.lookLast = {x: e.clientX, y: e.clientY};
+            const sens = BASE_LOOK * (playerData.sensitivity/8);
+            state.yaw -= dx * sens;
+            state.pitch -= dy * sens;
+            state.pitch = Math.max(-Math.PI/2 + .05, Math.min(Math.PI/2 - .05, state.pitch));
+            updateCameraFromYawPitch();
+        }
+    });
+    document.addEventListener('mouseup', (e)=>{
+        if(e.button === 2) mouseLookActive = false;
+    });
+    document.addEventListener('contextmenu', (e)=>{
+        if(e.target.closest && e.target.closest('#hud')) e.preventDefault();
+    });
 }
 function setupButtons(){
     const hold=(id,onDown,onUp)=>{
@@ -1635,6 +1714,20 @@ document.addEventListener('keyup',e=>{
         case 'ShiftLeft':state.keys.shift=false;break;
         case 'ControlLeft':case 'KeyC':state.isCrouching=false;break;
     }
+});
+// ПК: ЛКМ на пустом месте = стрельба
+document.addEventListener('mousedown', (e)=>{
+    if(e.button !== 0) return;
+    if(!state.scene || state.isGameOver || state.isPaused) return;
+    if(e.target && e.target.closest){
+        if(e.target.closest('.ctrl-btn')) return;
+        if(e.target.closest('#joy-move')) return;
+        if(e.target.closest('.overlay')) return;
+        if(e.target.closest('.modal')) return;
+        if(e.target.closest('#paused-msg')) return;
+        if(e.target.closest('#button-editor')) return;
+    }
+    shoot();
 });
 console.log('🎮 Standoff Mini 3D загружен!');
 </script>
